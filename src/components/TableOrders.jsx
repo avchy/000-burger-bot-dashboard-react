@@ -60,7 +60,9 @@ export function TableOrders() {
     }
   }
 
-  const dateToTime = (orderDate) => {
+  const dateToTime = (orderDateServer) => {
+    const orderDate = new Date(orderDateServer)
+
     const hours = String(orderDate.getHours()).padStart(2, '0')
     const minutes = String(orderDate.getMinutes()).padStart(2, '0')
     const seconds = String(orderDate.getSeconds()).padStart(2, '0')
