@@ -10,10 +10,36 @@ import {
   TableBody,
   Button,
   CircularProgress,
-  Paper,
+  Paper,  Typography,
+
 } from '@mui/material'
+// import styled from 'styled-components'; // Импорт библиотеки для создания стилей
+import { styled } from '@mui/material/styles'
 
 import { initialState } from '../data/orders.js'
+
+
+// Создание пользовательских стилей с помощью styled-components
+const StyledTableContainer = styled(TableContainer)`
+  margin-top: 20px;
+`;
+
+const StyledTable = styled(Table)`
+  min-width: 650px;
+`;
+
+const StyledTableCell = styled(TableCell)`
+  background-color: #f5f5f5; // Цвет фона для ячеек
+  font-weight: bold; // Полужирный текст
+  border: 1px solid #ddd; // Разделительные линии
+  padding: 10px; // Отступы внутри ячейки
+`;
+
+const StyledTableRow = styled(TableRow)`
+  &:nth-of-type(odd) {
+    background-color: #e0e0e0; // Цвет фона для четных строк
+  }
+`;
 
 export function TableOrders() {
   const [orders, setOrders] = useState(initialState)
@@ -77,29 +103,30 @@ export function TableOrders() {
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'right', width: '100%' }}>
-      <Box p={2} sx={{ width: '100%' }}>
-        <h1>Orders Dashboard</h1>
-        <TableContainer component={Paper} p={2}>
-          <Table sx={{ minWidth: 650 }} aria-label='simple table' p={2}>
-            <TableHead>
-              <TableRow>
-                <TableCell component='th' scope='row'>
-                  ID
-                </TableCell>
-                <TableCell align='right'>Query ID</TableCell>
-                <TableCell align='right'>Comment</TableCell>
-                <TableCell align='right'>Total Price</TableCell>
-                <TableCell align='right'>Delivery Option</TableCell>
-                <TableCell align='right'>Payment Method</TableCell>
-                <TableCell align='right'>Order Date</TableCell>
-                <TableCell align='right'>Cart Items</TableCell>
-                <TableCell align='right'>Address</TableCell>
-                <TableCell align='right'>User Name</TableCell>
-                <TableCell align='right'>User ID</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+    <Box p={2} sx={{ width: '100%' }}>
+      <Typography variant="h4" align="center" mb={2}>
+        Orders Dashboard
+      </Typography>
+      {/* Используем пользовательские стили */}
+      <StyledTableContainer component={Paper}>
+        <StyledTable aria-label="simple table">
+          <TableHead>
+            <StyledTableRow>
+              <StyledTableCell align="center">ID</StyledTableCell>
+              <StyledTableCell align="center">Query ID</StyledTableCell>
+              <StyledTableCell align="center">Comment</StyledTableCell>
+              <StyledTableCell align="center">Total Price</StyledTableCell>
+              <StyledTableCell align="center">Delivery Option</StyledTableCell>
+              <StyledTableCell align="center">Payment Method</StyledTableCell>
+              <StyledTableCell align="center">Order Date</StyledTableCell>
+              <StyledTableCell align="center">Cart Items</StyledTableCell>
+              <StyledTableCell align="center">Address</StyledTableCell>
+              <StyledTableCell align="center">User Name</StyledTableCell>
+              <StyledTableCell align="center">User ID</StyledTableCell>
+            </StyledTableRow>
+          </TableHead>
+          <TableBody>
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={11}>
@@ -113,12 +140,12 @@ export function TableOrders() {
                     style={{ backgroundColor: getRowColor(order.order_date) }}
                   >
                     <TableCell>{order.order_id}</TableCell>
-                    <TableCell>{order.queryId || ''}</TableCell>
-                    <TableCell>{order.comment || ''}</TableCell>
-                    <TableCell>{order.totalPrice || ''}</TableCell>
-                    <TableCell>{order.optionDelivery || ''}</TableCell>
-                    <TableCell>{order.paymentMethod || ''}</TableCell>
-                    <TableCell>{dateToTime(order.order_date) || ''}</TableCell>
+                    <TableCell>{order.queryId || '-'}</TableCell>
+                    <TableCell>{order.comment || '-'}</TableCell>
+                    <TableCell>{order.totalPrice || '-'}</TableCell>
+                    <TableCell>{order.optionDelivery || '-'}</TableCell>
+                    <TableCell>{order.paymentMethod || '-'}</TableCell>
+                    <TableCell>{dateToTime(order.order_date) || '-'}</TableCell>
                     <TableCell>
                       {order.cartItems && order.cartItems.length > 0 ? (
                         <Table>
@@ -177,8 +204,8 @@ export function TableOrders() {
                 </TableRow>
               )}
             </TableBody>
-          </Table>
-        </TableContainer>
+            </StyledTable>
+        </StyledTableContainer>
       </Box>
     </Box>
   )
