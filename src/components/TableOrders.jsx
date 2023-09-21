@@ -60,6 +60,20 @@ export function TableOrders() {
     }
   }
 
+  const dateToTime = (orderDate) => {
+    const hours = String(orderDate.getHours()).padStart(2, '0')
+    const minutes = String(orderDate.getMinutes()).padStart(2, '0')
+    const seconds = String(orderDate.getSeconds()).padStart(2, '0')
+
+    const day = String(orderDate.getDate()).padStart(2, '0')
+    const month = String(orderDate.getMonth() + 1).padStart(2, '0') // Месяцы в JavaScript начинаются с 0, поэтому добавляем 1
+    const year = orderDate.getFullYear()
+
+    const formattedDate = `${hours}:${minutes}:${seconds}--${day}/${month}/${year}`
+    console.log(formattedDate)
+    return formattedDate
+  }
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'right', width: '100%' }}>
       <Box p={2} sx={{ width: '100%' }}>
@@ -102,7 +116,7 @@ export function TableOrders() {
                     <TableCell>{order.totalPrice || ''}</TableCell>
                     <TableCell>{order.optionDelivery || ''}</TableCell>
                     <TableCell>{order.paymentMethod || ''}</TableCell>
-                    <TableCell>{order.order_date || ''}</TableCell>
+                    <TableCell>{dateToTime(order.order_date) || ''}</TableCell>
                     <TableCell>
                       {order.cartItems && order.cartItems.length > 0 ? (
                         <Table>
