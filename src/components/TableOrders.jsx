@@ -13,19 +13,16 @@ import {
   Paper,  Typography,
 
 } from '@mui/material'
-// import styled from 'styled-components'; // Импорт библиотеки для создания стилей
-import { styled } from '@mui/material/styles'
-
+ import { styled } from '@mui/material/styles'
 import { initialState } from '../data/orders.js'
 
-
-// Создание пользовательских стилей с помощью styled-components
 const StyledTableContainer = styled(TableContainer)`
   margin-top: 20px;
 `;
 
 const StyledTable = styled(Table)`
-  min-width: 650px;
+  min-width: 650px;   border-collapse: collapse; // Слияние границ ячеек для линий между ними
+
 `;
 
 const StyledTableCell = styled(TableCell)`
@@ -38,6 +35,8 @@ const StyledTableCell = styled(TableCell)`
 const StyledTableRow = styled(TableRow)`
   &:nth-of-type(odd) {
     background-color: #e0e0e0; // Цвет фона для четных строк
+    border: 1px solid #ddd; // Разделительные линии
+
   }
 `;
 
