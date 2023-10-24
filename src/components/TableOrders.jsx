@@ -101,7 +101,7 @@ export function TableOrders() {
     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
       <Box p={2} sx={{ width: '100%' }}>
         <Typography variant='h4' align='center' mb={2}>
-          Orders Dashboard !!!
+          Orders Dashboard
         </Typography>
 
         <Box sx={{ marginTop: '20px', textAlign: 'center' }}>
