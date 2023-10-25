@@ -3,72 +3,67 @@ import axios from 'axios'
 import {
   Box,
   Table,
-  TableContainer,
   TableHead,
   TableRow,
   TableCell,
   TableBody,
-  Button,
   CircularProgress,
   Paper,
   Typography,
 } from '@mui/material'
-import { styled } from '@mui/material/styles'
+
+import {
+  StyledTableRow,
+  StyledTableCell,
+  StyledTable,
+  StyledTableContainer,
+} from '../styles/styledComponents'
+
 import { initialState } from '../data/orders.js'
-
-const StyledTableContainer = styled(TableContainer)`
-  margin-top: 20px;
-`
-
-const StyledTable = styled(Table)`
-  min-width: 650px;
-  border-collapse: collapse;
-`
-
-const StyledTableCell = styled(TableCell)`
-  background-color: #f5f5f5;
-  font-weight: bold;
-  border: 1px solid #ddd;
-  padding: 10px;
-`
-
-const StyledTableRow = styled(TableRow)`
-  &:nth-of-type(odd) {
-    background-color: #e0e0e0;
-    border: 1px solid #ddd;
-  }
-`
+import AudioPlayer from './AudioPlayer.jsx'
 
 export function TableOrders() {
-  const [orders, setOrders] = useState(initialState)
-  const [loading, setLoading] = useState(true)
+  const [orders, setOrders] = useState([])
+  // const [orders, setOrders] = useState(initialState)
 
+  const [loading, setLoading] = useState(true)
+  const [volumeValueDataReceived, setVolumeValueDataReceived] = useState(0)
+
+  const audio = new Audio('icq_sms_sound.mp3')
+  const audioSrc = 'icq_sms_sound.mp3'
+
+  //==================================================
+
+  // Функция для получения данных из сервера
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://burgerim.ru/orders')
-      const newOrders = response.data.reverse()
+      const response = await fetch('https://burgerim.ru/orders')
+      if (response.ok) {
+        const newData = await response.json()
+        // Проверка изменения данных
+        if (JSON.stringify(newData) !== JSON.stringify(orders)) {
+          console.log('Данные изменились:', newData)
+          setOrders(newData)
 
-      if (JSON.stringify(orders) !== JSON.stringify(newOrders)) {
-        // Если данные изменились на сервере, обновляем состояние
-        setOrders(newOrders)
+          setVolumeValueDataReceived(1)
+          setTimeout(() => {
+            setVolumeValueDataReceived(0)
+          }, 3000)
+        }
       }
-
       setLoading(false)
     } catch (error) {
-      console.error(error)
+      console.error('Ошибка при запросе данных:', error)
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchData()
+    fetchData() // Выполняем запрос сразу
+    const interval = setInterval(fetchData, 1000)  
 
-    const intervalId = setInterval(fetchData, 1000)
-
-    return () => {
-      clearInterval(intervalId)
-    }
-  }, [])
+    return () => clearInterval(interval) // Очищаем интервал при размонтировании компонента
+  }, [orders]) // Зависимость от изменения данных
 
   const parseCartItems = (cartItems) => {
     try {
@@ -105,158 +100,163 @@ export function TableOrders() {
     const year = orderDate.getFullYear()
 
     const formattedDate = `${hours}:${minutes}:${seconds}--${day}/${month}/${year}`
-    console.log(formattedDate)
     return formattedDate
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-      <Box p={2} sx={{ width: '100%' }}>
-        <Typography variant='h4' align='center' mb={2}>
-          Orders Dashboard
-        </Typography>
+    <>
+      <AudioPlayer volumeValueDataReceived={volumeValueDataReceived} />
 
-        <Box sx={{ marginTop: '20px', textAlign: 'center' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box
-                sx={{
-                  backgroundColor: 'lightGreen',
-                  width: '200px',
-                  height: '20px',
-                  marginRight: '5px',
-                }}
-              >
-                менее 5 минут назад
+      <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <Box p={2} sx={{ width: '100%' }}>
+          <Typography variant='h4' align='center' mb={2}>
+            Orders Dashboard
+          </Typography>
+          <Box sx={{ marginTop: '20px', textAlign: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box
+                  sx={{
+                    backgroundColor: 'lightGreen',
+                    width: '200px',
+                    height: '20px',
+                    marginRight: '5px',
+                  }}
+                >
+                  менее 5 минут назад
+                </Box>
               </Box>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box
-                sx={{
-                  backgroundColor: 'Yellow',
-                  width: '200px',
-                  height: '20px',
-                  marginRight: '5px',
-                }}
-              >
-                5-10 минут назад
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box
+                  sx={{
+                    backgroundColor: 'Yellow',
+                    width: '200px',
+                    height: '20px',
+                    marginRight: '5px',
+                  }}
+                >
+                  5-10 минут назад
+                </Box>
               </Box>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box
-                sx={{
-                  backgroundColor: 'lightPink',
-                  width: '200px',
-                  height: '20px',
-                  marginRight: '5px',
-                }}
-              >
-                более 10 минут назад{' '}
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box
+                  sx={{
+                    backgroundColor: 'lightPink',
+                    width: '200px',
+                    height: '20px',
+                    marginRight: '5px',
+                  }}
+                >
+                  более 10 минут назад{' '}
+                </Box>
               </Box>
             </Box>
           </Box>
-        </Box>
-
-        <StyledTableContainer component={Paper}>
-          <StyledTable aria-label='simple table'>
-            <TableHead>
-              <StyledTableRow>
-                <StyledTableCell align='center'>ID</StyledTableCell>
-                {/* <StyledTableCell align='center'>Query ID</StyledTableCell> */}
-                <StyledTableCell align='center'>Comment</StyledTableCell>
-                <StyledTableCell align='center'>Total Price</StyledTableCell>
-                <StyledTableCell align='center'>
-                  Delivery Option
-                </StyledTableCell>
-                <StyledTableCell align='center'>Payment Method</StyledTableCell>
-                <StyledTableCell align='center'>Order Date</StyledTableCell>
-                <StyledTableCell align='center'>Cart Items</StyledTableCell>
-                <StyledTableCell align='center'>Address</StyledTableCell>
-                <StyledTableCell align='center'>Username</StyledTableCell>
-                <StyledTableCell align='center'>User ID</StyledTableCell>
-              </StyledTableRow>
-            </TableHead>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell align='center' colSpan={11}>
-                    <CircularProgress />
-                  </TableCell>
-                </TableRow>
-              ) : orders.length > 0 ? (
-                orders.map((order) => (
-                  <TableRow
-                    key={order.order_id}
-                    sx={{ backgroundColor: getRowColor(order.order_date) }}
-                  >
-                    <TableCell>{order.order_id}</TableCell>
-                    {/* <TableCell>{order.queryId || '-'}</TableCell> */}
-                    <TableCell>{order.comment || '-'}</TableCell>
-                    <TableCell>{order.totalPrice || '-'}</TableCell>
-                    <TableCell>{order.optionDelivery || '-'}</TableCell>
-                    <TableCell>{order.paymentMethod || '-'}</TableCell>
-                    <TableCell>{dateToTime(order.order_date) || '-'}</TableCell>
-                    <TableCell>
-                      {order.cartItems && order.cartItems.length > 0 ? (
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell>Title</TableCell>
-                              <TableCell>Quantity</TableCell>
-                              <TableCell>Description</TableCell>
-                              <TableCell>Toppings</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {parseCartItems(order.cartItems).map(
-                              (item, index) => (
-                                <TableRow key={index}>
-                                  <TableCell>{item.title}</TableCell>
-                                  <TableCell>{item.quantity}</TableCell>
-                                  <TableCell>
-                                    {item.description || '-'}
-                                  </TableCell>
-                                  <TableCell>
-                                    {item?.toppings?.length > 0 ? (
-                                      <ul>
-                                        {item?.toppings?.map(
-                                          (topping, toppingIndex) =>
-                                            topping.count > 0 && (
-                                              <li key={toppingIndex}>
-                                                {topping.title}
-                                              </li>
-                                            )
-                                        )}
-                                      </ul>
-                                    ) : (
-                                      '-'
-                                    )}
-                                  </TableCell>
-                                </TableRow>
-                              )
-                            )}
-                          </TableBody>
-                        </Table>
-                      ) : (
-                        'No items'
-                      )}
+          <StyledTableContainer component={Paper}>
+            <StyledTable aria-label='simple table'>
+              <TableHead>
+                <StyledTableRow>
+                  <StyledTableCell align='center'>ID</StyledTableCell>
+                  {/* <StyledTableCell align='center'>Query ID</StyledTableCell> */}
+                  <StyledTableCell align='center'>Comment</StyledTableCell>
+                  <StyledTableCell align='center'>Total Price</StyledTableCell>
+                  <StyledTableCell align='center'>
+                    Delivery Option
+                  </StyledTableCell>
+                  <StyledTableCell align='center'>
+                    Payment Method
+                  </StyledTableCell>
+                  <StyledTableCell align='center'>Order Date</StyledTableCell>
+                  <StyledTableCell align='center'>Cart Items</StyledTableCell>
+                  <StyledTableCell align='center'>Address</StyledTableCell>
+                  <StyledTableCell align='center'>Username</StyledTableCell>
+                  <StyledTableCell align='center'>User ID</StyledTableCell>
+                </StyledTableRow>
+              </TableHead>
+              <TableBody>
+                {loading ? (
+                  <TableRow>
+                    <TableCell align='center' colSpan={11}>
+                      <CircularProgress />
                     </TableCell>
-                    <TableCell>{order.address || ''}</TableCell>
-                    <TableCell>{order.user_name || ''}</TableCell>
-                    <TableCell>{order.user_id || ''}</TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={11} align='center'>
-                    <Box p={2}>No Orders To Display</Box>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </StyledTable>
-        </StyledTableContainer>
+                ) : orders.length > 0 ? (
+                  orders.map((order) => (
+                    <TableRow
+                      key={order.order_id}
+                      sx={{ backgroundColor: getRowColor(order.order_date) }}
+                    >
+                      <TableCell>{order.order_id}</TableCell>
+                      {/* <TableCell>{order.queryId || '-'}</TableCell> */}
+                      <TableCell>{order.comment || '-'}</TableCell>
+                      <TableCell>{order.totalPrice || '-'}</TableCell>
+                      <TableCell>{order.optionDelivery || '-'}</TableCell>
+                      <TableCell>{order.paymentMethod || '-'}</TableCell>
+                      <TableCell>
+                        {dateToTime(order.order_date) || '-'}
+                      </TableCell>
+                      <TableCell>
+                        {order.cartItems && order.cartItems.length > 0 ? (
+                          <Table>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Title</TableCell>
+                                <TableCell>Quantity</TableCell>
+                                <TableCell>Description</TableCell>
+                                <TableCell>Toppings</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {parseCartItems(order.cartItems).map(
+                                (item, index) => (
+                                  <TableRow key={index}>
+                                    <TableCell>{item.title}</TableCell>
+                                    <TableCell>{item.quantity}</TableCell>
+                                    <TableCell>
+                                      {item.description || '-'}
+                                    </TableCell>
+                                    <TableCell>
+                                      {item?.toppings?.length > 0 ? (
+                                        <ul>
+                                          {item?.toppings?.map(
+                                            (topping, toppingIndex) =>
+                                              topping.count > 0 && (
+                                                <li key={toppingIndex}>
+                                                  {topping.title}
+                                                </li>
+                                              )
+                                          )}
+                                        </ul>
+                                      ) : (
+                                        '-'
+                                      )}
+                                    </TableCell>
+                                  </TableRow>
+                                )
+                              )}
+                            </TableBody>
+                          </Table>
+                        ) : (
+                          'No items'
+                        )}
+                      </TableCell>
+                      <TableCell>{order.address || ''}</TableCell>
+                      <TableCell>{order.user_name || ''}</TableCell>
+                      <TableCell>{order.user_id || ''}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={11} align='center'>
+                      <Box p={2}>No Orders To Display</Box>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </StyledTable>
+          </StyledTableContainer>
+        </Box>
       </Box>
-    </Box>
+    </>
   )
 }
