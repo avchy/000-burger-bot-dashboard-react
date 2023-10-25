@@ -46,7 +46,13 @@ export function TableOrders() {
   const fetchData = async () => {
     try {
       const response = await axios.get('https://burgerim.ru/orders')
-      setOrders(response.data.reverse())
+      const newOrders = response.data.reverse()
+
+      if (JSON.stringify(orders) !== JSON.stringify(newOrders)) {
+        // Если данные изменились на сервере, обновляем состояние
+        setOrders(newOrders)
+      }
+
       setLoading(false)
     } catch (error) {
       console.error(error)
@@ -56,6 +62,12 @@ export function TableOrders() {
 
   useEffect(() => {
     fetchData()
+
+    const intervalId = setInterval(fetchData, 1000)
+
+    return () => {
+      clearInterval(intervalId)
+    }
   }, [])
 
   const parseCartItems = (cartItems) => {
@@ -105,7 +117,7 @@ export function TableOrders() {
         </Typography>
 
         <Box sx={{ marginTop: '20px', textAlign: 'center' }}>
-           <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Box
                 sx={{
