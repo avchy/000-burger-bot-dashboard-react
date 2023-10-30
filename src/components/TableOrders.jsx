@@ -43,7 +43,7 @@ export function TableOrders() {
         // Проверка изменения данных
         if (JSON.stringify(newData) !== JSON.stringify(orders)) {
           console.log('Данные изменились:', newData)
-          setOrders(newData)
+          setOrders(newData.reverse())
 
           setVolumeValueDataReceived(1)
           setTimeout(() => {
@@ -60,7 +60,7 @@ export function TableOrders() {
 
   useEffect(() => {
     fetchData() // Выполняем запрос сразу
-    const interval = setInterval(fetchData, 1000)  
+    const interval = setInterval(fetchData, 1000)
 
     return () => clearInterval(interval) // Очищаем интервал при размонтировании компонента
   }, [orders]) // Зависимость от изменения данных
