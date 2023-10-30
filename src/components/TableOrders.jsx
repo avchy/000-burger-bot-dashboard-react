@@ -127,8 +127,7 @@ export function TableOrders() {
     const formattedDate = `${hours}:${minutes}:${seconds}--${day}/${month}/${year}`
     return formattedDate
   }
-
-  return (
+   return (
     <>
       <AudioPlayer volumeValueDataReceived={volumeValueDataReceived} />
 
@@ -221,7 +220,7 @@ export function TableOrders() {
                         {dateToTime(order.order_date) || '-'}
                       </TableCell>
                       <TableCell>
-                        {order.cartItems && order.cartItems.length > 0 ? (
+                         {order.cartItems && parseCartItems(order.cartItems).length > 0 ? (
                           <Table>
                             <TableHead>
                               <TableRow>
