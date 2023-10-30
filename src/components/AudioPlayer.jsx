@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { MdPlayArrow, MdPause } from 'react-icons/md'
-import { Button } from '@mui/material'
+import { Button, Box } from '@mui/material'
 
 // const audioSrc = 'sound_long.mp3'
 // const audioSrc = 'icq_sms_sound.mp3'
@@ -56,7 +56,16 @@ export default function AudioPlayer(props) {
             aria-label={isPlaying ? 'Pause' : 'Play'}
             size='lg'
           >
-            {isPlaying ? <MdPause size={30} /> : <MdPlayArrow size={30} />}
+            {isPlaying ? (
+              <Box>
+                <MdPause size={30} />
+                выкл. звук
+              </Box>
+            ) : (
+              <Box>
+                <MdPlayArrow size={30} /> вкл. звук
+              </Box>
+            )}
           </Button>
         </div>
 

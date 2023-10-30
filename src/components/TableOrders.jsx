@@ -24,6 +24,7 @@ import AudioPlayer from './AudioPlayer.jsx'
 
 export function TableOrders() {
   const [orders, setOrders] = useState([])
+  const [ordersReverse, setOrdersReverse] = useState([])
   // const [orders, setOrders] = useState(initialState)
 
   const [loading, setLoading] = useState(true)
@@ -41,9 +42,14 @@ export function TableOrders() {
       if (response.ok) {
         const newData = await response.json()
         // Проверка изменения данных
-        if (JSON.stringify(newData) !== JSON.stringify(orders)) {
+        console.log('newData', newData)
+        console.log('orders', orders)
+        if (newData.length != orders.length) {
+          // if (JSON.stringify(newData) !== JSON.stringify(orders)) {
+
           console.log('Данные изменились:', newData)
-          setOrders(newData.reverse())
+          setOrders(newData)
+          setOrdersReverse(newData.reverse())
 
           setVolumeValueDataReceived(1)
           setTimeout(() => {
@@ -59,8 +65,27 @@ export function TableOrders() {
   }
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://burgerim.ru/orders')
+        if (response.ok) {
+          const newData = await response.json()
+          setOrders(newData)
+          setOrdersReverse(newData.reverse())
+        }
+        setLoading(false)
+      } catch (error) {
+        console.error('Ошибка при запросе данных:', error)
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  useEffect(() => {
     fetchData() // Выполняем запрос сразу
-    const interval = setInterval(fetchData, 1000)
+    const interval = setInterval(fetchData, 3000)
 
     return () => clearInterval(interval) // Очищаем интервал при размонтировании компонента
   }, [orders]) // Зависимость от изменения данных
@@ -181,7 +206,7 @@ export function TableOrders() {
                     </TableCell>
                   </TableRow>
                 ) : orders.length > 0 ? (
-                  orders.map((order) => (
+                  ordersReverse.map((order) => (
                     <TableRow
                       key={order.order_id}
                       sx={{ backgroundColor: getRowColor(order.order_date) }}
