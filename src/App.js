@@ -1,17 +1,20 @@
 import './styles/App.scss'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+
 import { TableOrders } from './pages/TableOrders'
-import { Settings } from './pages/Settings'
+import { Settings } from './pages/Settings/Settings'
 import { Home } from './pages/Home'
 import { Statistics } from './pages/Statistics'
 
-import LoginButton from './components/LoginButton'
-import LogoutButton from './components/LogoutButton'
+// import LoginButton from './components/LoginButton'
+// import LogoutButton from './components/LogoutButton'
 import Profile from './pages/Profile'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import Navbar from './components/Navbar'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
- 
+
+import { MenuItems } from './pages/Settings/MenuItems'
+import { ProfileSettings } from './pages/Settings/ProfileSettings'
 
 function App() {
   const { isLoading, error } = useAuth0()
@@ -26,18 +29,21 @@ function App() {
         <>
           {/* <LoginButton />
           <LogoutButton /> */}
- 
+
           <Router>
             <Navbar />
             <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/settings' element={<Settings />} />
-              <Route path='/statistics' element={<Statistics />} /> 
+              <Route path='/statistics' element={<Statistics />} />
               <Route path='/orders' element={<TableOrders />} />
-              
-              <Route path='/login' element={<LoginButton />} /> 
-              <Route path='/logout' element={<LogoutButton />} />
+
+              {/* <Route path='/login' element={<LoginButton />} /> 
+              <Route path='/logout' element={<LogoutButton />} /> */}
+
+              <Route path='/menu_items' element={<MenuItems />} />
+              <Route path='/profile_settings' element={<ProfileSettings />} />
             </Routes>
           </Router>
         </>
