@@ -19,30 +19,27 @@ const Navbar = () => {
     <>
       <Nav>
         <Bars />
-
-        <NavMenu>
-          <NavLink to='/'>Home</NavLink>
-          <NavLink to='/profile'>Profile</NavLink>
-          <NavLink to='/settings' activeStyle>
-            Settings
-          </NavLink>
-          <NavLink to='/statistics' activeStyle>
-            Statistics{' '}
-          </NavLink>
-          <NavLink to='/orders' activeStyle>
-            Orders
-          </NavLink>
-        </NavMenu>
-
+        {isAuthenticated && (
+          <NavMenu>
+            <NavLink to='/'>Home</NavLink>
+            <NavLink to='/profile'>Profile</NavLink>
+            <NavLink to='/settings' activeStyle>
+              Settings
+            </NavLink>
+            <NavLink to='/statistics' activeStyle>
+              Statistics{' '}
+            </NavLink>
+            <NavLink to='/orders' activeStyle>
+              Orders
+            </NavLink>
+          </NavMenu>
+        )}
+        
         {/* Second Nav */}
 
         <NavBtn>
           {!isAuthenticated && (
-            <NavBtnLink
-              to='/'
-              onClick={() => loginWithRedirect()}
-              activeStyle
-            >
+            <NavBtnLink to='/' onClick={() => loginWithRedirect()} activeStyle>
               login
             </NavBtnLink>
           )}
