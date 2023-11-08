@@ -10,6 +10,11 @@ import {
   Button,
   TextField,
 } from '@mui/material'
+
+import Chip from '@mui/material/Chip'
+import Autocomplete from '@mui/material/Autocomplete'
+import Stack from '@mui/material/Stack'
+
 import NavbarSettings from '../../components/NavbarSettings'
 import axios from 'axios'
 import Tags from './Tags'
@@ -71,19 +76,18 @@ export function MenuItems() {
     <>
       <NavbarSettings />
 
-      <h1>Выбор нескольких элементов</h1>
-      <Tags />
+ 
 
       <Paper>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>title</TableCell>
+              <TableCell>Title</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Price</TableCell>
-              <TableCell>toppings</TableCell>
-              <TableCell>image</TableCell>{' '}
-              {/* Добавлено поле "image" в заголовок таблицы */}
+              <TableCell>image</TableCell>
+              <TableCell>Toppings</TableCell>
+
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -93,8 +97,31 @@ export function MenuItems() {
                 <TableCell>{item.title}</TableCell>
                 <TableCell>{item.description}</TableCell>
                 <TableCell>{item.price}</TableCell>
-                <TableCell>{JSON.stringify(item.toppings)}</TableCell>
                 <TableCell>{item.image}</TableCell>
+
+                <TableCell>
+               {  item.toppings &&
+                   <Stack spacing={3} sx={{ width: 500 }}>
+                    <Autocomplete
+                      multiple
+                      id='tags-outlined'
+                      options={item.toppings}
+                      getOptionLabel={(option) => option.title}
+                      defaultValue={[...item.toppings]}
+                      filterSelectedOptions
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label='toppings for this dish'
+                          placeholder='...'
+                        />
+                      )}
+                    />
+                  </Stack> }
+                </TableCell>
+
+                {/* <TableCell>{JSON.stringify(item.toppings)}</TableCell> */}
+
                 <TableCell>
                   <Button
                     variant='contained'

@@ -14,13 +14,13 @@ export default function Tags() {
         getOptionLabel={(option) => option.title}
         defaultValue={[top100Films[2]]}
         filterSelectedOptions
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label='filterSelectedOptions'
-            placeholder='Favorites'
-          />
-        )}
+        // renderInput={(params) => (
+        //   <TextField
+        //     {...params}
+        //     label='filterSelectedOptions'
+        //     placeholder='Favorites'
+        //   />
+        // )}
       />
     </Stack>
   )
