@@ -10,8 +10,9 @@ import {
   Button,
   TextField,
 } from '@mui/material'
-import NavbarSettings from '../../components/NavbarSettings/'
+import NavbarSettings from '../../components/NavbarSettings'
 import axios from 'axios'
+import Tags from './Tags'
 
 export function MenuItems() {
   const [menuItems, setMenuItems] = useState([])
@@ -22,17 +23,21 @@ export function MenuItems() {
     toppings: '',
     image: '', // Добавлено поле "image"
   })
-  
- 
-  
-   const handleMenuItemChange = (e) => {
+
+  const handleMenuItemChange = (e) => {
     const { name, value } = e.target
     setMenuItem({ ...menuItem, [name]: value })
   }
 
   const addMenuItem = () => {
     setMenuItems([...menuItems, menuItem])
-    setMenuItem({ title: '', description: '', price: '', toppings: '', image: '' })
+    setMenuItem({
+      title: '',
+      description: '',
+      price: '',
+      toppings: '',
+      image: '',
+    })
   }
 
   const deleteMenuItem = (index) => {
@@ -58,24 +63,6 @@ export function MenuItems() {
     }
   }
 
-  // const getMenu =   () => {
-  //   let config = {
-  //     method: 'get',
-  //     maxBodyLength: Infinity,
-  //     url: 'https://burgerim.ru/menu',
-  //     headers: { }
-  //   };
-
-  //   axios.request(config)
-  //   .then((response) => {
-  //     console.log(response.data);
-  //     // console.log(JSON.stringify(response.data));
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
-  // }
-
   useEffect(() => {
     getMenu()
   }, [])
@@ -84,6 +71,9 @@ export function MenuItems() {
     <>
       <NavbarSettings />
 
+      <h1>Выбор нескольких элементов</h1>
+      <Tags />
+
       <Paper>
         <Table>
           <TableHead>
@@ -91,7 +81,7 @@ export function MenuItems() {
               <TableCell>title</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Price</TableCell>
-              {/* <TableCell>Add-ons</TableCell> */}
+              <TableCell>toppings</TableCell>
               <TableCell>image</TableCell>{' '}
               {/* Добавлено поле "image" в заголовок таблицы */}
               <TableCell>Actions</TableCell>
@@ -103,7 +93,7 @@ export function MenuItems() {
                 <TableCell>{item.title}</TableCell>
                 <TableCell>{item.description}</TableCell>
                 <TableCell>{item.price}</TableCell>
-                {/* <TableCell>{item.toppings}</TableCell> */}
+                <TableCell>{JSON.stringify(item.toppings)}</TableCell>
                 <TableCell>{item.image}</TableCell>
                 <TableCell>
                   <Button

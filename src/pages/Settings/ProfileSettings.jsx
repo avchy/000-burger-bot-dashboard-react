@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@mui/material'
 import { useAuth0 } from '@auth0/auth0-react'
-import NavbarSettings from '../../components/NavbarSettings/'
+import NavbarSettings from '../../components/NavbarSettings'
 
 export function ProfileSettings() {
   const { user } = useAuth0()
