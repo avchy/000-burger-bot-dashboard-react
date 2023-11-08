@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
   Paper,
   Table,
@@ -9,34 +9,76 @@ import {
   Typography,
   Button,
   TextField,
-} from '@mui/material';
-import NavbarSettings from '../../components/NavbarSettings/';
+} from '@mui/material'
+import NavbarSettings from '../../components/NavbarSettings/'
+import axios from 'axios'
 
 export function MenuItems() {
-  const [menuItems, setMenuItems] = useState([]);
+  const [menuItems, setMenuItems] = useState([])
   const [menuItem, setMenuItem] = useState({
-    name: '',
+    title: '',
     description: '',
     price: '',
-    addOns: '',
-    photo: '', // Добавлено поле "photo"
-  });
-
-  const handleMenuItemChange = (e) => {
-    const { name, value } = e.target;
-    setMenuItem({ ...menuItem, [name]: value });
-  };
+    toppings: '',
+    image: '', // Добавлено поле "image"
+  })
+  
+ 
+  
+   const handleMenuItemChange = (e) => {
+    const { name, value } = e.target
+    setMenuItem({ ...menuItem, [name]: value })
+  }
 
   const addMenuItem = () => {
-    setMenuItems([...menuItems, menuItem]);
-    setMenuItem({ name: '', description: '', price: '', addOns: '', photo: '' });
-  };
+    setMenuItems([...menuItems, menuItem])
+    setMenuItem({ title: '', description: '', price: '', toppings: '', image: '' })
+  }
 
   const deleteMenuItem = (index) => {
-    const updatedMenuItems = [...menuItems];
-    updatedMenuItems.splice(index, 1);
-    setMenuItems(updatedMenuItems);
-  };
+    const updatedMenuItems = [...menuItems]
+    updatedMenuItems.splice(index, 1)
+    setMenuItems(updatedMenuItems)
+  }
+
+  const getMenu = async () => {
+    // const url = 'https://localhost/'
+    const url = 'https://burgerim.ru/'
+    // const url = 'https://burgerim.ru/menu'
+    try {
+      const response = await axios.get('https://burgerim.ru/menu')
+
+      console.log('response.data', response.data)
+      setMenuItems(response.data)
+
+      console.log('Запрос "getMenu" успешно выполнен')
+    } catch (error) {
+      console.error('Ошибка при выполнении запроса "getMenu":', error)
+      return
+    }
+  }
+
+  // const getMenu =   () => {
+  //   let config = {
+  //     method: 'get',
+  //     maxBodyLength: Infinity,
+  //     url: 'https://burgerim.ru/menu',
+  //     headers: { }
+  //   };
+
+  //   axios.request(config)
+  //   .then((response) => {
+  //     console.log(response.data);
+  //     // console.log(JSON.stringify(response.data));
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
+  // }
+
+  useEffect(() => {
+    getMenu()
+  }, [])
 
   return (
     <>
@@ -46,26 +88,27 @@ export function MenuItems() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
+              <TableCell>title</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Price</TableCell>
-              <TableCell>Add-ons</TableCell>
-              <TableCell>Photo</TableCell> {/* Добавлено поле "Photo" в заголовок таблицы */}
+              {/* <TableCell>Add-ons</TableCell> */}
+              <TableCell>image</TableCell>{' '}
+              {/* Добавлено поле "image" в заголовок таблицы */}
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {menuItems.map((item, index) => (
               <TableRow key={index}>
-                <TableCell>{item.name}</TableCell>
+                <TableCell>{item.title}</TableCell>
                 <TableCell>{item.description}</TableCell>
                 <TableCell>{item.price}</TableCell>
-                <TableCell>{item.addOns}</TableCell>
-                <TableCell>{item.photo}</TableCell>
+                {/* <TableCell>{item.toppings}</TableCell> */}
+                <TableCell>{item.image}</TableCell>
                 <TableCell>
                   <Button
-                    variant="contained"
-                    color="secondary"
+                    variant='contained'
+                    color='secondary'
                     onClick={() => deleteMenuItem(index)}
                   >
                     Delete
@@ -76,46 +119,50 @@ export function MenuItems() {
             <TableRow>
               <TableCell>
                 <TextField
-                  name="name"
-                  value={menuItem.name}
+                  name='title'
+                  value={menuItem.title}
                   onChange={handleMenuItemChange}
-                  variant="outlined"
+                  variant='outlined'
                 />
               </TableCell>
               <TableCell>
                 <TextField
-                  name="description"
+                  name='description'
                   value={menuItem.description}
                   onChange={handleMenuItemChange}
-                  variant="outlined"
+                  variant='outlined'
                 />
               </TableCell>
               <TableCell>
                 <TextField
-                  name="price"
+                  name='price'
                   value={menuItem.price}
                   onChange={handleMenuItemChange}
-                  variant="outlined"
+                  variant='outlined'
                 />
               </TableCell>
               <TableCell>
                 <TextField
-                  name="addOns"
-                  value={menuItem.addOns}
+                  name='toppings'
+                  value={menuItem.toppings}
                   onChange={handleMenuItemChange}
-                  variant="outlined"
+                  variant='outlined'
                 />
               </TableCell>
               <TableCell>
                 <TextField
-                  name="photo" // Добавлено поле "photo"
-                  value={menuItem.photo}
+                  name='image' // Добавлено поле "image"
+                  value={menuItem.image}
                   onChange={handleMenuItemChange}
-                  variant="outlined"
+                  variant='outlined'
                 />
               </TableCell>
               <TableCell>
-                <Button variant="contained" color="primary" onClick={addMenuItem}>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={addMenuItem}
+                >
                   Add
                 </Button>
               </TableCell>
@@ -124,5 +171,5 @@ export function MenuItems() {
         </Table>
       </Paper>
     </>
-  );
+  )
 }

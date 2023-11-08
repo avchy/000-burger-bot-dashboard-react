@@ -23,13 +23,13 @@ const Navbar = () => {
           <NavMenu>
             <NavLink to='/'>Home</NavLink>
             <NavLink to='/profile'>Profile</NavLink>
-            <NavLink to='/settings' activeStyle>
+            <NavLink to='/settings'  >
               Settings
             </NavLink>
-            <NavLink to='/statistics' activeStyle>
+            <NavLink to='/statistics'  >
               Statistics{' '}
             </NavLink>
-            <NavLink to='/orders' activeStyle>
+            <NavLink to='/orders'  >
               Orders
             </NavLink>
           </NavMenu>
@@ -39,13 +39,13 @@ const Navbar = () => {
 
         <NavBtn>
           {!isAuthenticated && (
-            <NavBtnLink to='/' onClick={() => loginWithRedirect()} activeStyle>
+            <NavBtnLink to='/' onClick={() => loginWithRedirect()}  >
               login
             </NavBtnLink>
           )}
 
           {isAuthenticated && (
-            <NavBtnLink onClick={() => logout()} to='/' activeStyle>
+            <NavBtnLink onClick={() => logout()} to='/'  >
               logout
             </NavBtnLink>
           )}
