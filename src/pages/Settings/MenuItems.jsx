@@ -15,11 +15,14 @@ import Chip from '@mui/material/Chip'
 import Autocomplete from '@mui/material/Autocomplete'
 import Stack from '@mui/material/Stack'
 
-import NavbarSettings from '../../components/NavbarSettings'
+import NavbarSettings from '../../components/Navbar/NavbarSettings'
 import axios from 'axios'
-import Tags from './Tags'
+
+import { useAuth0 } from '@auth0/auth0-react'
 
 export function MenuItems() {
+  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0()
+
   const [menuItems, setMenuItems] = useState([])
   const [menuItem, setMenuItem] = useState({
     title: '',
@@ -51,12 +54,31 @@ export function MenuItems() {
     setMenuItems(updatedMenuItems)
   }
 
+  // const getMenu = async () => {
+  //   // const url = 'https://localhost/'
+  //   const url = 'https://burgerim.ru/'
+  //   // const url = 'https://burgerim.ru/menu'
+  //   try {
+  //     const response = await axios.get('https://burgerim.ru/menu')
+
+  //     console.log('response.data', response.data)
+  //     setMenuItems(response.data)
+
+  //     console.log('Запрос "getMenu" успешно выполнен')
+  //   } catch (error) {
+  //     console.error('Ошибка при выполнении запроса "getMenu":', error)
+  //     return
+  //   }
+  // }
+
   const getMenu = async () => {
-    // const url = 'https://localhost/'
-    const url = 'https://burgerim.ru/'
-    // const url = 'https://burgerim.ru/menu'
+    const url = 'https://burgerim.ru/menu/'
+    const restaurant = user?.nickname || 'cafecafe'
+    // const restaurant = 'cafecafe'
+
     try {
-      const response = await axios.get('https://burgerim.ru/menu')
+      // const response = await axios.get("https://burgerim.ru/menu/cafecafe")
+      const response = await axios.get(url + restaurant)
 
       console.log('response.data', response.data)
       setMenuItems(response.data)
@@ -70,13 +92,11 @@ export function MenuItems() {
 
   useEffect(() => {
     getMenu()
-  }, [])
+  }, [user?.nickname])
 
   return (
     <>
       <NavbarSettings />
-
- 
 
       <Paper>
         <Table>
@@ -100,24 +120,25 @@ export function MenuItems() {
                 <TableCell>{item.image}</TableCell>
 
                 <TableCell>
-               {  item.toppings &&
-                   <Stack spacing={3} sx={{ width: 500 }}>
-                    <Autocomplete
-                      multiple
-                      id='tags-outlined'
-                      options={item.toppings}
-                      getOptionLabel={(option) => option.title}
-                      defaultValue={[...item.toppings]}
-                      filterSelectedOptions
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label='toppings for this dish'
-                          placeholder='...'
-                        />
-                      )}
-                    />
-                  </Stack> }
+                  {item.toppings && (
+                    <Stack spacing={3} sx={{ width: 500 }}>
+                      <Autocomplete
+                        multiple
+                        id='tags-outlined'
+                        options={item.toppings}
+                        getOptionLabel={(option) => option.title}
+                        defaultValue={[...item.toppings]}
+                        filterSelectedOptions
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label='toppings for this dish'
+                            placeholder='...'
+                          />
+                        )}
+                      />
+                    </Stack>
+                  )}
                 </TableCell>
 
                 {/* <TableCell>{JSON.stringify(item.toppings)}</TableCell> */}

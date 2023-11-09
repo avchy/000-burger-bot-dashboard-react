@@ -7,13 +7,15 @@ import {
   Bars,
   NavMenu,
   NavBtn,
-  NavBtnLink,
+  NavBtnLink,NavBtnLinkLogIn
 } from './navbarElements'
+
+import { Typography } from '@mui/material'
 
 import { useAuth0 } from '@auth0/auth0-react'
 
 const Navbar = () => {
-  const { loginWithRedirect, logout, isAuthenticated } = useAuth0()
+  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0()
 
   return (
     <>
@@ -21,33 +23,43 @@ const Navbar = () => {
         <Bars />
         {isAuthenticated && (
           <NavMenu>
-            <NavLink to='/'>Home</NavLink>
-            <NavLink to='/profile'>Profile</NavLink>
-            <NavLink to='/settings'  >
-              Settings
-            </NavLink>
-            <NavLink to='/statistics'  >
-              Statistics{' '}
-            </NavLink>
-            <NavLink to='/orders'  >
-              Orders
-            </NavLink>
+            <NavBtnLink to='/'>Home</NavBtnLink>
+            <NavBtnLink to='/profile'>Profile</NavBtnLink>
+            <NavBtnLink to='/menu_items'>Menu</NavBtnLink>
+            <NavBtnLink to='/settings'>Settings</NavBtnLink>
+            <NavBtnLink to='/statistics'>Statistics </NavBtnLink>
+            <NavBtnLink to='/orders'>Orders</NavBtnLink>
           </NavMenu>
         )}
-        
-        {/* Second Nav */}
 
+        {/* Second Nav */}
         <NavBtn>
+       
+
+          {user?.picture && (
+            <img
+              style={{ width: '50px', margin: '10px 10px 10px 40px' }}
+              src={user.picture}
+              alt={user?.name}
+            />
+          )}
+
+          {isAuthenticated ? (
+            <Typography sx={{p:1}}>hello {user?.nickname} </Typography>
+          ) : (
+            <Typography sx={{p:1}}>hello guest, please log in </Typography>
+          )}
+          
           {!isAuthenticated && (
-            <NavBtnLink to='/' onClick={() => loginWithRedirect()}  >
+            <NavBtnLinkLogIn to='/' onClick={() => loginWithRedirect()}>
               login
-            </NavBtnLink>
+            </NavBtnLinkLogIn>
           )}
 
           {isAuthenticated && (
-            <NavBtnLink onClick={() => logout()} to='/'  >
+            <NavBtnLinkLogIn onClick={() => logout()} to='/'>
               logout
-            </NavBtnLink>
+            </NavBtnLinkLogIn>
           )}
         </NavBtn>
       </Nav>
