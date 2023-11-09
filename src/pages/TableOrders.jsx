@@ -141,7 +141,7 @@ export function TableOrders() {
             <Box p={2} sx={{ width: '100%' }}>
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Typography variant='h4' align='center' mb={2}>
-                  Orders Dashboard
+                  Orders
                 </Typography>
                 <AudioPlayer
                   volumeValueDataReceived={volumeValueDataReceived}

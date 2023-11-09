@@ -17,5 +17,13 @@ import { useAuth0 } from '@auth0/auth0-react'
 export function Statistics() {
   const { user, isAuthenticated } = useAuth0()
 
-  return <>{isAuthenticated && <Box> Statistics </Box>}</>
+  return (
+    <>
+      {isAuthenticated && (
+        <Typography variant='h4' align='center' m={2}>
+          Statistics{' '}
+        </Typography>
+      )}
+    </>
+  )
 }

@@ -28,7 +28,9 @@ export function Home() {
             height: '100vh',
           }}
         >
-          <h1>Home page</h1>
+          <Typography variant='h4' align='center' m={2}>
+            Home page
+          </Typography>
         </div>
       )}
     </>

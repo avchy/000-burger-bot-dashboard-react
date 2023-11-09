@@ -27,6 +27,7 @@ const Navbar = () => {
             <NavBtnLink to='/profile'>Profile</NavBtnLink>
             <NavBtnLink to='/menu_items'>Menu</NavBtnLink>
             <NavBtnLink to='/settings'>Settings</NavBtnLink>
+            {/* <NavBtnLink to='/profile_settings'>Settings</NavBtnLink> */}
             <NavBtnLink to='/statistics'>Statistics </NavBtnLink>
             <NavBtnLink to='/orders'>Orders</NavBtnLink>
           </NavMenu>

@@ -9,6 +9,7 @@ import {
   Typography,
   Button,
   TextField,
+  LinearProgress,Box
 } from '@mui/material'
 
 import Chip from '@mui/material/Chip'
@@ -96,118 +97,123 @@ export function MenuItems() {
 
   return (
     <>
-      <NavbarSettings />
+      {menuItems.length == 0 && (
+        <Box sx={{ width: '100%' }}>
+          <LinearProgress />
+        </Box>
+      )}
+      {menuItems.length > 0 && (
+        <Paper>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Title</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell>image</TableCell>
+                <TableCell>Toppings</TableCell>
 
-      <Paper>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>image</TableCell>
-              <TableCell>Toppings</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {menuItems.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell>{item.title}</TableCell>
+                  <TableCell>{item.description}</TableCell>
+                  <TableCell>{item.price}</TableCell>
+                  <TableCell>{item.image}</TableCell>
 
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {menuItems.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{item.title}</TableCell>
-                <TableCell>{item.description}</TableCell>
-                <TableCell>{item.price}</TableCell>
-                <TableCell>{item.image}</TableCell>
+                  <TableCell>
+                    {item.toppings && (
+                      <Stack spacing={3} sx={{ width: 500 }}>
+                        <Autocomplete
+                          multiple
+                          id='tags-outlined'
+                          options={item.toppings}
+                          getOptionLabel={(option) => option.title}
+                          defaultValue={[...item.toppings]}
+                          filterSelectedOptions
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label='toppings for this dish'
+                              placeholder='...'
+                            />
+                          )}
+                        />
+                      </Stack>
+                    )}
+                  </TableCell>
 
+                  {/* <TableCell>{JSON.stringify(item.toppings)}</TableCell> */}
+
+                  <TableCell>
+                    <Button
+                      variant='contained'
+                      color='secondary'
+                      onClick={() => deleteMenuItem(index)}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+              <TableRow>
                 <TableCell>
-                  {item.toppings && (
-                    <Stack spacing={3} sx={{ width: 500 }}>
-                      <Autocomplete
-                        multiple
-                        id='tags-outlined'
-                        options={item.toppings}
-                        getOptionLabel={(option) => option.title}
-                        defaultValue={[...item.toppings]}
-                        filterSelectedOptions
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label='toppings for this dish'
-                            placeholder='...'
-                          />
-                        )}
-                      />
-                    </Stack>
-                  )}
+                  <TextField
+                    name='title'
+                    value={menuItem.title}
+                    onChange={handleMenuItemChange}
+                    variant='outlined'
+                  />
                 </TableCell>
-
-                {/* <TableCell>{JSON.stringify(item.toppings)}</TableCell> */}
-
+                <TableCell>
+                  <TextField
+                    name='description'
+                    value={menuItem.description}
+                    onChange={handleMenuItemChange}
+                    variant='outlined'
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    name='price'
+                    value={menuItem.price}
+                    onChange={handleMenuItemChange}
+                    variant='outlined'
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    name='toppings'
+                    value={menuItem.toppings}
+                    onChange={handleMenuItemChange}
+                    variant='outlined'
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    name='image' // Добавлено поле "image"
+                    value={menuItem.image}
+                    onChange={handleMenuItemChange}
+                    variant='outlined'
+                  />
+                </TableCell>
                 <TableCell>
                   <Button
                     variant='contained'
-                    color='secondary'
-                    onClick={() => deleteMenuItem(index)}
+                    color='primary'
+                    onClick={addMenuItem}
                   >
-                    Delete
+                    Add
                   </Button>
                 </TableCell>
               </TableRow>
-            ))}
-            <TableRow>
-              <TableCell>
-                <TextField
-                  name='title'
-                  value={menuItem.title}
-                  onChange={handleMenuItemChange}
-                  variant='outlined'
-                />
-              </TableCell>
-              <TableCell>
-                <TextField
-                  name='description'
-                  value={menuItem.description}
-                  onChange={handleMenuItemChange}
-                  variant='outlined'
-                />
-              </TableCell>
-              <TableCell>
-                <TextField
-                  name='price'
-                  value={menuItem.price}
-                  onChange={handleMenuItemChange}
-                  variant='outlined'
-                />
-              </TableCell>
-              <TableCell>
-                <TextField
-                  name='toppings'
-                  value={menuItem.toppings}
-                  onChange={handleMenuItemChange}
-                  variant='outlined'
-                />
-              </TableCell>
-              <TableCell>
-                <TextField
-                  name='image' // Добавлено поле "image"
-                  value={menuItem.image}
-                  onChange={handleMenuItemChange}
-                  variant='outlined'
-                />
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant='contained'
-                  color='primary'
-                  onClick={addMenuItem}
-                >
-                  Add
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </Paper>
+            </TableBody>
+          </Table>
+        </Paper>
+      )}
     </>
   )
 }
