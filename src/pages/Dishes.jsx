@@ -75,7 +75,7 @@ export function Dishes() {
       // const response = await axios.get('https://burgerim.ru/dishes/' + restaurant)
       const response = await axios.get('https://burgerim.ru/dishes/' + restaurant_id)
 
-      console.log('response.data', response.data)
+      console.log('getMenu_response.data', response.data)
       setDishes(response.data)
 
       console.log('Запрос "getMenu" успешно выполнен')
@@ -182,7 +182,7 @@ export function Dishes() {
                 <TableCell>Title</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Price</TableCell>
-                <TableCell  >image</TableCell>
+                <TableCell>image</TableCell>
                 <TableCell>Toppings</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
@@ -196,7 +196,7 @@ export function Dishes() {
                   <TableCell>{item.title}</TableCell>
                   <TableCell>{item.description}</TableCell>
                   <TableCell>{item.price}</TableCell>
-                  <TableCell style={{ width: 160 }}  >
+                  <TableCell style={{ width: 160 }}>
                     {item.image ? (
                       <img
                         style={{ width: '150px', height: '150px', objectFit: 'cover' }}
@@ -207,7 +207,7 @@ export function Dishes() {
                       <p>Please upload an image</p>
                     )}
                   </TableCell>
-
+                  {console.log('item.toppings ', item.toppings)}
                   <TableCell>
                     {item.toppings && (
                       <Stack spacing={3} sx={{ width: 500 }}>
@@ -246,9 +246,7 @@ export function Dishes() {
                 </TableRow>
               ))}
               <TableRow sx={{ backgroundColor: 'lightBlue' }}>
-                <TableCell>
-                  {/* <TextField name='id'   variant='outlined' /> */}
-                </TableCell>
+                <TableCell>{/* <TextField name='id'   variant='outlined' /> */}</TableCell>
                 <TableCell>
                   <TextField name='title' value={menuItem.title} onChange={handleMenuItemChange} variant='outlined' />
                 </TableCell>
