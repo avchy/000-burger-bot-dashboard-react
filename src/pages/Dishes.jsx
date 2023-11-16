@@ -193,8 +193,8 @@ export function Dishes() {
               {dishes.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell>{item.id}</TableCell>
-                  <TableCell>{item.title}</TableCell>
-                  <TableCell>{item.description}</TableCell>
+                  <TableCell style={{ width: '20%' }}>{item.title}</TableCell>
+                  <TableCell style={{ width: '50%' }}>{item.description}</TableCell>
                   <TableCell>{item.price}</TableCell>
                   <TableCell style={{ width: 160 }}>
                     {item.image ? (
@@ -208,13 +208,18 @@ export function Dishes() {
                     )}
                   </TableCell>
                   {console.log('item.toppings ', item.toppings)}
+
+                  {/* list of toppings in dish================ */}
                   <TableCell>
                     {item.toppings && (
                       <Stack spacing={3} sx={{ width: 500 }}>
                         <Autocomplete
                           multiple
                           id='tags-outlined'
-                          options={toppings}
+                          // options={toppings}
+                          options={toppings.filter(
+                            (topping) => !item.toppings.some((selected) => selected.id === topping.id)
+                          )}
                           getOptionLabel={(option) => option.title}
                           defaultValue={[...item.toppings]}
                           filterSelectedOptions
@@ -274,6 +279,8 @@ export function Dishes() {
                     )}
                   </ImagePreview>
                 </TableCell>
+
+                {/* choose toppings in new dish================ */}
 
                 <TableCell>
                   {toppings && (
