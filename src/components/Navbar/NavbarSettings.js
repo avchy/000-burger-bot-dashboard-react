@@ -15,7 +15,7 @@ const NavbarSettings = () => {
         <Bars />
         <NavBtn>
           <NavBtnLink to='/profile_settings'>Profile Settings</NavBtnLink>
-          <NavBtnLink to='/menu_items'>Menu Items</NavBtnLink>
+          <NavBtnLink to='/dishes'>Menu Items</NavBtnLink>
         </NavBtn>
       </Nav>
     </>

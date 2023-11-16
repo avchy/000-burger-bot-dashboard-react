@@ -10,9 +10,9 @@ import {
   TextField,
 } from '@mui/material'
 import { useAuth0 } from '@auth0/auth0-react'
-import NavbarSettings from '../../components/Navbar/NavbarSettings'
+// import NavbarSettings from '../../components/Navbar/NavbarSettings'
 
-export function ProfileSettings() {
+export function Settings() {
   const { user } = useAuth0()
   const [link, setLink] = useState('')
 
@@ -24,7 +24,7 @@ export function ProfileSettings() {
   }
   return (
     <>
-      <NavbarSettings />
+      {/* <NavbarSettings /> */}
 
       <Paper>
         <Table>

@@ -2,7 +2,7 @@ import './styles/App.scss'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import { TableOrders } from './pages/TableOrders'
-import { Settings } from './pages/Settings/Settings'
+import { Settings } from './pages/Settings'
 import { Home } from './pages/Home'
 import { Statistics } from './pages/Statistics'
 
@@ -13,8 +13,9 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 import Navbar from './components/Navbar'
 
-import { MenuItems } from './pages/Settings/MenuItems'
-import { ProfileSettings } from './pages/Settings/ProfileSettings'
+import { Dishes } from './pages/Dishes'
+import { Toppings } from './pages/Toppings'
+// import { ProfileSettings } from './pages/Settings/ProfileSettings'
 
 function App() {
   const { isLoading, error } = useAuth0()
@@ -42,8 +43,9 @@ function App() {
               {/* <Route path='/login' element={<LoginButton />} /> 
               <Route path='/logout' element={<LogoutButton />} /> */}
 
-              <Route path='/menu_items' element={<MenuItems />} />
-              <Route path='/profile_settings' element={<ProfileSettings />} />
+              <Route path='/dishes' element={<Dishes />} />
+              <Route path='/toppings' element={<Toppings />} />
+              {/* <Route path='/profile_settings' element={<ProfileSettings />} /> */}
             </Routes>
           </Router>
         </>
