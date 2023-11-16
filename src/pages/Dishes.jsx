@@ -12,16 +12,14 @@ import {
   LinearProgress,
   Box,
 } from '@mui/material'
-import styled from 'styled-components'
 import Autocomplete from '@mui/material/Autocomplete'
 import Stack from '@mui/material/Stack'
 import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-react'
-
-const folder = 'cafe_cafe_dishes'
-
+import { ImagePreview } from '../components/styledComponents'
+ 
 export function Dishes() {
-  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0()
+  const {   user } = useAuth0()
   const [productImg, setProductImg] = useState('')
   const [selectedToppings, setSelectedToppings] = useState([])
   const [newSelectedToppings, setNewSelectedToppings] = useState([])
@@ -333,20 +331,3 @@ export function Dishes() {
     </>
   )
 }
-
-const ImagePreview = styled.div`
-  margin: 2rem 0;
-  padding: 2rem;
-  border: 1px solid rgb(183, 183, 183);
-  max-width: 300px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  color: rgb(78, 78, 78);
-
-  img {
-    max-width: 100%;
-  }
-`
