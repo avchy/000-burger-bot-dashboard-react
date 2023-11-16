@@ -111,7 +111,6 @@ export function Dishes() {
 
   const addMenuItem = async () => {
     console.log('menuItem :>> ', menuItem)
-    setDishes([...dishes, menuItem])
     const restaurant_id = 2
 
     console.log('newSelectedToppings', newSelectedToppings)
@@ -132,6 +131,7 @@ export function Dishes() {
       console.error('Ошибка при выполнении запроса "addMenuItem":', error)
       return
     }
+    setDishes([...dishes, data])
 
     setMenuItem({
       title: '',
@@ -212,7 +212,8 @@ export function Dishes() {
                   {/* list of toppings in dish================ */}
                   <TableCell>
                     {item.toppings && (
-                      <Stack spacing={3} sx={{ width: 500 }}>
+                      <Stack spacing={3}  >
+                      {/* <Stack spacing={3} sx={{ width: 500 }}> */}
                         <Autocomplete
                           multiple
                           id='tags-outlined'
