@@ -60,10 +60,25 @@ export function Dishes() {
     setMenuItem({ ...menuItem, [name]: value })
   }
 
-  const deleteMenuItem = (index) => {
-    const updatedDishes = [...dishes]
-    updatedDishes.splice(index, 1)
-    setDishes(updatedDishes)
+  // const deleteMenuItem = (index) => {
+  //   const updatedDishes = [...dishes]
+  //   updatedDishes.splice(index, 1)
+  //   setDishes(updatedDishes)
+  // }
+
+  const deleteMenuItem = async (index) => {
+    try {
+      const dishIdToDelete = dishes[index].id // Получаем ID блюда для удаления
+      const response = await axios.delete(`https://burgerim.ru/dishes/${dishIdToDelete}`)
+
+      console.log('Запрос "deleteMenuItem" успешно выполнен')
+
+      const updatedDishes = [...dishes]
+      updatedDishes.splice(index, 1) // Удаляем элемент из массива
+      setDishes(updatedDishes) // Обновляем состояние dishes без удаленного элемента
+    } catch (error) {
+      console.error('Ошибка при выполнении запроса "deleteMenuItem":', error)
+    }
   }
 
   const getMenu = async () => {
@@ -115,23 +130,23 @@ export function Dishes() {
 
     console.log('newSelectedToppings', newSelectedToppings)
 
-    const data = {
+    const newDish = {
       ...menuItem,
       image: productImg,
       restaurant_id: restaurant_id,
       toppings: newSelectedToppings, // Добавление выбранных топингов в объект menuItem
     }
 
-    console.log('data :>> ', data)
+    console.log('newDish :>> ', newDish)
 
     try {
-      const response = await axios.post('https://burgerim.ru/dishes', data)
+      const response = await axios.post('https://burgerim.ru/dishes', newDish)
       console.log('Запрос "addMenuItem" успешно выполнен')
     } catch (error) {
       console.error('Ошибка при выполнении запроса "addMenuItem":', error)
       return
     }
-    setDishes([...dishes, data])
+    setDishes([...dishes, newDish])
 
     setMenuItem({
       title: '',
@@ -145,7 +160,7 @@ export function Dishes() {
   const updateMenuItem = async (index) => {
     const updatedItem = dishes[index]
 
-    const data = {
+    const updatedDish = {
       ...updatedItem,
       toppings: selectedToppings,
       restaurant_id: 2, // Укажите соответствующий restaurant_id
@@ -154,11 +169,11 @@ export function Dishes() {
     console.log('selectedToppings', selectedToppings)
 
     try {
-      const response = await axios.put(`https://burgerim.ru/dishes/${updatedItem.id}`, data)
-      // const response = await axios.put(`https://burgerim.ru/dishes/${updatedItem.id}`, data);
+      const response = await axios.put(`https://burgerim.ru/dishes/${updatedItem.id}`, updatedDish)
+      // const response = await axios.put(`https://burgerim.ru/dishes/${updatedItem.id}`, updatedDish);
       console.log('Запрос "updateMenuItem" успешно выполнен')
       const updatedDishes = [...dishes]
-      updatedDishes[index] = data
+      updatedDishes[index] = updatedDish
       setDishes(updatedDishes)
       setSelectedToppings([])
     } catch (error) {
@@ -212,8 +227,8 @@ export function Dishes() {
                   {/* list of toppings in dish================ */}
                   <TableCell>
                     {item.toppings && (
-                      <Stack spacing={3}  >
-                      {/* <Stack spacing={3} sx={{ width: 500 }}> */}
+                      <Stack spacing={3}>
+                        {/* <Stack spacing={3} sx={{ width: 500 }}> */}
                         <Autocomplete
                           multiple
                           id='tags-outlined'
