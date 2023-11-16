@@ -12,6 +12,7 @@ import {
   LinearProgress,
   Box,
 } from '@mui/material'
+import styled from "styled-components";
 
 // import Chip from '@mui/material/Chip'
 import Autocomplete from '@mui/material/Autocomplete'
@@ -28,6 +29,7 @@ const folder = 'cafe_cafe_dishes'
 
 export function Dishes() {
   const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0()
+  const [productImg, setProductImg] = useState("");
 
   const [dishes, setDishes] = useState([])
   const [menuItem, setMenuItem] = useState({
@@ -35,8 +37,30 @@ export function Dishes() {
     description: '',
     price: '',
     toppings: '',
-    image: '', // Добавлено поле "image"
+    image: '',  
   })
+  
+  
+  const handleProductImageUpload = (e) => {
+    const file = e.target.files[0];
+
+    TransformFileData(file);
+  };
+
+  const TransformFileData = (file) => {
+    const reader = new FileReader();
+
+    if (file) {
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setProductImg(reader.result);
+      };
+    } else {
+      setProductImg("");
+    }
+  };
+  
+  
 
   const handleMenuItemChange = (e) => {
     const { name, value } = e.target
@@ -47,6 +71,11 @@ export function Dishes() {
     const updatedDishes = [...dishes]
     updatedDishes.splice(index, 1)
     setDishes(updatedDishes)
+  }
+  const updateMenuItem = (index) => {
+    // const updatedDishes = [...dishes]
+    // updatedDishes.splice(index, 1)
+    // setDishes(updatedDishes)
   }
 
   const getMenu = async () => {
@@ -93,10 +122,13 @@ export function Dishes() {
   const addMenuItem = async () => {
     console.log('menuItem :>> ', menuItem)
     setDishes([...dishes, menuItem])
+    const restaurant_id = 2
 
     const data = {
       ...menuItem,
-      restaurant_name: user.nickname,
+      image: productImg,
+
+      restaurant_id: restaurant_id,
     }
 
     console.log('data :>> ', data)
@@ -212,6 +244,14 @@ export function Dishes() {
                   </TableCell>
 
                   <TableCell>
+                    <Button
+                      sx={{ m: '5px 0px' }}
+                      variant='contained'
+                      color='primary'
+                      onClick={() => updateMenuItem(index)}
+                    >
+                      Update
+                    </Button>
                     <Button variant='contained' color='secondary' onClick={() => deleteMenuItem(index)}>
                       Delete
                     </Button>
@@ -236,11 +276,28 @@ export function Dishes() {
 
                 <TableCell>
                   <TextField
-                    name='image' // Добавлено поле "image"
+                    name='image'  
                     value={menuItem.image}
                     onChange={handleMenuItemChange}
                     variant='outlined'
                   />
+                  
+                  <input
+          id="imgUpload"
+          accept="image/*"
+          type="file"
+          onChange={handleProductImageUpload}
+          required
+        />
+             <ImagePreview>
+        {productImg ? (
+          <>
+            <img src={productImg} alt="error!" />
+          </>
+        ) : (
+          <p>Product image upload preview will appear here!</p>
+        )}
+      </ImagePreview>
                 </TableCell>
 
                 <TableCell>
@@ -283,3 +340,20 @@ export function Dishes() {
     </>
   )
 }
+
+const ImagePreview = styled.div`
+  margin: 2rem 0 2rem 2rem;
+  padding: 2rem;
+  border: 1px solid rgb(183, 183, 183);
+  max-width: 300px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: rgb(78, 78, 78);
+
+  img {
+    max-width: 100%;
+  }
+`;
