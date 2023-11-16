@@ -30,7 +30,7 @@ const Navbar = () => {
         {/* Second Nav */}
         <NavBtn>
           {user?.picture && (
-            <img style={{ width: '50px', margin: '10px 10px 10px 40px' }} src={user.picture} alt={user?.name} />
+            <img className='avatar_img' style={{ width: '50px', margin: '10px 10px 10px 40px' }} src={user.picture} alt={user?.name} />
           )}
 
           {isAuthenticated ? (

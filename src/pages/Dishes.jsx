@@ -12,55 +12,48 @@ import {
   LinearProgress,
   Box,
 } from '@mui/material'
-import styled from "styled-components";
-
-// import Chip from '@mui/material/Chip'
+import styled from 'styled-components'
 import Autocomplete from '@mui/material/Autocomplete'
 import Stack from '@mui/material/Stack'
-
-// import NavbarSettings from '../components/Navbar/NavbarSettings'
 import axios from 'axios'
-
 import { useAuth0 } from '@auth0/auth0-react'
-
-import { v4 as uuidv4 } from 'uuid'
 
 const folder = 'cafe_cafe_dishes'
 
 export function Dishes() {
   const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0()
-  const [productImg, setProductImg] = useState("");
+  const [productImg, setProductImg] = useState('')
+  const [selectedToppings, setSelectedToppings] = useState([])
+  const [newSelectedToppings, setNewSelectedToppings] = useState([])
 
   const [dishes, setDishes] = useState([])
+  const [toppings, setToppings] = useState([])
   const [menuItem, setMenuItem] = useState({
     title: '',
     description: '',
     price: '',
-    toppings: '',
-    image: '',  
+    toppings: [],
+    image: '',
   })
-  
-  
-  const handleProductImageUpload = (e) => {
-    const file = e.target.files[0];
 
-    TransformFileData(file);
-  };
+  const handleProductImageUpload = (e) => {
+    const file = e.target.files[0]
+
+    TransformFileData(file)
+  }
 
   const TransformFileData = (file) => {
-    const reader = new FileReader();
+    const reader = new FileReader()
 
     if (file) {
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file)
       reader.onloadend = () => {
-        setProductImg(reader.result);
-      };
+        setProductImg(reader.result)
+      }
     } else {
-      setProductImg("");
+      setProductImg('')
     }
-  };
-  
-  
+  }
 
   const handleMenuItemChange = (e) => {
     const { name, value } = e.target
@@ -72,19 +65,13 @@ export function Dishes() {
     updatedDishes.splice(index, 1)
     setDishes(updatedDishes)
   }
-  const updateMenuItem = (index) => {
-    // const updatedDishes = [...dishes]
-    // updatedDishes.splice(index, 1)
-    // setDishes(updatedDishes)
-  }
 
   const getMenu = async () => {
-    const restaurant = user.nickname
-    const restaurant_id = 2
+    // const restaurant = user.nickname
     // const restaurant = 'cafecafe'
+    const restaurant_id = 2
 
     try {
-      // const response = await axios.get("https://burgerim.ru/dishes/cafecafe")
       // const response = await axios.get('https://burgerim.ru/dishes/' + restaurant)
       const response = await axios.get('https://burgerim.ru/dishes/' + restaurant_id)
 
@@ -98,37 +85,42 @@ export function Dishes() {
     }
   }
 
+  const getToppings = async () => {
+    // const restaurant = user.nickname
+    // const restaurant = 'cafecafe'
+    const restaurant_id = 2
+
+    try {
+      // const response = await axios.get('https://burgerim.ru/dishes/' + restaurant)
+      const response = await axios.get('https://burgerim.ru/toppings/' + restaurant_id)
+
+      console.log('response.data', response.data)
+      setToppings(response.data)
+
+      console.log('Запрос "getMenu" успешно выполнен')
+    } catch (error) {
+      console.error('Ошибка при выполнении запроса "getMenu":', error)
+      return
+    }
+  }
+
   useEffect(() => {
     getMenu()
+    getToppings()
   }, [user.nickname])
-
-  // Add a function to handle image upload to Cloudinary
-  // const uploadImageToCloudinary = async (file) => {
-  //   try {
-  //     // Upload the image to Cloudinary
-  //     const result = await cloudinary.uploader.upload(file.path, {
-  //       folder: folder, // Specify the folder in Cloudinary where you want to store the images
-  //       public_id: uuidv4(), // Generate a unique public_id for each image using uuid
-  //     })
-
-  //     // Return the URL of the uploaded image
-  //     return result.secure_url
-  //   } catch (error) {
-  //     console.error('Error uploading image to Cloudinary:', error)
-  //     throw error
-  //   }
-  // }
 
   const addMenuItem = async () => {
     console.log('menuItem :>> ', menuItem)
     setDishes([...dishes, menuItem])
     const restaurant_id = 2
 
+    console.log('newSelectedToppings', newSelectedToppings)
+
     const data = {
       ...menuItem,
       image: productImg,
-
       restaurant_id: restaurant_id,
+      toppings: newSelectedToppings, // Добавление выбранных топингов в объект menuItem
     }
 
     console.log('data :>> ', data)
@@ -141,60 +133,38 @@ export function Dishes() {
       return
     }
 
-    // const config = {
-    //   method: 'post',
-    //   maxBodyLength: Infinity,
-    //   url: 'https://burgerim.ru/dishes',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   data: data,
-    // }
-
-    // axios
-    //   .request(config)
-    //   .then((response) => {
-    //      console.log('JSON.stringify(response.data) :>> ', JSON.stringify(response.data));
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //   })
-
     setMenuItem({
       title: '',
       description: '',
       price: '',
-      toppings: '',
+      toppings: [],
       image: '',
     })
   }
 
-  // Update the addMenuItem function to handle image upload
-  // const addMenuItem = async () => {
-  //   try {
-  //     // Check if an image file is provided
-  //     if (menuItem.image) {
-  //       // Upload the image to Cloudinary
-  //       const imageUrl = await uploadImageToCloudinary(menuItem.image[0])
-  //       // Update the menuItem object with the Cloudinary image URL
-  //       setMenuItem({ ...menuItem, image: imageUrl })
-  //     }
+  const updateMenuItem = async (index) => {
+    const updatedItem = dishes[index]
 
-  //     // Add the updated menuItem to the dishes state
-  //     setDishes([...dishes, menuItem])
+    const data = {
+      ...updatedItem,
+      toppings: selectedToppings,
+      restaurant_id: 2, // Укажите соответствующий restaurant_id
+    }
 
-  //     // Reset the menuItem state
-  //     setMenuItem({
-  //       title: '',
-  //       description: '',
-  //       price: '',
-  //       toppings: '',
-  //       image: '',
-  //     })
-  //   } catch (error) {
-  //     console.error('Error adding menu item:', error)
-  //   }
-  // }
+    console.log('selectedToppings', selectedToppings)
+
+    try {
+      const response = await axios.put(`https://burgerim.ru/dishes/${updatedItem.id}`, data)
+      // const response = await axios.put(`https://burgerim.ru/dishes/${updatedItem.id}`, data);
+      console.log('Запрос "updateMenuItem" успешно выполнен')
+      const updatedDishes = [...dishes]
+      updatedDishes[index] = data
+      setDishes(updatedDishes)
+      setSelectedToppings([])
+    } catch (error) {
+      console.error('Ошибка при выполнении запроса "updateMenuItem":', error)
+    }
+  }
 
   return (
     <>
@@ -208,22 +178,35 @@ export function Dishes() {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>ID</TableCell>
                 <TableCell>Title</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Price</TableCell>
-                <TableCell>image</TableCell>
+                <TableCell  >image</TableCell>
                 <TableCell>Toppings</TableCell>
-
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
+              {console.log('dishes111', dishes)}{' '}
               {dishes.map((item, index) => (
                 <TableRow key={index}>
+                  <TableCell>{item.id}</TableCell>
                   <TableCell>{item.title}</TableCell>
                   <TableCell>{item.description}</TableCell>
                   <TableCell>{item.price}</TableCell>
-                  <TableCell>{item.image}</TableCell>
+                  <TableCell style={{ width: 160 }}  >
+                    {item.image ? (
+                      <img
+                        style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                        src={item.image}
+                        alt='dish_image'
+                      />
+                    ) : (
+                      <p>Please upload an image</p>
+                    )}
+                  </TableCell>
 
                   <TableCell>
                     {item.toppings && (
@@ -231,10 +214,14 @@ export function Dishes() {
                         <Autocomplete
                           multiple
                           id='tags-outlined'
-                          options={item.toppings}
+                          options={toppings}
                           getOptionLabel={(option) => option.title}
                           defaultValue={[...item.toppings]}
                           filterSelectedOptions
+                          onChange={(event, newValue) => {
+                            setSelectedToppings(newValue)
+                          }}
+                          // value={selectedToppings}
                           renderInput={(params) => (
                             <TextField {...params} label='toppings for this dish' placeholder='...' />
                           )}
@@ -258,7 +245,10 @@ export function Dishes() {
                   </TableCell>
                 </TableRow>
               ))}
-              <TableRow>
+              <TableRow sx={{ backgroundColor: 'lightBlue' }}>
+                <TableCell>
+                  {/* <TextField name='id'   variant='outlined' /> */}
+                </TableCell>
                 <TableCell>
                   <TextField name='title' value={menuItem.title} onChange={handleMenuItemChange} variant='outlined' />
                 </TableCell>
@@ -275,57 +265,39 @@ export function Dishes() {
                 </TableCell>
 
                 <TableCell>
-                  <TextField
-                    name='image'  
-                    value={menuItem.image}
-                    onChange={handleMenuItemChange}
-                    variant='outlined'
-                  />
-                  
-                  <input
-          id="imgUpload"
-          accept="image/*"
-          type="file"
-          onChange={handleProductImageUpload}
-          required
-        />
-             <ImagePreview>
-        {productImg ? (
-          <>
-            <img src={productImg} alt="error!" />
-          </>
-        ) : (
-          <p>Product image upload preview will appear here!</p>
-        )}
-      </ImagePreview>
+                  <input id='imgUpload' accept='image/*' type='file' onChange={handleProductImageUpload} required />
+                  <ImagePreview>
+                    {productImg ? (
+                      <>
+                        <img src={productImg} alt='error!' />
+                      </>
+                    ) : (
+                      <p>Product image upload preview will appear here!</p>
+                    )}
+                  </ImagePreview>
                 </TableCell>
 
                 <TableCell>
-                  <TextField
-                    name='toppings'
-                    value={menuItem.toppings}
-                    onChange={handleMenuItemChange}
-                    variant='outlined'
-                  />
+                  {toppings && (
+                    <Stack spacing={3} sx={{ width: 500 }}>
+                      <Autocomplete
+                        multiple
+                        id='tags-outlined'
+                        options={toppings}
+                        getOptionLabel={(option) => option.title}
+                        defaultValue={[...toppings]}
+                        filterSelectedOptions
+                        onChange={(event, newValue) => {
+                          setNewSelectedToppings(newValue)
+                        }}
+                        value={newSelectedToppings} // Установка выбранных значений из состояния
+                        renderInput={(params) => (
+                          <TextField {...params} label='toppings for this dish' placeholder='...' />
+                        )}
+                      />
+                    </Stack>
+                  )}
                 </TableCell>
-
-                {/* <TableCell>
-                    {item.toppings && (
-                      <Stack spacing={3} sx={{ width: 500 }}>
-                        <Autocomplete
-                          multiple
-                          id='tags-outlined'
-                          options={item.toppings}
-                          getOptionLabel={(option) => option.title}
-                          defaultValue={[...item.toppings]}
-                          filterSelectedOptions
-                          renderInput={(params) => (
-                            <TextField {...params} label='toppings for this dish' placeholder='...' />
-                          )}
-                        />
-                      </Stack>
-                    )}
-                  </TableCell> */}
 
                 <TableCell>
                   <Button variant='contained' color='primary' onClick={addMenuItem}>
@@ -342,7 +314,7 @@ export function Dishes() {
 }
 
 const ImagePreview = styled.div`
-  margin: 2rem 0 2rem 2rem;
+  margin: 2rem 0;
   padding: 2rem;
   border: 1px solid rgb(183, 183, 183);
   max-width: 300px;
@@ -356,4 +328,4 @@ const ImagePreview = styled.div`
   img {
     max-width: 100%;
   }
-`;
+`
