@@ -1,15 +1,15 @@
 import styled from 'styled-components'
 
 export const ImagePreview = styled.div`
-  margin: 2rem 0;
-  padding: 2rem;
+  margin: 10px 0;
+  padding: 5px;
+
   border: 1px solid rgb(183, 183, 183);
-  max-width: 300px;
-  width: 100%;
+  max-width: 200px;
+  /* width: 100%; */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
   color: rgb(78, 78, 78);
 
   img {

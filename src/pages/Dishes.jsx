@@ -11,6 +11,7 @@ import {
   TextField,
   LinearProgress,
   Box,
+  Input,
 } from '@mui/material'
 import Autocomplete from '@mui/material/Autocomplete'
 import Stack from '@mui/material/Stack'
@@ -37,6 +38,12 @@ export function Dishes() {
     image: '',
   })
 
+  const handleEditChange = (e, index, field) => {
+    const updatedDishes = [...dishes]
+    updatedDishes[index][field] = e.target.value
+    setDishes(updatedDishes)
+  }
+
   const handleProductImageUpload = (e) => {
     const file = e.target.files[0]
 
@@ -59,27 +66,6 @@ export function Dishes() {
   const handleMenuItemChange = (e) => {
     const { name, value } = e.target
     setMenuItem({ ...menuItem, [name]: value })
-  }
-
-  // const deleteMenuItem = (index) => {
-  //   const updatedDishes = [...dishes]
-  //   updatedDishes.splice(index, 1)
-  //   setDishes(updatedDishes)
-  // }
-
-  const deleteMenuItem = async (index) => {
-    try {
-      const dishIdToDelete = dishes[index].id // Получаем ID блюда для удаления
-      const response = await axios.delete(`https://burgerim.ru/dishes/${dishIdToDelete}`)
-
-      console.log('Запрос "deleteMenuItem" успешно выполнен')
-
-      const updatedDishes = [...dishes]
-      updatedDishes.splice(index, 1) // Удаляем элемент из массива
-      setDishes(updatedDishes) // Обновляем состояние dishes без удаленного элемента
-    } catch (error) {
-      console.error('Ошибка при выполнении запроса "deleteMenuItem":', error)
-    }
   }
 
   const getMenu = async () => {
@@ -179,14 +165,37 @@ export function Dishes() {
       console.log('Запрос "updateMenuItem" успешно выполнен')
       const updatedDishes = [...dishes]
       updatedDishes[index] = updatedDish
+
       setDishes(updatedDishes)
+
       setSelectedToppings([])
+
       setSuccessAlert(true)
       setTimeout(() => {
         setSuccessAlert(false)
       }, 2000)
     } catch (error) {
       console.error('Ошибка при выполнении запроса "updateMenuItem":', error)
+    }
+  }
+
+  const deleteMenuItem = async (index) => {
+    try {
+      const dishIdToDelete = dishes[index].id // Получаем ID блюда для удаления
+      const response = await axios.delete(`https://burgerim.ru/dishes/${dishIdToDelete}`)
+
+      console.log('Запрос "deleteMenuItem" успешно выполнен')
+
+      const updatedDishes = [...dishes]
+      updatedDishes.splice(index, 1) // Удаляем элемент из массива
+      setDishes(updatedDishes)
+
+      setSuccessAlert(true)
+      setTimeout(() => {
+        setSuccessAlert(false)
+      }, 2000)
+    } catch (error) {
+      console.error('Ошибка при выполнении запроса "deleteMenuItem":', error)
     }
   }
 
@@ -226,9 +235,25 @@ export function Dishes() {
               {dishes.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell>{item.id}</TableCell>
-                  <TableCell>{item.title}</TableCell>
-                  <TableCell>{item.description}</TableCell>
-                  <TableCell>{item.price}</TableCell>
+
+                  <TableCell>
+                    <TextField
+                      sx={{ minWidth: '100px' }}
+                      value={item.title}
+                      onChange={(e) => handleEditChange(e, index, 'title')}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      sx={{ minWidth: '150px' }}
+                      value={item.description}
+                      onChange={(e) => handleEditChange(e, index, 'description')}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField value={item.price} onChange={(e) => handleEditChange(e, index, 'price')} />
+                  </TableCell>
+
                   <TableCell>
                     {item.image ? (
                       <img
@@ -242,7 +267,7 @@ export function Dishes() {
                   </TableCell>
                   {console.log('item.toppings ', item.toppings)}
 
-                  {/* list of toppings in dish================ */}
+                  {/* list of toppings in dish ================================================ */}
                   <TableCell>
                     {item.toppings && (
                       <Stack spacing={3}>
@@ -283,7 +308,26 @@ export function Dishes() {
                   </TableCell>
                 </TableRow>
               ))}
-              {/* creating a new dish================ */}
+            </TableBody>
+          </Table>
+
+          {/* table for adding  new dish ================================================ */}
+
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell>image</TableCell>
+                <TableCell>Toppings</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {/* creating a new dish ================================================ */}
               <TableRow sx={{ backgroundColor: 'lightBlue' }}>
                 <TableCell>{/* <TextField name='id'   variant='outlined' /> */}</TableCell>
                 <TableCell>
@@ -302,14 +346,24 @@ export function Dishes() {
                 </TableCell>
 
                 <TableCell>
-                  <input id='imgUpload' accept='image/*' type='file' onChange={handleProductImageUpload} required />
+                  <Input
+                    id='imgUpload'
+                    type='file'
+                    inputProps={{
+                      accept: 'image/*',
+                      style: { maxWidth: '100px' },
+                    }}
+                    onChange={handleProductImageUpload}
+                    required
+                  />{' '}
+                  {/* <input id='imgUpload' accept='image/*' type='file' onChange={handleProductImageUpload} required /> */}
                   <ImagePreview>
                     {productImg ? (
                       <>
                         <img src={productImg} alt='error!' />
                       </>
                     ) : (
-                      <p>Product image upload preview will appear here!</p>
+                      <p> Image Preview </p>
                     )}
                   </ImagePreview>
                 </TableCell>
@@ -318,7 +372,7 @@ export function Dishes() {
 
                 <TableCell>
                   {toppings && (
-                    <Stack spacing={3}  >
+                    <Stack spacing={3}>
                       <Autocomplete
                         multiple
                         id='tags-outlined'
