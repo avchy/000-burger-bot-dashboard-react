@@ -17,12 +17,15 @@ import Stack from '@mui/material/Stack'
 import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-react'
 import { ImagePreview } from '../components/styledComponents'
- 
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+
 export function Dishes() {
-  const {   user } = useAuth0()
+  const { user } = useAuth0()
   const [productImg, setProductImg] = useState('')
   const [selectedToppings, setSelectedToppings] = useState([])
   const [newSelectedToppings, setNewSelectedToppings] = useState([])
+  const [successAlert, setSuccessAlert] = useState(false)
 
   const [dishes, setDishes] = useState([])
   const [toppings, setToppings] = useState([])
@@ -140,6 +143,10 @@ export function Dishes() {
     try {
       const response = await axios.post('https://burgerim.ru/dishes', newDish)
       console.log('Запрос "addMenuItem" успешно выполнен')
+      setSuccessAlert(true)
+      setTimeout(() => {
+        setSuccessAlert(false)
+      }, 2000)
     } catch (error) {
       console.error('Ошибка при выполнении запроса "addMenuItem":', error)
       return
@@ -174,6 +181,10 @@ export function Dishes() {
       updatedDishes[index] = updatedDish
       setDishes(updatedDishes)
       setSelectedToppings([])
+      setSuccessAlert(true)
+      setTimeout(() => {
+        setSuccessAlert(false)
+      }, 2000)
     } catch (error) {
       console.error('Ошибка при выполнении запроса "updateMenuItem":', error)
     }
@@ -181,6 +192,15 @@ export function Dishes() {
 
   return (
     <>
+      {successAlert && (
+        <Box className='notification'>
+          <Alert severity='success'>
+            <AlertTitle>Success</AlertTitle>
+            The operation was a — <strong>success!</strong>
+          </Alert>
+        </Box>
+      )}
+
       {dishes.length == 0 && (
         <Box sx={{ width: '100%' }}>
           <LinearProgress />
@@ -206,10 +226,10 @@ export function Dishes() {
               {dishes.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell>{item.id}</TableCell>
-                  <TableCell style={{ width: '20%' }}>{item.title}</TableCell>
-                  <TableCell style={{ width: '50%' }}>{item.description}</TableCell>
+                  <TableCell>{item.title}</TableCell>
+                  <TableCell>{item.description}</TableCell>
                   <TableCell>{item.price}</TableCell>
-                  <TableCell style={{ width: 160 }}>
+                  <TableCell>
                     {item.image ? (
                       <img
                         style={{ width: '150px', height: '150px', objectFit: 'cover' }}
@@ -226,11 +246,9 @@ export function Dishes() {
                   <TableCell>
                     {item.toppings && (
                       <Stack spacing={3}>
-                        {/* <Stack spacing={3} sx={{ width: 500 }}> */}
                         <Autocomplete
                           multiple
                           id='tags-outlined'
-                          // options={toppings}
                           options={toppings.filter(
                             (topping) => !item.toppings.some((selected) => selected.id === topping.id)
                           )}
@@ -240,7 +258,8 @@ export function Dishes() {
                           onChange={(event, newValue) => {
                             setSelectedToppings(newValue)
                           }}
-                          // value={selectedToppings}
+                          // isOptionEqualToValue={(option, value) => option.id === value.id} // Добавьте это свойство
+
                           renderInput={(params) => (
                             <TextField {...params} label='toppings for this dish' placeholder='...' />
                           )}
@@ -264,6 +283,7 @@ export function Dishes() {
                   </TableCell>
                 </TableRow>
               ))}
+              {/* creating a new dish================ */}
               <TableRow sx={{ backgroundColor: 'lightBlue' }}>
                 <TableCell>{/* <TextField name='id'   variant='outlined' /> */}</TableCell>
                 <TableCell>
@@ -298,7 +318,7 @@ export function Dishes() {
 
                 <TableCell>
                   {toppings && (
-                    <Stack spacing={3} sx={{ width: 500 }}>
+                    <Stack spacing={3}  >
                       <Autocomplete
                         multiple
                         id='tags-outlined'
