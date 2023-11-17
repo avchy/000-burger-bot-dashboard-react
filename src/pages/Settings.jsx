@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { ImagePreview } from "components/styledComponents"
 import {
 	Paper,
@@ -22,6 +22,7 @@ import { FlexRowContainer, FlexColumnContainer } from "components/AllHelpCompone
 export function Settings() {
 	const { user } = useAuth0()
 	const [link, setLink] = useState("")
+	const [settings, setSettings] = useState([])
 	const [textToOrder, setTextToOrder] = useState("")
 	const [logoImage, setLogoImage] = useState("")
 	const [showCreditCardButton, setShowCreditCardButton] = useState(false)
@@ -76,6 +77,35 @@ export function Settings() {
 		}
 	}
 
+	useEffect(() => {
+		setShowCreditCardButton(settings.showCreditCardButton || false)
+		setShowApplePayButton(settings.showApplePayButton || false)
+		setShowGooglePayButton(settings.showGooglePayButton || false)
+		setShowOrderButton(settings.showOrderButton || false)
+
+		setLink(settings.link || "")
+		setTextToOrder(settings.textToOrder || "")
+	}, [settings])
+
+	const getSettings = async () => {
+		const restaurant_id = 2
+
+		try {
+			const response = await axios.get("https://burgerim.ru/settings/" + restaurant_id)
+
+			console.log("getSettings-response.data", response.data)
+			setSettings(response.data[0])
+
+			console.log('Запрос "getSettings" успешно выполнен')
+		} catch (error) {
+			console.error('Ошибка при выполнении запроса "getSettings":', error)
+			return
+		}
+	}
+
+	useEffect(() => {
+		getSettings()
+	}, [])
 	return (
 		<FlexColumnContainer>
 			<FlexRowContainer sx={{ m: "15px " }}>
