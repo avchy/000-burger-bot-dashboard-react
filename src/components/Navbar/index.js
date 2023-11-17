@@ -53,14 +53,13 @@ const Navbar = () => {
 					)}
 
 					{!isAuthenticated && (
-						<NavBtnLinkLogIn onClick={() => loginWithRedirect()}>
-							{/* <NavBtnLinkLogIn to='/' onClick={() => loginWithRedirect()}> */}
+						<NavBtnLinkLogIn to="/" onClick={() => loginWithRedirect()}>
 							login
 						</NavBtnLinkLogIn>
 					)}
 
 					{isAuthenticated && (
-						<NavBtnLinkLogIn onClick={() => logout()} to="/">
+						<NavBtnLinkLogIn to="/" onClick={() => logout()}>
 							logout
 						</NavBtnLinkLogIn>
 					)}
