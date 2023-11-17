@@ -23,7 +23,7 @@ export function Settings() {
 	const { user } = useAuth0()
 	const [link, setLink] = useState("")
 	const [textToOrder, setTextToOrder] = useState("")
-	const [productImg, setProductImg] = useState("")
+	const [logoImage, setLogoImage] = useState("")
 	const [showCreditCardButton, setShowCreditCardButton] = useState(false)
 	const [showApplePayButton, setShowApplePayButton] = useState(false)
 	const [showGooglePayButton, setShowGooglePayButton] = useState(false)
@@ -40,10 +40,10 @@ export function Settings() {
 		if (file) {
 			reader.readAsDataURL(file)
 			reader.onloadend = () => {
-				setProductImg(reader.result)
+				setLogoImage(reader.result)
 			}
 		} else {
-			setProductImg("")
+			setLogoImage("")
 		}
 	}
 	const handleLinkChange = (e) => {
@@ -55,7 +55,7 @@ export function Settings() {
 	const saveChanges = async () => {
 		const dataToUpdate = {
 			link: link,
-			productImg: productImg,
+			logoImage: logoImage,
 			showCreditCardButton: showCreditCardButton,
 			showApplePayButton: showApplePayButton,
 			showGooglePayButton: showGooglePayButton,
@@ -120,9 +120,9 @@ export function Settings() {
 					required
 				/>{" "}
 				<ImagePreview>
-					{productImg ? (
+					{logoImage ? (
 						<>
-							<img src={productImg} alt="error!" />
+							<img src={logoImage} alt="error!" />
 						</>
 					) : (
 						<p> Image Preview </p>
