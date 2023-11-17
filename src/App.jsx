@@ -9,8 +9,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Navbar from "./components/Navbar";
 import { Dishes } from "./pages/Dishes";
 import { Toppings } from "./pages/Toppings";
-import LoginButton from "./components/LoginButton";
-import LogoutButton from "./components/LogoutButton";
+
+// import LoginButton from "./components/LoginButton";
+// import LogoutButton from "./components/LogoutButton";
 
 function App() {
 	const { isLoading, error } = useAuth0();
@@ -23,8 +24,8 @@ function App() {
 			{!error && isLoading && <p>Loading...</p>}
 			{!error && !isLoading && (
 				<>
-					<LoginButton />
-					<LogoutButton />
+					{/* <LoginButton />
+					<LogoutButton /> */}
 
 					<Router>
 						<Navbar />
@@ -35,8 +36,8 @@ function App() {
 							<Route path="/statistics" element={<Statistics />} />
 							<Route path="/orders" element={<TableOrders />} />
 
-							<Route path="/login" element={<LoginButton />} />
-							<Route path="/logout" element={<LogoutButton />} />
+							{/* <Route path="/login" element={<LoginButton />} />
+							<Route path="/logout" element={<LogoutButton />} /> */}
 
 							<Route path="/dishes" element={<Dishes />} />
 							<Route path="/toppings" element={<Toppings />} />

@@ -17,7 +17,15 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { IoSettingsSharp } from "react-icons/io5";
 
 const Navbar = () => {
-	const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+	const { loginWithRedirect, logout } = useAuth0();
+	// const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+
+	const isAuthenticated = true;
+
+	const user = {
+		nickname: "cafecafe",
+		picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
+	};
 
 	return (
 		<>
@@ -29,8 +37,7 @@ const Navbar = () => {
 						<NavBtnLink to="/profile">Profile</NavBtnLink>
 						<NavBtnLink to="/toppings">Toppings</NavBtnLink>
 						<NavBtnLink to="/dishes">Menu</NavBtnLink>
-						{/* <NavBtnLink to='/profile_settings'>Settings</NavBtnLink> */}
-						<NavBtnLink to="/statistics">Statistics </NavBtnLink>
+ 						{/* <NavBtnLink to="/statistics">Statistics </NavBtnLink> */}
 						<NavBtnLink to="/orders">Orders</NavBtnLink>
 					</NavMenu>
 				)}
@@ -41,8 +48,8 @@ const Navbar = () => {
 						<img
 							className="avatar_img"
 							style={{ width: "50px", margin: "10px 10px 10px 40px" }}
-							src={user.picture}
-							alt={user?.name}
+							src={user?.picture}
+							alt={user?.nickname}
 						/>
 					)}
 

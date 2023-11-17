@@ -25,7 +25,8 @@ import AudioPlayer from '../components/AudioPlayer.jsx'
 import { useAuth0 } from '@auth0/auth0-react'
 
 export function TableOrders() {
-  const { user, isAuthenticated } = useAuth0()
+  // const {  isAuthenticated } = useAuth0()
+	const isAuthenticated = true;
 
   const [orders, setOrders] = useState([])
   const [ordersReverse, setOrdersReverse] = useState([])
