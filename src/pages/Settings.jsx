@@ -68,7 +68,7 @@ export function Settings() {
 		console.log("dataToUpdate", dataToUpdate)
 		try {
 			const response = await axios.put(
-				`https://burgerim.ru/config/${restaurant_id}`,
+				`https://burgerim.ru/settings/${restaurant_id}`,
 				dataToUpdate
 			)
 			console.log('Запрос "saveChanges" успешно выполнен')
