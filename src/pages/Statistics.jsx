@@ -15,7 +15,8 @@ import {
 import { useAuth0 } from '@auth0/auth0-react'
 
 export function Statistics() {
-  const { user, isAuthenticated } = useAuth0()
+  // const {   isAuthenticated } = useAuth0()
+	const isAuthenticated = true;
 
   return (
     <>
