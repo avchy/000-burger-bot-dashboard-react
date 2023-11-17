@@ -3,7 +3,7 @@
     "CORS": "*"
   },
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": "src"
   },
 
   "exclude": [
