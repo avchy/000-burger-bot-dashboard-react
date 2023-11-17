@@ -18,6 +18,8 @@ import axios from "axios"
 
 import { useAuth0 } from "@auth0/auth0-react"
 import { FlexRowContainer, FlexColumnContainer } from "components/AllHelpComponents"
+import Alert from "@mui/material/Alert"
+import AlertTitle from "@mui/material/AlertTitle"
 
 export function Settings() {
 	const { user } = useAuth0()
@@ -29,6 +31,7 @@ export function Settings() {
 	const [showApplePayButton, setShowApplePayButton] = useState(false)
 	const [showGooglePayButton, setShowGooglePayButton] = useState(false)
 	const [showOrderButton, setShowOrderButton] = useState(false)
+	const [successAlert, setSuccessAlert] = useState(false)
 
 	const handleProductImageUpload = (e) => {
 		const file = e.target.files[0]
@@ -72,6 +75,11 @@ export function Settings() {
 				dataToUpdate
 			)
 			console.log('Запрос "saveChanges" успешно выполнен')
+
+			setSuccessAlert(true)
+			setTimeout(() => {
+				setSuccessAlert(false)
+			}, 2000)
 		} catch (error) {
 			console.error('Ошибка при выполнении запроса "saveChanges":', error)
 		}
@@ -107,111 +115,116 @@ export function Settings() {
 		getSettings()
 	}, [])
 	return (
-		<FlexColumnContainer>
-			<FlexRowContainer sx={{ m: "15px " }}>
-				<Typography sx={{ m: "5px " }} variant="h6">
-					Link
-				</Typography>
-				<TextField
-					sx={{ m: "5px  " }}
-					value={link}
-					onChange={handleLinkChange}
-					label="Link"
-					variant="outlined"
-					fullWidth
-				/>
-			</FlexRowContainer>
-			<FlexRowContainer sx={{ m: "15px " }}>
-				<Typography sx={{ m: "5px " }} variant="h6">
-					Text to Order
-				</Typography>
-				<TextField
-					sx={{ m: "5px  " }}
-					value={textToOrder}
-					onChange={handleTextToOrder}
-					label="textToOrder"
-					variant="outlined"
-					fullWidth
-				/>
-			</FlexRowContainer>
+		<>
+			{successAlert && (
+				<Box className="notification">
+					<Alert severity="success">
+						<AlertTitle>Success</AlertTitle>
+						The operation was a — <strong>success!</strong>
+					</Alert>
+				</Box>
+			)}
 
-			<FlexRowContainer>
-				<Typography sx={{ m: "5px " }} variant="h6">
-					Photo in Order
-				</Typography>
-				<Input
-					id="imgUpload"
-					type="file"
-					inputProps={{
-						accept: "image/*",
-						style: { maxWidth: "100px" },
-					}}
-					onChange={handleProductImageUpload}
-					required
-				/>{" "}
-				<ImagePreview>
-					{logoImage ? (
-						<>
-							<img src={logoImage} alt="error!" />
-						</>
-					) : (
-						<p> Image Preview </p>
-					)}
-				</ImagePreview>
-			</FlexRowContainer>
-
-			<FlexRowContainer>
-				<Typography sx={{ m: "5px " }} variant="h6">
-					Credit Card Button
-				</Typography>
-				<input
-					type="checkbox"
-					checked={showCreditCardButton}
-					onChange={(e) => setShowCreditCardButton(e.target.checked)}
-				/>
-			</FlexRowContainer>
-
-			<FlexRowContainer>
-				<Typography sx={{ m: "5px " }} variant="h6">
-					Apple Pay Button
-				</Typography>
-				<input
-					type="checkbox"
-					checked={showApplePayButton}
-					onChange={(e) => setShowApplePayButton(e.target.checked)}
-				/>
-			</FlexRowContainer>
-
-			<FlexRowContainer>
-				<Typography sx={{ m: "5px " }} variant="h6">
-					Google Pay Button
-				</Typography>
-				<input
-					type="checkbox"
-					checked={showGooglePayButton}
-					onChange={(e) => setShowGooglePayButton(e.target.checked)}
-				/>
-			</FlexRowContainer>
-
-			<FlexRowContainer>
-				<Typography sx={{ m: "5px " }} variant="h6">
-					Order Button
-				</Typography>
-				<input
-					type="checkbox"
-					checked={showOrderButton}
-					onChange={(e) => setShowOrderButton(e.target.checked)}
-				/>
-			</FlexRowContainer>
-
-			<Button
-				sx={{ m: "5px 0px" }}
-				variant="contained"
-				color="primary"
-				onClick={saveChanges}
-			>
-				save
-			</Button>
-		</FlexColumnContainer>
+			<FlexColumnContainer>
+				<FlexRowContainer sx={{ m: "15px " }}>
+					<Typography sx={{ m: "5px " }} variant="h6">
+						Link
+					</Typography>
+					<TextField
+						sx={{ m: "5px  " }}
+						value={link}
+						onChange={handleLinkChange}
+						label="Link"
+						variant="outlined"
+						fullWidth
+					/>
+				</FlexRowContainer>
+				<FlexRowContainer sx={{ m: "15px " }}>
+					<Typography sx={{ m: "5px " }} variant="h6">
+						Text to Order
+					</Typography>
+					<TextField
+						sx={{ m: "5px  " }}
+						value={textToOrder}
+						onChange={handleTextToOrder}
+						label="textToOrder"
+						variant="outlined"
+						fullWidth
+					/>
+				</FlexRowContainer>
+				<FlexRowContainer>
+					<Typography sx={{ m: "5px " }} variant="h6">
+						Photo in Order
+					</Typography>
+					<Input
+						id="imgUpload"
+						type="file"
+						inputProps={{
+							accept: "image/*",
+							style: { maxWidth: "100px" },
+						}}
+						onChange={handleProductImageUpload}
+						required
+					/>{" "}
+					<ImagePreview>
+						{logoImage ? (
+							<>
+								<img src={logoImage} alt="error!" />
+							</>
+						) : (
+							<p> Image Preview </p>
+						)}
+					</ImagePreview>
+				</FlexRowContainer>
+				<FlexRowContainer>
+					<Typography sx={{ m: "5px " }} variant="h6">
+						Credit Card Button
+					</Typography>
+					<input
+						type="checkbox"
+						checked={showCreditCardButton}
+						onChange={(e) => setShowCreditCardButton(e.target.checked)}
+					/>
+				</FlexRowContainer>
+				<FlexRowContainer>
+					<Typography sx={{ m: "5px " }} variant="h6">
+						Apple Pay Button
+					</Typography>
+					<input
+						type="checkbox"
+						checked={showApplePayButton}
+						onChange={(e) => setShowApplePayButton(e.target.checked)}
+					/>
+				</FlexRowContainer>
+				<FlexRowContainer>
+					<Typography sx={{ m: "5px " }} variant="h6">
+						Google Pay Button
+					</Typography>
+					<input
+						type="checkbox"
+						checked={showGooglePayButton}
+						onChange={(e) => setShowGooglePayButton(e.target.checked)}
+					/>
+				</FlexRowContainer>
+				<FlexRowContainer>
+					<Typography sx={{ m: "5px " }} variant="h6">
+						Order Button
+					</Typography>
+					<input
+						type="checkbox"
+						checked={showOrderButton}
+						onChange={(e) => setShowOrderButton(e.target.checked)}
+					/>
+				</FlexRowContainer>
+				<Button
+					sx={{ m: "5px 0px" }}
+					variant="contained"
+					color="primary"
+					onClick={saveChanges}
+				>
+					save
+				</Button>
+			</FlexColumnContainer>
+		</>
 	)
 }
