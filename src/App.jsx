@@ -19,9 +19,8 @@ function App() {
 	const { isLoading, error } = useAuth0();
 
 	return (
-		<main className="column">
-			{/* <h1>Enter to your Dashboard Shop Panel</h1> */}
-
+		< >
+ 
 			{error && <p>Authentication Error</p>}
 			{!error && isLoading && <p>Loading...</p>}
 			{!error && !isLoading && (
@@ -48,7 +47,7 @@ function App() {
 					</Router>
 				</>
 			)}
-		</main>
+		</>
 	);
 }
 

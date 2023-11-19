@@ -31,8 +31,7 @@ const Navbar = () => {
 		<>
 
 			<Nav>
-				{/* <Bars /> */}
- 				{isAuthenticated && (
+  				{isAuthenticated && (
 					<NavMenu>
 						<NavBtnLink to="/">Home</NavBtnLink>
 						<NavBtnLink to="/profile">Profile</NavBtnLink>
