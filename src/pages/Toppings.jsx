@@ -75,7 +75,7 @@ export function Toppings() {
 
       setTimeout(() => {
         setSuccessAlert(false);
-      }, 2000);
+      }, 3000);
     } catch (error) {
       console.error('Ошибка при выполнении запроса "addMenuItem":', error);
       return;
@@ -93,7 +93,7 @@ export function Toppings() {
 
       setTimeout(() => {
         setSuccessAlert(false);
-      }, 2000);
+      }, 3000);
       console.log("Топпинг успешно обновлен");
       getToppings();
     } catch (error) {
@@ -109,7 +109,7 @@ export function Toppings() {
       setSuccessAlert(true);
       setTimeout(() => {
         setSuccessAlert(false);
-      }, 2000);
+      }, 3000);
       console.log("Топпинг успешно удален");
       getToppings();
     } catch (error) {
@@ -143,6 +143,12 @@ export function Toppings() {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+
+    // Проверяем, что вводимое значение содержит только цифры
+    if (name === "price" && !/^\d+$/.test(value)) {
+      return; // Прерываем выполнение функции, если ввод не является числом
+    }
+
     setNewTopping({
       ...newTopping,
       [name]: value,
@@ -194,8 +200,13 @@ export function Toppings() {
                     <TextField
                       value={topping.price}
                       onChange={(e) => {
+                        const { value } = e.target;
+                        // Проверяем, что вводимое значение содержит только цифры
+                        if (!/^\d*$/.test(value)) {
+                          return; // Прерываем выполнение функции, если ввод не является числом
+                        }
                         const updatedList = [...toppingsList];
-                        updatedList[index].price = e.target.value;
+                        updatedList[index].price = value;
                         setToppingsList(updatedList);
                       }}
                     />
