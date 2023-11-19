@@ -10,8 +10,7 @@ import {
 	NavBtnLink,
 	NavBtnLinkLogIn,
 } from "./navbarElements";
-import MobileMenu from "./MobileMenu";
-
+ 
 import { Typography } from "@mui/material";
 
 import { useAuth0 } from "@auth0/auth0-react";
@@ -32,9 +31,8 @@ const Navbar = () => {
 		<>
 
 			<Nav>
-				<Bars />
-				<MobileMenu />
-				{isAuthenticated && (
+				{/* <Bars /> */}
+ 				{isAuthenticated && (
 					<NavMenu>
 						<NavBtnLink to="/">Home</NavBtnLink>
 						<NavBtnLink to="/profile">Profile</NavBtnLink>

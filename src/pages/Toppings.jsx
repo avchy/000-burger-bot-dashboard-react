@@ -12,6 +12,7 @@ import {
   LinearProgress,
   Box,
 } from '@mui/material'
+import { FlexRowContainer, FlexColumnContainer } from "components/AllHelpComponents";
 
 import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-react'
@@ -99,7 +100,7 @@ export function Toppings() {
       )}
 
       {/* Форма для добавления нового топпинга */}
-      <Paper style={{ marginTop: '20px', padding: '20px' }}>
+      <FlexColumnContainer style={{ marginTop: '20px', padding: '20px' }}>
         <Typography variant='h6'>Add New Topping</Typography>
         <TextField
           label='Title'
@@ -125,7 +126,7 @@ export function Toppings() {
         <Button variant='contained' color='primary' onClick={addTopping}>
           Add Topping
         </Button>
-      </Paper>
+      </FlexColumnContainer>
     </>
   )
 }

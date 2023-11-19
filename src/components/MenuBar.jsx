@@ -20,6 +20,7 @@ import {
 	ListItemText,
 	Button,
 } from "@mui/material";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import { pagesDashboards } from "../constants/constants";
 
@@ -104,19 +105,20 @@ export function MenuBar() {
 	const handleMenuItemClick = () => {
 		handleDrawerClose();
 	};
+	const { isAuthenticated } = useAuth0();
 
 	return (
 		<>
-			<Box sx={MenuBarStyle}>
-				{/* <Box sx={{ display: "flex" }}> */}
-				<CssBaseline />
-				<AppBar position="fixed" open={open}>
-					<Toolbar>
-						{/* <Typography variant='h6' noWrap sx={{ flexGrow: 1, textAlign: 'center' }} component='div'>
+			{isAuthenticated && (
+				<Box sx={MenuBarStyle}>
+					<CssBaseline />
+					<AppBar position="fixed" open={open}>
+						<Toolbar>
+							{/* <Typography variant='h6' noWrap sx={{ flexGrow: 1, textAlign: 'center' }} component='div'>
               {hrefMainPage.slice(1).toUpperCase()}
             </Typography> */}
 
-						{/* <Box
+							{/* <Box
 							sx={{
 								display: "flex",
 								flexDirection: "column",
@@ -153,85 +155,87 @@ export function MenuBar() {
 							</Typography>
 						</Box> */}
 
-						<IconButton
-							color="inherit"
-							aria-label="open drawer"
-							edge="end"
-							onClick={handleDrawerOpen}
-							sx={{ ...(open && { display: "none" }) }}
-						>
-							<MenuIcon />
-						</IconButton>
-					</Toolbar>
-				</AppBar>
-				<DrawerHeader />
-				<Drawer
-					sx={{
-						"width": drawerWidth,
-						"flexShrink": 0,
-						"& .MuiDrawer-paper": {
-							width: drawerWidth,
-						},
-					}}
-					variant="persistent"
-					anchor="right"
-					open={open}
-				>
-					<DrawerHeader>
-						<IconButton onClick={handleDrawerClose}>
-							{theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-						</IconButton>
-					</DrawerHeader>
+							<IconButton
+								color="inherit"
+								aria-label="open drawer"
+								edge="end"
+								onClick={handleDrawerOpen}
+								sx={{ ...(open && { display: "none" }) }}
+							>
+								<MenuIcon />
+							</IconButton>
+						</Toolbar>
+					</AppBar>
+					<DrawerHeader />
+					<Drawer
+						sx={{
+							"width": drawerWidth,
+							"flexShrink": 0,
+							"& .MuiDrawer-paper": {
+								width: drawerWidth,
+							},
+						}}
+						variant="persistent"
+						anchor="right"
+						open={open}
+					>
+						<DrawerHeader>
+							<IconButton onClick={handleDrawerClose}>
+								{/* <ChevronRightIcon />  */}
+								{theme.direction === "rtl" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+							</IconButton>
+						</DrawerHeader>
 
-					<Divider />
-					<List>
-						{/* list buttons============== */}
-						{pagesDashboards.map(
-							(pagesDashboard) =>
-								pagesDashboard.pageType === "up" && (
-									<Link
-										key={pagesDashboard.name}
-										onClick={handleDrawerClose}
-										to={pagesDashboard.href}
-										style={{ textDecoration: "none" }}
-									>
-										<ListItem disablePadding>
-											<ListItemButton onClick={() => handleMenuItemClick()}>
-												<ListItemIcon>
-													<BookIcon />
-												</ListItemIcon>
-												<ListItemText primary={pagesDashboard.name} />
-											</ListItemButton>
-										</ListItem>
-									</Link>
-								)
-						)}
-					</List>
-					<Divider />
-					<List>
-						{pagesDashboards.map(
-							(pagesDashboard) =>
-								pagesDashboard.pageType === "down" && (
-									<Link
-										key={pagesDashboard.name}
-										onClick={handleDrawerClose}
-										to={pagesDashboard.href}
-										style={{ textDecoration: "none" }}
-									>
-										<ListItem disablePadding>
-											<ListItemButton onClick={() => handleMenuItemClick()}>
-												<ListItemIcon>
-													<BookIcon />
-												</ListItemIcon>
-												<ListItemText primary={pagesDashboard.name} />
-											</ListItemButton>
-										</ListItem>
-									</Link>
-								)
-						)}
-					</List>
-				</Drawer>
-			</Box>
+						<Divider />
+						<List>
+							{/* list buttons============== */}
+							{pagesDashboards.map(
+								(pagesDashboard) =>
+									pagesDashboard.pageType === "up" && (
+										<Link
+											key={pagesDashboard.name}
+											onClick={handleDrawerClose}
+											to={pagesDashboard.href}
+											style={{ textDecoration: "none" }}
+										>
+											<ListItem disablePadding>
+												<ListItemButton onClick={() => handleMenuItemClick()}>
+													<ListItemIcon>
+														<BookIcon />
+													</ListItemIcon>
+													<ListItemText primary={pagesDashboard.name} />
+												</ListItemButton>
+											</ListItem>
+										</Link>
+									)
+							)}
+						</List>
+						<Divider />
+						<List>
+							{pagesDashboards.map(
+								(pagesDashboard) =>
+									pagesDashboard.pageType === "down" && (
+										<Link
+											key={pagesDashboard.name}
+											onClick={handleDrawerClose}
+											to={pagesDashboard.href}
+											style={{ textDecoration: "none" }}
+										>
+											<ListItem disablePadding>
+												<ListItemButton onClick={() => handleMenuItemClick()}>
+													<ListItemIcon>
+														<BookIcon />
+													</ListItemIcon>
+													<ListItemText primary={pagesDashboard.name} />
+												</ListItemButton>
+											</ListItem>
+										</Link>
+									)
+							)}
+						</List>
+					</Drawer>
+				</Box>
+			)}
 		</>
 	);
 }
