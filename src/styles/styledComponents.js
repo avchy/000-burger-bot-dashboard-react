@@ -26,7 +26,7 @@ export const StyledTableRow = styled(TableRow)`
 
 export const ImagePreview = styled(Box)`
 	margin: 10px 0;
-	padding: 5px;
+	/* padding: 5px; */
 
 	border: 1px solid rgb(183, 183, 183);
 	max-width: 200px;

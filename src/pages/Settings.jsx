@@ -88,12 +88,15 @@ export function Settings() {
 			setLogoImage("");
 		}
 	};
+	
 	const handleLinkChange = (e) => {
 		setLink(e.target.value);
 	};
+	
 	const handleTextToOrder = (e) => {
 		setTextToOrder(e.target.value);
 	};
+	
 	const saveChanges = async () => {
 		const dataToUpdate = {
 			link: link,

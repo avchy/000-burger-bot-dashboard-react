@@ -39,7 +39,7 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
 	color: "white",
 }));
 export const StyledButton = styled(Button)(({ theme }) => ({
-	margin: theme.spacing(2),
+	margin: theme.spacing(1),
 }));
 
 export const Container = styled(Box)`
