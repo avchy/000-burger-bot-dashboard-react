@@ -22,12 +22,12 @@ import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
 
 export function Settings() {
-	// const { user } = useAuth0()
+	const { user } = useAuth0()
 	
-	const user = {
-		nickname: "cafecafe",
-		picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
-	};
+	// const user = {
+	// 	nickname: "cafecafe",
+	// 	picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
+	// };
 	
 	const [link, setLink] = useState("")
 	const [settings, setSettings] = useState([])

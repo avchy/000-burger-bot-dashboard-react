@@ -17,11 +17,11 @@ import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-react'
 
 export function Toppings() {
-  // const { user } = useAuth0()
-	const user = {
-		nickname: "cafecafe",
-		picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
-	};
+  const { user } = useAuth0()
+	// const user = {
+	// 	nickname: "cafecafe",
+	// 	picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
+	// };
   const [toppingsList, setToppingsList] = useState([])
   const [newTopping, setNewTopping] = useState({
     title: '',
