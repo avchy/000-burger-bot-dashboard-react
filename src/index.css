@@ -29,12 +29,7 @@ button {
   border-radius: 0.5rem;
 }
 
-.avatar_img {
-    width: 200px;
-    border: 0.5rem double #000;
-    border-radius: 50%;
-    margin: 0 1rem 1rem;
-}
+
 
 .column {
   display: flex;
@@ -42,3 +37,13 @@ button {
   justify-content: flex-start;
   align-items: center;
 } */
+
+
+/* //================================================ */
+
+.avatar_img {
+  width: 200px;
+  border: 0.5rem double #000;
+  border-radius: 50%;
+  margin: 0 1rem 1rem;
+}

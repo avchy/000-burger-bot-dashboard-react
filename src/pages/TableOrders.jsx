@@ -17,10 +17,10 @@ import {
 	StyledTableCell,
 	StyledTable,
 	StyledTableContainer,
-} from "../styles/styledComponents";
+} from "styles/styledComponents";
 
-import { initialState } from "../data/orders.js";
-import AudioPlayer from "../components/AudioPlayer.jsx";
+import { initialState } from "data/orders.js";
+import AudioPlayer from "components/AudioPlayer.jsx";
 
 import { useAuth0 } from "@auth0/auth0-react";
 

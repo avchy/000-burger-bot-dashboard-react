@@ -12,7 +12,7 @@ import {
 	TableCell,
 	TextField,
 } from "@mui/material";
-import theme from "../styles/theme"; // Импортируйте тему из нового файла
+import theme from "styles/theme"; // Импортируйте тему из нового файла
 
 export const FlexRowContainer = styled(Box)(({ theme }) => ({
 	display: "flex",
