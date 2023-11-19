@@ -10,7 +10,7 @@ import {
 	NavBtnLink,
 	NavBtnLinkLogIn,
 } from "./navbarElements";
-
+ 
 import { Typography } from "@mui/material";
 
 import { useAuth0 } from "@auth0/auth0-react";
@@ -18,7 +18,7 @@ import { IoSettingsSharp } from "react-icons/io5";
 
 const Navbar = () => {
 	const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
-	
+
 	// const { loginWithRedirect, logout } = useAuth0();
 	// const isAuthenticated = true;
 
@@ -29,15 +29,15 @@ const Navbar = () => {
 
 	return (
 		<>
+
 			<Nav>
-				<Bars />
-				{isAuthenticated && (
+  				{isAuthenticated && (
 					<NavMenu>
 						<NavBtnLink to="/">Home</NavBtnLink>
 						<NavBtnLink to="/profile">Profile</NavBtnLink>
 						<NavBtnLink to="/toppings">Toppings</NavBtnLink>
 						<NavBtnLink to="/dishes">Menu</NavBtnLink>
- 						{/* <NavBtnLink to="/statistics">Statistics </NavBtnLink> */}
+						{/* <NavBtnLink to="/statistics">Statistics </NavBtnLink> */}
 						<NavBtnLink to="/orders">Orders</NavBtnLink>
 					</NavMenu>
 				)}

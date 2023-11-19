@@ -10,6 +10,8 @@ import Navbar from "./components/Navbar";
 import { Dishes } from "./pages/Dishes";
 import { Toppings } from "./pages/Toppings";
 
+import { MenuBar } from "./components/MenuBar";
+
 // import LoginButton from "./components/LoginButton";
 // import LogoutButton from "./components/LogoutButton";
 
@@ -17,9 +19,8 @@ function App() {
 	const { isLoading, error } = useAuth0();
 
 	return (
-		<main className="column">
-			{/* <h1>Enter to your Dashboard Shop Panel</h1> */}
-
+		< >
+ 
 			{error && <p>Authentication Error</p>}
 			{!error && isLoading && <p>Loading...</p>}
 			{!error && !isLoading && (
@@ -28,6 +29,7 @@ function App() {
 					<LogoutButton /> */}
 
 					<Router>
+						<MenuBar />
 						<Navbar />
 						<Routes>
 							<Route path="/" element={<Home />} />
@@ -45,7 +47,7 @@ function App() {
 					</Router>
 				</>
 			)}
-		</main>
+		</>
 	);
 }
 
