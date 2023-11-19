@@ -212,7 +212,7 @@ export function Toppings() {
                         )}
                       </ImagePreview>
 
-                      <label htmlFor="imgUpload">
+                      <label htmlFor={`imgUpload-${index}`}>
                         <Button
                           variant="contained"
                           component="span"
@@ -228,7 +228,7 @@ export function Toppings() {
                         </Button>
                       </label>
                       <Input
-                        id="imgUpload"
+                        id={`imgUpload-${index}`} // Убедитесь, что у каждого input уникальный id
                         type="file"
                         inputProps={{
                           accept: "image/*",
