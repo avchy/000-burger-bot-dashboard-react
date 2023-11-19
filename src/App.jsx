@@ -10,6 +10,8 @@ import Navbar from "./components/Navbar";
 import { Dishes } from "./pages/Dishes";
 import { Toppings } from "./pages/Toppings";
 
+import { MenuBar } from "./components/MenuBar";
+
 // import LoginButton from "./components/LoginButton";
 // import LogoutButton from "./components/LogoutButton";
 
@@ -28,6 +30,7 @@ function App() {
 					<LogoutButton /> */}
 
 					<Router>
+						<MenuBar />
 						<Navbar />
 						<Routes>
 							<Route path="/" element={<Home />} />

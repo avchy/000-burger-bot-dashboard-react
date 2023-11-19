@@ -10,6 +10,7 @@ import {
 	NavBtnLink,
 	NavBtnLinkLogIn,
 } from "./navbarElements";
+import MobileMenu from "./MobileMenu";
 
 import { Typography } from "@mui/material";
 
@@ -18,7 +19,7 @@ import { IoSettingsSharp } from "react-icons/io5";
 
 const Navbar = () => {
 	const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
-	
+
 	// const { loginWithRedirect, logout } = useAuth0();
 	// const isAuthenticated = true;
 
@@ -29,15 +30,17 @@ const Navbar = () => {
 
 	return (
 		<>
+
 			<Nav>
 				<Bars />
+				<MobileMenu />
 				{isAuthenticated && (
 					<NavMenu>
 						<NavBtnLink to="/">Home</NavBtnLink>
 						<NavBtnLink to="/profile">Profile</NavBtnLink>
 						<NavBtnLink to="/toppings">Toppings</NavBtnLink>
 						<NavBtnLink to="/dishes">Menu</NavBtnLink>
- 						{/* <NavBtnLink to="/statistics">Statistics </NavBtnLink> */}
+						{/* <NavBtnLink to="/statistics">Statistics </NavBtnLink> */}
 						<NavBtnLink to="/orders">Orders</NavBtnLink>
 					</NavMenu>
 				)}
