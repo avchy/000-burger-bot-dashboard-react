@@ -14,8 +14,10 @@ import {
 	Box,
 	Input,
 	Checkbox,
+	CircularProgress,
 } from "@mui/material";
 import axios from "axios";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { useAuth0 } from "@auth0/auth0-react";
 import { FlexRowContainer, FlexColumnContainer } from "components/AllHelpComponents";
@@ -29,6 +31,7 @@ export function Settings() {
 	// 	nickname: "cafecafe",
 	// 	picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
 	// };
+	const [loading, setLoading] = useState(true);
 
 	const [link, setLink] = useState("");
 	const [settings, setSettings] = useState([]);
@@ -39,6 +42,29 @@ export function Settings() {
 	const [showGooglePayButton, setShowGooglePayButton] = useState(false);
 	const [showOrderButton, setShowOrderButton] = useState(false);
 	const [successAlert, setSuccessAlert] = useState(false);
+
+	const getSettings = async () => {
+		const restaurant_id = 2;
+
+		try {
+			const response = await axios.get("https://burgerim.ru/settings/" + restaurant_id);
+
+			console.log("getSettings-response.data", response.data);
+			setSettings(response.data[0]);
+
+			console.log('Запрос "getSettings" успешно выполнен');
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
+
+			console.error('Ошибка при выполнении запроса "getSettings":', error);
+			return;
+		}
+	};
+
+	useEffect(() => {
+		getSettings();
+	}, []);
 
 	const handleProductImageUpload = (e) => {
 		const file = e.target.files[0];
@@ -82,12 +108,15 @@ export function Settings() {
 				dataToUpdate
 			);
 			console.log('Запрос "saveChanges" успешно выполнен');
+			setLoading(false);
 
 			setSuccessAlert(true);
 			setTimeout(() => {
 				setSuccessAlert(false);
 			}, 2000);
 		} catch (error) {
+			setLoading(false);
+
 			console.error('Ошибка при выполнении запроса "saveChanges":', error);
 		}
 	};
@@ -100,27 +129,9 @@ export function Settings() {
 
 		setLink(settings.link || "");
 		setTextToOrder(settings.textToOrder || "");
+		setLogoImage(settings.logoImage || "");
 	}, [settings]);
 
-	const getSettings = async () => {
-		const restaurant_id = 2;
-
-		try {
-			const response = await axios.get("https://burgerim.ru/settings/" + restaurant_id);
-
-			console.log("getSettings-response.data", response.data);
-			setSettings(response.data[0]);
-
-			console.log('Запрос "getSettings" успешно выполнен');
-		} catch (error) {
-			console.error('Ошибка при выполнении запроса "getSettings":', error);
-			return;
-		}
-	};
-
-	useEffect(() => {
-		getSettings();
-	}, []);
 	return (
 		<>
 			{successAlert && (
@@ -132,106 +143,133 @@ export function Settings() {
 				</Box>
 			)}
 
-			<FlexColumnContainer>
-				<FlexRowContainer sx={{ mt: 2 }}>
-					<Typography sx={{ mr: 2 }} variant="h6">
-						Link
-					</Typography>
-					<TextField
-						sx={{}}
-						value={link}
-						onChange={handleLinkChange}
-						label="Link"
-						variant="outlined"
-						fullWidth
-					/>
-				</FlexRowContainer>
-				<FlexRowContainer sx={{ mt: 2 }}>
-					<Typography sx={{ mr: 2 }} variant="h6">
-						Text to Order
-					</Typography>
-					<TextField
-						sx={{ m: "5px  " }}
-						value={textToOrder}
-						onChange={handleTextToOrder}
-						label="textToOrder"
-						variant="outlined"
-						fullWidth
-					/>
-				</FlexRowContainer>
-				<FlexRowContainer>
-					<Typography sx={{ m: "5px " }} variant="h6">
-						Photo in Order
-					</Typography>
-					<Input
-						id="imgUpload"
-						type="file"
-						inputProps={{
-							accept: "image/*",
-							style: { maxWidth: "100px" },
-						}}
-						onChange={handleProductImageUpload}
-						required
-					/>{" "}
-					<ImagePreview>
-						{logoImage ? (
-							<>
-								<img src={logoImage} alt="error!" />
-							</>
-						) : (
-							<p> Image Preview </p>
-						)}
-					</ImagePreview>
-				</FlexRowContainer>
+			{loading ? (
+				<TableRow>
+					<TableCell align="center" colSpan={11}>
+						<LinearProgress />
+					</TableCell>
+				</TableRow>
+			) : (
+				<FlexColumnContainer sx={{ p: 2 }}>
+					<FlexRowContainer sx={{ mt: 2 }}>
+						<Typography sx={{ mr: 2 }} variant="h6">
+							Link
+						</Typography>
+						<TextField
+							sx={{}}
+							value={link}
+							onChange={handleLinkChange}
+							label="Link"
+							variant="outlined"
+							fullWidth
+						/>
+					</FlexRowContainer>
+					<FlexRowContainer sx={{ mt: 2 }}>
+						<Typography sx={{ mr: 2 }} variant="h6">
+							Text to Order
+						</Typography>
+						<TextField
+							sx={{ m: "5px  " }}
+							value={textToOrder}
+							onChange={handleTextToOrder}
+							label="textToOrder"
+							variant="outlined"
+							fullWidth
+						/>
+					</FlexRowContainer>
+					<FlexRowContainer>
+						<Typography sx={{ m: "5px " }} variant="h6">
+							Photo in Order
+						</Typography>
 
-				<Box sx={{ border: "2px solid grey", borderRadius: "5px" }}>
-					<FlexRowContainer>
-						<Typography sx={{ m: "5px " }} variant="h6">
-							Credit Card Button
-						</Typography>
-						<Checkbox
-							checked={showCreditCardButton}
-							onChange={(e) => setShowCreditCardButton(e.target.checked)}
-						/>
-					</FlexRowContainer>
-					<FlexRowContainer>
-						<Typography sx={{ m: "5px " }} variant="h6">
-							Apple Pay Button
-						</Typography>
-						<Checkbox
-							checked={showApplePayButton}
-							onChange={(e) => setShowApplePayButton(e.target.checked)}
-						/>
-					</FlexRowContainer>
-					<FlexRowContainer>
-						<Typography sx={{ m: "5px " }} variant="h6">
-							Google Pay Button
-						</Typography>
-						<Checkbox
-							checked={showGooglePayButton}
-							onChange={(e) => setShowGooglePayButton(e.target.checked)}
-						/>
-					</FlexRowContainer>
-					<FlexRowContainer>
-						<Typography sx={{ m: "5px " }} variant="h6">
-							Order Button
-						</Typography>
-						<Checkbox
-							checked={showOrderButton}
-							onChange={(e) => setShowOrderButton(e.target.checked)}
-						/>
-					</FlexRowContainer>
-				</Box>
+						<div>
+							<label htmlFor="imgUpload">
+								<Button
+									variant="contained"
+									component="span"
+									startIcon={<CloudUploadIcon />}
+									sx={{
+										"borderRadius": 8,
+										"backgroundColor": "#2196f3",
+										"color": "#fff",
+										"&:hover": { backgroundColor: "#1976d2" },
+									}}
+								>
+									Upload image
+								</Button>
+							</label>
+							<Input
+								id="imgUpload"
+								type="file"
+								inputProps={{
+									accept: "image/*",
+									style: { display: "none" },
+								}}
+								onChange={handleProductImageUpload}
+								required
+							/>
+						</div>
 
-				<Button
-					sx={{ m: "5px 0px" }}
-					variant="contained"
-					color="primary"
-					onClick={saveChanges}
-				>
-					save
-				</Button>
-			</FlexColumnContainer>
+						<ImagePreview>
+							{logoImage ? (
+								<>
+									<img src={logoImage} alt="error!" />
+								</>
+							) : (
+								<p> Image Preview </p>
+							)}
+						</ImagePreview>
+					</FlexRowContainer>
+
+					<Box sx={{ border: "2px solid grey", borderRadius: "5px" }}>
+						<FlexRowContainer>
+							<Typography sx={{ m: "5px " }} variant="h6">
+								Credit Card Button
+							</Typography>
+							<Checkbox
+								checked={showCreditCardButton}
+								onChange={(e) => setShowCreditCardButton(e.target.checked)}
+							/>
+						</FlexRowContainer>
+						<FlexRowContainer>
+							<Typography sx={{ m: "5px " }} variant="h6">
+								Apple Pay Button
+							</Typography>
+							<Checkbox
+								checked={showApplePayButton}
+								onChange={(e) => setShowApplePayButton(e.target.checked)}
+							/>
+						</FlexRowContainer>
+						<FlexRowContainer>
+							<Typography sx={{ m: "5px " }} variant="h6">
+								Google Pay Button
+							</Typography>
+							<Checkbox
+								checked={showGooglePayButton}
+								onChange={(e) => setShowGooglePayButton(e.target.checked)}
+							/>
+						</FlexRowContainer>
+						<FlexRowContainer>
+							<Typography sx={{ m: "5px " }} variant="h6">
+								Order Button
+							</Typography>
+							<Checkbox
+								checked={showOrderButton}
+								onChange={(e) => setShowOrderButton(e.target.checked)}
+							/>
+						</FlexRowContainer>
+					</Box>
+
+					<Button
+						sx={{ m: "5px 0px" }}
+						variant="contained"
+						color="primary"
+						onClick={saveChanges}
+					>
+						save
+					</Button>
+				</FlexColumnContainer>
+			)}
 		</>
 	);
 }

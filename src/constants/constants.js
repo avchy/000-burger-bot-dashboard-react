@@ -1,11 +1,11 @@
 export const pagesDashboards = [
 	{ name: "Home", href: "/", pageType: "up" },
-	{ name: "profile", href: "/profile", pageType: "up" },
-	{ name: "toppings", href: "/toppings", pageType: "up" },
-	{ name: "dishes", href: "/dishes", pageType: "up" },
-	{ name: "statistics", href: "/statistics", pageType: "up" },
-	{ name: "orders", href: "/orders", pageType: "up" },
-	{ name: "settings", href: "/settings", pageType: "down" },
+	{ name: "Profile", href: "/profile", pageType: "up" },
+	{ name: "Toppings", href: "/toppings", pageType: "up" },
+	{ name: "Dishes", href: "/dishes", pageType: "up" },
+	{ name: "Statistics", href: "/statistics", pageType: "up" },
+	{ name: "Orders", href: "/orders", pageType: "up" },
+	{ name: "Settings", href: "/settings", pageType: "down" },
 ];
 
 export const initialState = [

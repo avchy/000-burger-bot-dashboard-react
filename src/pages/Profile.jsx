@@ -5,33 +5,32 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
+import { FlexColumnContainer } from "components/AllHelpComponents";
 
 const Profile = () => {
-    const { user, isAuthenticated } = useAuth0();
+	const { user, isAuthenticated } = useAuth0();
 
-    return (
-        isAuthenticated && (
-            <Box maxWidth="800px" margin="auto" sx={{ overflow: "hidden", p: 3 }}>
-                {user?.picture && (
-                    <Avatar
-                        sx={{ width: 100, height: 100, margin: "auto" }}
-                        src={user.picture}
-                        alt={user?.name}
-                    />
-                )}
-                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 2 }}>
-                    <Typography variant="h5">{user?.name}</Typography>
-                    <List>
-                        {Object.keys(user).map((objKey, i) => (
-                            <ListItem key={i}>
-                                <ListItemText primary={objKey} secondary={user[objKey]} />
-                            </ListItem>
-                        ))}
-                    </List>
-                </Box>
-            </Box>
-        )
-    );
+	return (
+		isAuthenticated && (
+			<FlexColumnContainer sx={{ m: 3 }}>
+				{user?.picture && (
+					<Avatar
+						sx={{ width: 100, height: 100, margin: "auto" }}
+						src={user.picture}
+						alt={user?.name}
+					/>
+				)}
+				<Typography variant="h4">{user?.name}</Typography>
+
+				{Object.keys(user).map((objKey, i) => (
+					<Box key={i}>
+						<Typography sx={{mt:2}} variant="h5">{objKey}</Typography>
+						<Typography noWrap >{user[objKey]}</Typography>
+					</Box>
+				))}
+			</FlexColumnContainer>
+		)
+	);
 };
 
 export default Profile;

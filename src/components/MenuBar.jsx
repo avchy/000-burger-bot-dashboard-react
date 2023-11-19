@@ -113,12 +113,17 @@ export function MenuBar() {
 				<Box sx={MenuBarStyle}>
 					<CssBaseline />
 					<AppBar position="fixed" open={open}>
-						<Toolbar>
+						<Toolbar
+							sx={{
+								display: "flex",
+								justifyContent: "flex-end",
+							}}
+						>
 							{/* <Typography variant='h6' noWrap sx={{ flexGrow: 1, textAlign: 'center' }} component='div'>
               {hrefMainPage.slice(1).toUpperCase()}
             </Typography> */}
 
-							{/* <Box
+							<Box
 							sx={{
 								display: "flex",
 								flexDirection: "column",
@@ -153,17 +158,22 @@ export function MenuBar() {
 							>
 								{gregorianDateStr}
 							</Typography>
-						</Box> */}
+						</Box>
 
-							<IconButton
-								color="inherit"
-								aria-label="open drawer"
-								edge="end"
-								onClick={handleDrawerOpen}
-								sx={{ ...(open && { display: "none" }) }}
-							>
-								<MenuIcon />
-							</IconButton>
+					 
+
+							<Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+								<IconButton
+									color="inherit"
+									aria-label="open drawer"
+									edge="end"
+									onClick={handleDrawerOpen}
+									sx={{ display: open ? "none" : "block" }}
+									// sx={{ ...(open && { display: "none" }) }}
+								>
+									<MenuIcon />
+								</IconButton>
+							</Box>
 						</Toolbar>
 					</AppBar>
 					<DrawerHeader />
