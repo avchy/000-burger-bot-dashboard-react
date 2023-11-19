@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 
-import { pagesDashboards } from "../constants/constants";
+import { pagesDashboards } from "constants/constants";
 
 import { Link } from "react-router-dom";
 // import { useMainPage } from 'hooks'

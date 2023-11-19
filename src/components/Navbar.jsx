@@ -9,7 +9,7 @@ import {
 	NavBtn,
 	NavBtnLink,
 	NavBtnLinkLogIn,
-} from "./navbarElements";
+} from "styles/navbarElements";
  
 import { Typography } from "@mui/material";
 

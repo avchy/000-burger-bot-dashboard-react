@@ -12,7 +12,7 @@ import {
 	TableCell,
 	TextField,
 } from "@mui/material";
-import theme from "../styles/theme"; // Импортируйте тему из нового файла
+import theme from "styles/theme"; // Импортируйте тему из нового файла
 
 export const FlexRowContainer = styled(Box)(({ theme }) => ({
 	display: "flex",
@@ -39,7 +39,7 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
 	color: "white",
 }));
 export const StyledButton = styled(Button)(({ theme }) => ({
-	margin: theme.spacing(2),
+	margin: theme.spacing(1),
 }));
 
 export const Container = styled(Box)`

@@ -17,7 +17,7 @@ import Autocomplete from '@mui/material/Autocomplete'
 import Stack from '@mui/material/Stack'
 import axios from 'axios'
 import { useAuth0 } from '@auth0/auth0-react'
-import { ImagePreview } from '../components/styledComponents'
+import { ImagePreview } from 'styles/styledComponents'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 
