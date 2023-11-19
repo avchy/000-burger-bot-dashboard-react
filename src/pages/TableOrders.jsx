@@ -156,7 +156,7 @@ export function TableOrders() {
 												marginRight: "5px",
 											}}
 										>
-											менее 5 минут назад
+											less than 5 minutes ago
 										</Box>
 									</Box>
 									<Box sx={{ display: "flex", alignItems: "center" }}>
@@ -168,7 +168,7 @@ export function TableOrders() {
 												marginRight: "5px",
 											}}
 										>
-											5-10 минут назад
+											5-10 minutes ago.
 										</Box>
 									</Box>
 									<Box sx={{ display: "flex", alignItems: "center" }}>
@@ -180,7 +180,7 @@ export function TableOrders() {
 												marginRight: "5px",
 											}}
 										>
-											более 10 минут назад{" "}
+											more than 10 minutes ago{""}
 										</Box>
 									</Box>
 								</Box>
