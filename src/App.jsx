@@ -11,9 +11,11 @@ import { Dishes } from "./pages/Dishes";
 import { Toppings } from "./pages/Toppings";
 import { Extras } from "./pages/Extras";
 import { MenuBar } from "./components/MenuBar";
-
+import { useLocation } from "react-router-dom";
+import { Typography } from "@mui/material";
 // import LoginButton from "./components/LoginButton";
 // import LogoutButton from "./components/LogoutButton";
+import { Header } from "./components/Header";
 
 function App() {
   const { isLoading, error } = useAuth0();
@@ -30,6 +32,8 @@ function App() {
           <Router>
             <MenuBar />
             <Navbar />
+            <Header />
+
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/profile" element={<Profile />} />

@@ -31,8 +31,7 @@ export function Dishes() {
   const [productImg, setProductImg] = useState("");
   const [selectedToppings, setSelectedToppings] = useState([]);
   const [newSelectedToppings, setNewSelectedToppings] = useState([]);
-  
-  
+
   const [selectedExtras, setSelectedExtras] = useState([]);
   const [newSelectedExtras, setNewSelectedExtras] = useState([]);
   const [successAlert, setSuccessAlert] = useState(false);
@@ -146,7 +145,6 @@ export function Dishes() {
     }
   };
 
-
   const addMenuItem = async () => {
     console.log("menuItem :>> ", menuItem);
     const restaurant_id = 2;
@@ -245,7 +243,6 @@ export function Dishes() {
     }
   };
 
-  
   useEffect(() => {
     getMenu();
     getToppings();
@@ -272,7 +269,7 @@ export function Dishes() {
         <Paper>
           <Table>
             <TableHead>
-              <TableRow>
+              <TableRow sx={{ backgroundColor: "lightBlue" }}>
                 <TableCell>ID</TableCell>
                 <TableCell>Title</TableCell>
                 <TableCell>Description</TableCell>
@@ -372,9 +369,6 @@ export function Dishes() {
                     </Box>
                   </TableCell>
 
-
-
-
                   {/* list of toppings in dish ================================================ */}
                   {console.log("item.toppings ", item.toppings)}
 
@@ -409,11 +403,6 @@ export function Dishes() {
                       </Stack>
                     )}
                   </TableCell>
-
-
-
-
-
 
                   {/* list of extras in dish ================================================ */}
                   {console.log("item.extras ", item.extras)}
@@ -450,10 +439,6 @@ export function Dishes() {
                     )}
                   </TableCell>
 
-
-
-
-
                   <TableCell>
                     <Button
                       sx={{ m: "5px 0px" }}
@@ -473,11 +458,7 @@ export function Dishes() {
                   </TableCell>
                 </TableRow>
               ))}
-              
-              
               {/* table for adding  new dish ================================================ */}
-             
-             
               <TableRow sx={{ backgroundColor: "lightBlue" }}>
                 <TableCell>ID</TableCell>
                 <TableCell>Title</TableCell>
@@ -585,8 +566,6 @@ export function Dishes() {
 
                 {/* choose extras in new dish================ */}
 
-
-
                 <TableCell>
                   {extras && (
                     <Stack spacing={3}>
@@ -612,13 +591,6 @@ export function Dishes() {
                     </Stack>
                   )}
                 </TableCell>
-
-
-
-
-
-
-
 
                 <TableCell>
                   <Button

@@ -8,10 +8,13 @@ const theme = createTheme({
 	backgroundElements: "#1a222c",
 	blue: "#1a3f6c",
 	blue2: "#539acd",
+	lightBlue: "#add8e6",
+
 	palette: {
 		primary: {
 			main: "#1a3f6c",
 			secondary: "#539acd",
+
 		},
 		// Добавь другие цвета по необходимости
 	},

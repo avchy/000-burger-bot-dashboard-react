@@ -16,9 +16,10 @@ import { Typography } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import { IoSettingsSharp } from "react-icons/io5";
 
-const Navbar = () => {
+  const Navbar = () => {
 	const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
 
+	 
 	// const { loginWithRedirect, logout } = useAuth0();
 	// const isAuthenticated = true;
 
@@ -31,6 +32,8 @@ const Navbar = () => {
 		<>
 
 			<Nav>
+ 
+				
   				{isAuthenticated && (
 					<NavMenu>
 						<NavBtnLink to="/">Home</NavBtnLink>
