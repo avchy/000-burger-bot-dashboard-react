@@ -9,46 +9,46 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Navbar from "./components/Navbar";
 import { Dishes } from "./pages/Dishes";
 import { Toppings } from "./pages/Toppings";
-
+import { Extras } from "./pages/Extras";
 import { MenuBar } from "./components/MenuBar";
 
 // import LoginButton from "./components/LoginButton";
 // import LogoutButton from "./components/LogoutButton";
 
 function App() {
-	const { isLoading, error } = useAuth0();
+  const { isLoading, error } = useAuth0();
 
-	return (
-		< >
- 
-			{error && <p>Authentication Error</p>}
-			{!error && isLoading && <p>Loading...</p>}
-			{!error && !isLoading && (
-				<>
-					{/* <LoginButton />
+  return (
+    <>
+      {error && <p>Authentication Error</p>}
+      {!error && isLoading && <p>Loading...</p>}
+      {!error && !isLoading && (
+        <>
+          {/* <LoginButton />
 					<LogoutButton /> */}
 
-					<Router>
-						<MenuBar />
-						<Navbar />
-						<Routes>
-							<Route path="/" element={<Home />} />
-							<Route path="/profile" element={<Profile />} />
-							<Route path="/settings" element={<Settings />} />
-							<Route path="/statistics" element={<Statistics />} />
-							<Route path="/orders" element={<TableOrders />} />
+          <Router>
+            <MenuBar />
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/statistics" element={<Statistics />} />
+              <Route path="/orders" element={<TableOrders />} />
 
-							{/* <Route path="/login" element={<LoginButton />} />
+              {/* <Route path="/login" element={<LoginButton />} />
 							<Route path="/logout" element={<LogoutButton />} /> */}
 
-							<Route path="/dishes" element={<Dishes />} />
-							<Route path="/toppings" element={<Toppings />} />
-						</Routes>
-					</Router>
-				</>
-			)}
-		</>
-	);
+              <Route path="/toppings" element={<Toppings />} />
+              <Route path="/extras" element={<Extras />} />
+              <Route path="/dishes" element={<Dishes />} />
+            </Routes>
+          </Router>
+        </>
+      )}
+    </>
+  );
 }
 
 export default App;
