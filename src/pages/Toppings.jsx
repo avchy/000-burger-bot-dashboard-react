@@ -239,20 +239,15 @@ export function Toppings() {
                         </Button>
                       </label>
                       <Input
-                        id={`imgUpload-${index}`} // Убедитесь, что у каждого input уникальный id
+                        id={`imgUpload-${index}`}  
                         type="file"
                         inputProps={{
                           accept: "image/*",
                           style: { display: "none" },
                         }}
                         onChange={(e) => {
-                          const updatedList = [...toppingsList];
-                          // updatedList[index].image = e.target.files[0];
-                          // console.log('updatedList', updatedList)
-                          // setToppingsList(updatedList);
-
-                          const file = e.target.files[0];
-
+                          const updatedList = [...toppingsList]; 
+                          const file = e.target.files[0]; 
                           const reader = new FileReader();
 
                           if (file) {
@@ -268,18 +263,9 @@ export function Toppings() {
                           } else {
                             setToppingsList([...toppingsList]);
                           }
-                        }} // onChange={handleProductImageUpload}
+                        }}
                         required
                       />
-
-                      {/* <input
-												id="imgUpload"
-												type="file"
-												accept="image/*"
-												style={{ display: "none" }}
-												onChange={(e) => handleProductImageUpload(e)}
-												required
-											/> */}
                     </Box>
                   </TableCell>
                   <TableCell>
