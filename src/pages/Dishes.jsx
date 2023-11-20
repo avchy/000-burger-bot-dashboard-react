@@ -44,6 +44,12 @@ export function Dishes() {
   });
 
   const handleEditChange = (e, index, field) => {
+    const { value } = e.target;
+    // Проверяем, что вводимое значение содержит только цифры
+    if (!/^\d*$/.test(value) && field === "price") {
+      return; // Прерываем выполнение функции, если ввод не является числом
+    }
+
     const updatedDishes = [...dishes];
     updatedDishes[index][field] = e.target.value;
     setDishes(updatedDishes);
@@ -70,6 +76,12 @@ export function Dishes() {
 
   const handleMenuItemChange = (e) => {
     const { name, value } = e.target;
+
+    // Проверяем, что вводимое значение содержит только цифры
+    if (!/^\d*$/.test(value) && name === "price") {
+      return; // Прерываем выполнение функции, если ввод не является числом
+    }
+
     setMenuItem({ ...menuItem, [name]: value });
   };
 
@@ -269,18 +281,6 @@ export function Dishes() {
                     />
                   </TableCell>
 
-                  {/* <TableCell>
-                    {item.image ? (
-                      <img
-                        style={{ width: '150px', height: '150px', objectFit: 'cover' }}
-                        src={item.image}
-                        alt='dish_image'
-                      />
-                    ) : (
-                      <p>Please upload an image</p>
-                    )}
-                  </TableCell> */}
-
                   <TableCell>
                     <Box>
                       <ImagePreview>
@@ -308,6 +308,7 @@ export function Dishes() {
                           Upload image
                         </Button>
                       </label>
+
                       <Input
                         id={`imgUpload-${index}`}
                         type="file"
@@ -434,17 +435,6 @@ export function Dishes() {
                 </TableCell>
 
                 <TableCell>
-                  <Input
-                    id="imgUpload"
-                    type="file"
-                    inputProps={{
-                      accept: "image/*",
-                      style: { maxWidth: "100px" },
-                    }}
-                    onChange={handleProductImageUpload}
-                    required
-                  />{" "}
-                  {/* <input id='imgUpload' accept='image/*' type='file' onChange={handleProductImageUpload} required /> */}
                   <ImagePreview>
                     {productImg ? (
                       <>
@@ -454,6 +444,31 @@ export function Dishes() {
                       <p> Image Preview </p>
                     )}
                   </ImagePreview>
+                  <label htmlFor={`imgUpload`}>
+                    <Button
+                      variant="contained"
+                      component="span"
+                      startIcon={<CloudUploadIcon />}
+                      sx={{
+                        "borderRadius": 8,
+                        "backgroundColor": "#2196f3",
+                        "color": "#fff",
+                        "&:hover": { backgroundColor: "#1976d2" },
+                      }}
+                    >
+                      Upload image
+                    </Button>
+                  </label>
+                  <Input
+                    id={`imgUpload`}
+                    type="file"
+                    inputProps={{
+                      accept: "image/*",
+                      style: { display: "none" },
+                    }}
+                    onChange={handleProductImageUpload}
+                    required
+                  />{" "}
                 </TableCell>
 
                 {/* choose toppings in new dish================ */}
