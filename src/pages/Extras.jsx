@@ -22,107 +22,105 @@ import AlertTitle from "@mui/material/AlertTitle";
 
 import { FlexRowContainer, StyledButton } from "components/AllHelpComponents";
 
-export function Toppings() {
+export function Extras() {
   const { user } = useAuth0();
-  const [toppingsList, setToppingsList] = useState([]);
-  const [newTopping, setNewTopping] = useState({
+  const [extrasList, setExtrasList] = useState([]);
+  const [newExtra, setNewExtra] = useState({
     title: "",
-    price: "",
     image: "",
   });
   const [logoImage, setLogoImage] = useState("");
   const [successAlert, setSuccessAlert] = useState(false);
 
-  const getToppings = async () => {
+  const getExtras = async () => {
     const restaurant_id = 2;
     try {
       const response = await axios.get(
-        "https://burgerim.ru/toppings/" + restaurant_id
+        "https://burgerim.ru/extras/" + restaurant_id
       );
-      setToppingsList(response.data);
+      setExtrasList(response.data);
     } catch (error) {
-      console.error('Ошибка при выполнении запроса "getToppings":', error);
+      console.error('Ошибка при выполнении запроса "getExtras":', error);
     }
   };
 
-  const addTopping = async () => {
+  const addExtra = async () => {
     const restaurant_id = 2;
 
     const data = {
-      title: newTopping.title,
-      price: newTopping.price,
+      title: newExtra.title,
       image: logoImage,
       restaurant_id: restaurant_id,
     };
 
-    console.log("newDish :>> ", data);
+    console.log("newExtra :>> ", data);
 
     try {
       const response = await axios.post(
-        "https://burgerim.ru/toppings/" + restaurant_id,
+        "https://burgerim.ru/extras/",
+        // "https://burgerim.ru/extras/" + restaurant_id,
         data
       );
-      console.log('Запрос "addMenuItem" успешно выполнен');
+      console.log('Запрос "addExtra" успешно выполнен');
 
-      setNewTopping({
+      setNewExtra({
         title: "",
-        price: "",
         image: "",
       });
 
-      getToppings();
+      getExtras();
       setSuccessAlert(true);
 
       setTimeout(() => {
         setSuccessAlert(false);
       }, 3000);
     } catch (error) {
-      console.error('Ошибка при выполнении запроса "addMenuItem":', error);
+      console.error('Ошибка при выполнении запроса "addExtra":', error);
       return;
     }
   };
 
-  const updateTopping = async (index) => {
-    const updatedTopping = toppingsList[index];
+  const updateExtra = async (index) => {
+    const updatedExtra = extrasList[index];
     try {
       await axios.put(
-        `https://burgerim.ru/toppings/${updatedTopping.id}`,
-        updatedTopping
+        `https://burgerim.ru/extras`,
+        // `https://burgerim.ru/extras/${updatedExtra.id}`,
+        updatedExtra
       );
       setSuccessAlert(true);
 
       setTimeout(() => {
         setSuccessAlert(false);
       }, 3000);
-      console.log("Топпинг успешно обновлен");
-      getToppings();
+      console.log("Экстра успешно обновлена");
+      getExtras();
     } catch (error) {
-      console.error("Ошибка при обновлении топпинга:", error);
+      console.error("Ошибка при обновлении экстры:", error);
     }
   };
 
-  const deleteTopping = async (index) => {
+  const deleteExtra = async (index) => {
     try {
-      const toppingIdToDelete = toppingsList[index].id;
-      await axios.delete(`https://burgerim.ru/toppings/${toppingIdToDelete}`);
+      const extraIdToDelete = extrasList[index].id;
+      await axios.delete(`https://burgerim.ru/extras/${extraIdToDelete}`);
 
       setSuccessAlert(true);
       setTimeout(() => {
         setSuccessAlert(false);
       }, 3000);
-      console.log("Топпинг успешно удален");
-      getToppings();
+      console.log("Экстра успешно удалена");
+      getExtras();
     } catch (error) {
-      console.error("Ошибка при удалении топпинга:", error);
+      console.error("Ошибка при удалении экстры:", error);
     }
   };
 
   useEffect(() => {
-    getToppings();
+    getExtras();
   }, [user.nickname]);
 
   const handleProductImageUpload = (e) => {
-    // const file = e.target.files[0];
     const file = e.currentTarget.files[0];
 
     TransformFileData(file);
@@ -144,13 +142,8 @@ export function Toppings() {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
-    // Проверяем, что вводимое значение содержит только цифры
-    if (name === "price" && !/^\d+$/.test(value)) {
-      return; // Прерываем выполнение функции, если ввод не является числом
-    }
-
-    setNewTopping({
-      ...newTopping,
+    setNewExtra({
+      ...newExtra,
       [name]: value,
     });
   };
@@ -166,7 +159,7 @@ export function Toppings() {
         </Box>
       )}
 
-      {toppingsList.length === 0 && (
+      {extrasList.length === 0 && (
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
         </Box>
@@ -177,46 +170,31 @@ export function Toppings() {
           <TableHead>
             <TableRow sx={{ backgroundColor: "lightBlue" }}>
               <TableCell>Title</TableCell>
-              <TableCell>Price</TableCell>
               <TableCell>Image</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {toppingsList.length > 0 &&
-              toppingsList.map((topping, index) => (
+            {extrasList.length > 0 &&
+              extrasList.map((extra, index) => (
                 <TableRow key={index}>
                   <TableCell>
                     <TextField
-                      value={topping.title}
+                      value={extra.title}
                       onChange={(e) => {
-                        const updatedList = [...toppingsList];
+                        const updatedList = [...extrasList];
                         updatedList[index].title = e.target.value;
-                        setToppingsList(updatedList);
+                        setExtrasList(updatedList);
                       }}
                     />
                   </TableCell>
-                  <TableCell>
-                    <TextField
-                      value={topping.price}
-                      onChange={(e) => {
-                        const { value } = e.target;
-                        // Проверяем, что вводимое значение содержит только цифры
-                        if (!/^\d*$/.test(value)) {
-                          return; // Прерываем выполнение функции, если ввод не является числом
-                        }
-                        const updatedList = [...toppingsList];
-                        updatedList[index].price = value;
-                        setToppingsList(updatedList);
-                      }}
-                    />
-                  </TableCell>
+
                   <TableCell>
                     <Box>
                       <ImagePreview>
-                        {topping.image ? (
+                        {extra.image ? (
                           <>
-                            <img src={topping.image} alt="no_image!" />
+                            <img src={extra.image} alt="no_image!" />
                           </>
                         ) : (
                           <Typography> Image Preview </Typography>
@@ -246,22 +224,18 @@ export function Toppings() {
                           style: { display: "none" },
                         }}
                         onChange={(e) => {
-                          const updatedList = [...toppingsList];
+                          const updatedList = [...extrasList];
                           const file = e.target.files[0];
                           const reader = new FileReader();
 
                           if (file) {
                             reader.readAsDataURL(file);
                             reader.onloadend = () => {
-                              // setLogoImage(reader.result);
-                              console.log("index", index);
                               updatedList[index].image = reader.result;
-                              console.log("updatedList", updatedList);
-
-                              setToppingsList(updatedList);
+                              setExtrasList(updatedList);
                             };
                           } else {
-                            setToppingsList([...toppingsList]);
+                            setExtrasList([...extrasList]);
                           }
                         }}
                         required
@@ -272,14 +246,14 @@ export function Toppings() {
                     <StyledButton
                       variant="contained"
                       color="primary"
-                      onClick={() => updateTopping(index)}
+                      onClick={() => updateExtra(index)}
                     >
                       Update
                     </StyledButton>
                     <StyledButton
                       variant="contained"
                       color="secondary"
-                      onClick={() => deleteTopping(index)}
+                      onClick={() => deleteExtra(index)}
                     >
                       Delete
                     </StyledButton>
@@ -287,11 +261,8 @@ export function Toppings() {
                 </TableRow>
               ))}
 
-            {/* // Add new Topping================================================ */}
-
             <TableRow sx={{ backgroundColor: "lightBlue" }}>
               <TableCell>Title</TableCell>
-              <TableCell>Price</TableCell>
               <TableCell>Image</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
@@ -301,17 +272,7 @@ export function Toppings() {
                 <TextField
                   label="Title"
                   name="title"
-                  value={newTopping.title}
-                  onChange={handleInputChange}
-                  sx={{ m: "10px" }}
-                />
-              </TableCell>
-
-              <TableCell>
-                <TextField
-                  label="Price"
-                  name="price"
-                  value={newTopping.price}
+                  value={newExtra.title}
                   onChange={handleInputChange}
                   sx={{ m: "10px" }}
                 />
@@ -359,9 +320,9 @@ export function Toppings() {
                 <StyledButton
                   variant="contained"
                   color="primary"
-                  onClick={addTopping}
+                  onClick={addExtra}
                 >
-                  Add Topping
+                  Add Extra
                 </StyledButton>
               </TableCell>
             </TableRow>

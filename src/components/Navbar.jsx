@@ -36,6 +36,7 @@ const Navbar = () => {
 						<NavBtnLink to="/">Home</NavBtnLink>
 						<NavBtnLink to="/profile">Profile</NavBtnLink>
 						<NavBtnLink to="/toppings">Toppings</NavBtnLink>
+						<NavBtnLink to="/extras">Extras</NavBtnLink>
 						<NavBtnLink to="/dishes">Dishes</NavBtnLink>
 						{/* <NavBtnLink to="/statistics">Statistics </NavBtnLink> */}
 						<NavBtnLink to="/orders">Orders</NavBtnLink>
