@@ -31,15 +31,21 @@ export function Dishes() {
   const [productImg, setProductImg] = useState("");
   const [selectedToppings, setSelectedToppings] = useState([]);
   const [newSelectedToppings, setNewSelectedToppings] = useState([]);
+  
+  
+  const [selectedExtras, setSelectedExtras] = useState([]);
+  const [newSelectedExtras, setNewSelectedExtras] = useState([]);
   const [successAlert, setSuccessAlert] = useState(false);
 
   const [dishes, setDishes] = useState([]);
   const [toppings, setToppings] = useState([]);
+  const [extras, setExtras] = useState([]);
   const [menuItem, setMenuItem] = useState({
     title: "",
     description: "",
     price: "",
     toppings: [],
+    extras: [],
     image: "",
   });
 
@@ -57,7 +63,6 @@ export function Dishes() {
 
   const handleProductImageUpload = (e) => {
     const file = e.target.files[0];
-
     TransformFileData(file);
   };
 
@@ -113,7 +118,7 @@ export function Dishes() {
         "https://burgerim.ru/toppings/" + restaurant_id
       );
 
-      console.log("response.data", response.data);
+      console.log("getToppings_response.data", response.data);
       setToppings(response.data);
 
       console.log('Запрос "getMenu" успешно выполнен');
@@ -122,11 +127,25 @@ export function Dishes() {
       return;
     }
   };
+  const getExtras = async () => {
+    // const restaurant = user.nickname
+    const restaurant_id = 2;
 
-  useEffect(() => {
-    getMenu();
-    getToppings();
-  }, [user.nickname]);
+    try {
+      const response = await axios.get(
+        "https://burgerim.ru/extras/" + restaurant_id
+      );
+
+      console.log("getExtras.data", response.data);
+      setExtras(response.data);
+
+      console.log('Запрос "getExtras" успешно выполнен');
+    } catch (error) {
+      console.error('Ошибка при выполнении запроса "getExtras":', error);
+      return;
+    }
+  };
+
 
   const addMenuItem = async () => {
     console.log("menuItem :>> ", menuItem);
@@ -139,6 +158,7 @@ export function Dishes() {
       image: productImg,
       restaurant_id: restaurant_id,
       toppings: newSelectedToppings, // Добавление выбранных топингов в объект menuItem
+      extras: newSelectedExtras, // Добавление выбранных Extras в объект menuItem
     };
 
     console.log("newDish :>> ", newDish);
@@ -147,6 +167,7 @@ export function Dishes() {
       const response = await axios.post("https://burgerim.ru/dishes", newDish);
       console.log('Запрос "addMenuItem" успешно выполнен');
       setSuccessAlert(true);
+      setProductImg(null);
       setTimeout(() => {
         setSuccessAlert(false);
       }, 2000);
@@ -171,10 +192,12 @@ export function Dishes() {
     const updatedDish = {
       ...updatedItem,
       toppings: selectedToppings,
+      extras: selectedExtras,
       restaurant_id: 2, // Укажите соответствующий restaurant_id
     };
 
     console.log("selectedToppings", selectedToppings);
+    console.log("selectedExtras", selectedExtras);
 
     try {
       const response = await axios.put(
@@ -189,6 +212,7 @@ export function Dishes() {
       setDishes(updatedDishes);
 
       setSelectedToppings([]);
+      setSelectedExtras([]);
 
       setSuccessAlert(true);
       setTimeout(() => {
@@ -221,6 +245,13 @@ export function Dishes() {
     }
   };
 
+  
+  useEffect(() => {
+    getMenu();
+    getToppings();
+    getExtras();
+  }, [user.nickname]);
+
   return (
     <>
       {successAlert && (
@@ -248,6 +279,7 @@ export function Dishes() {
                 <TableCell>Price</TableCell>
                 <TableCell>image</TableCell>
                 <TableCell>Toppings</TableCell>
+                <TableCell>Extras</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -340,9 +372,12 @@ export function Dishes() {
                     </Box>
                   </TableCell>
 
-                  {console.log("item.toppings ", item.toppings)}
+
+
 
                   {/* list of toppings in dish ================================================ */}
+                  {console.log("item.toppings ", item.toppings)}
+
                   <TableCell>
                     {item.toppings && (
                       <Stack spacing={3}>
@@ -375,6 +410,50 @@ export function Dishes() {
                     )}
                   </TableCell>
 
+
+
+
+
+
+                  {/* list of extras in dish ================================================ */}
+                  {console.log("item.extras ", item.extras)}
+
+                  <TableCell>
+                    {item.extras && (
+                      <Stack spacing={3}>
+                        <Autocomplete
+                          multiple
+                          id="tags-outlined"
+                          options={extras.filter(
+                            (topping) =>
+                              !item.extras.some(
+                                (selected) => selected.id === topping.id
+                              )
+                          )}
+                          getOptionLabel={(option) => option.title}
+                          defaultValue={[...item.extras]}
+                          filterSelectedOptions
+                          onChange={(event, newValue) => {
+                            setSelectedExtras(newValue);
+                          }}
+                          // isOptionEqualToValue={(option, value) => option.id === value.id} // Добавьте это свойство
+
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="extras for this dish"
+                              placeholder="..."
+                            />
+                          )}
+                        />
+                      </Stack>
+                    )}
+                  </TableCell>
+
+
+
+
+
                   <TableCell>
                     <Button
                       sx={{ m: "5px 0px" }}
@@ -394,7 +473,11 @@ export function Dishes() {
                   </TableCell>
                 </TableRow>
               ))}
+              
+              
               {/* table for adding  new dish ================================================ */}
+             
+             
               <TableRow sx={{ backgroundColor: "lightBlue" }}>
                 <TableCell>ID</TableCell>
                 <TableCell>Title</TableCell>
@@ -402,6 +485,7 @@ export function Dishes() {
                 <TableCell>Price</TableCell>
                 <TableCell>image</TableCell>
                 <TableCell>Toppings</TableCell>
+                <TableCell>Extras</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
               {/* creating a new dish ================================================ */}
@@ -498,6 +582,43 @@ export function Dishes() {
                     </Stack>
                   )}
                 </TableCell>
+
+                {/* choose extras in new dish================ */}
+
+
+
+                <TableCell>
+                  {extras && (
+                    <Stack spacing={3}>
+                      <Autocomplete
+                        multiple
+                        id="tags-outlined"
+                        options={extras}
+                        getOptionLabel={(option) => option.title}
+                        defaultValue={[...extras]}
+                        filterSelectedOptions
+                        onChange={(event, newValue) => {
+                          setNewSelectedExtras(newValue);
+                        }}
+                        value={newSelectedExtras} // Установка выбранных значений из состояния
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="extras for this dish"
+                            placeholder="..."
+                          />
+                        )}
+                      />
+                    </Stack>
+                  )}
+                </TableCell>
+
+
+
+
+
+
+
 
                 <TableCell>
                   <Button

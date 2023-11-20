@@ -39,6 +39,7 @@ export function Extras() {
         "https://burgerim.ru/extras/" + restaurant_id
       );
       setExtrasList(response.data);
+      console.log("getExtras", response.data);
     } catch (error) {
       console.error('Ошибка при выполнении запроса "getExtras":', error);
     }
@@ -68,6 +69,7 @@ export function Extras() {
         image: "",
       });
 
+      setLogoImage(null);
       getExtras();
       setSuccessAlert(true);
 
