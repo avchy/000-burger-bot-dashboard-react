@@ -1,5 +1,5 @@
-{
-  "rules": {
+module.exports = {
+  rules: {
     "import/no-named-as-default": "off",
     "import/namespace": "off",
     "import/named": "off",
@@ -14,38 +14,42 @@
     "no-use-before-define": "off",
     "no-extra-boolean-cast": 1,
     "new-parens": 1,
-    "no-unused-vars": "off"
+    "no-unused-vars": "off",
   },
 
-  "env": {
-    "browser": true,
-    "commonjs": true,
-    "es6": true,
-    "node": true
+  env: {
+    browser: true,
+    commonjs: true,
+    es6: true,
+    node: true,
   },
-  "extends": [
+  extends: [
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
-    "plugin:import/recommended"
-
-    // "prettier"
+    "plugin:import/recommended",
   ],
-  "parser": "@babel/eslint-parser",
+  parser: "@babel/eslint-parser",
 
-  "parserOptions": {
-    "requireConfigFile": false,
+  parserOptions: {
+    requireConfigFile: false,
 
-    "babelOptions": {
-      "presets": ["@babel/preset-react"]
+    babelOptions: {
+      presets: ["@babel/preset-react"],
     },
-    "ecmaFeatures": {
-      "jsx": true
+    ecmaFeatures: {
+      jsx: true,
     },
-    "ecmaVersion": 2018,
-    "sourceType": "module"
+    ecmaVersion: 2018,
+    sourceType: "module",
   },
-  "plugins": ["react"]
-}
+  plugins: ["react"],
+
+  settings: {
+    react: {
+      version: "detect", // 'detect' автоматически определит версию React
+    },
+  },
+};

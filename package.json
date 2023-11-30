@@ -18,7 +18,10 @@
 		"styled-components": "^6.1.0"
 	},
 	"scripts": {
-		"start": "react-scripts start"
+		"start": "react-scripts start",
+		
+		"lint:es": "eslint --ext .js,.jsx,.ts,.tsx src",
+		"lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx src"
 	},
 	"eslintConfig": {
 		"extends": [
