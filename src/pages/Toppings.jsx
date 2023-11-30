@@ -59,7 +59,8 @@ export function Toppings() {
 
     try {
       const response = await axios.post(
-        "https://burgerim.ru/toppings/" + restaurant_id,
+        "https://burgerim.ru/toppings/",
+        // "https://burgerim.ru/toppings/" + restaurant_id,
         data
       );
       console.log('Запрос "addMenuItem" успешно выполнен');
