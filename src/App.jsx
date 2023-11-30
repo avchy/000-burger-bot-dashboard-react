@@ -11,7 +11,6 @@ import { Dishes } from "./pages/Dishes";
 import { Toppings } from "./pages/Toppings";
 import { Extras } from "./pages/Extras";
 import { MenuBar } from "./components/MenuBar";
-import { useLocation } from "react-router-dom";
 import { Typography } from "@mui/material";
 // import LoginButton from "./components/LoginButton";
 // import LogoutButton from "./components/LogoutButton";
