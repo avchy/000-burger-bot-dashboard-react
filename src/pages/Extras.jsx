@@ -104,7 +104,7 @@ export function Extras() {
   const deleteExtra = async (index) => {
     try {
       const extraIdToDelete = extrasList[index].id;
-      await axios.delete(`${baseURL}/types/${extraIdToDelete}`);
+      await axios.delete(`${baseURL}/extras/${extraIdToDelete}`);
 
       setSuccessAlert(true);
       setTimeout(() => {
