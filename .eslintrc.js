@@ -31,7 +31,8 @@ module.exports = {
     "plugin:jsx-a11y/recommended",
     "plugin:import/recommended",
   ],
-  parser: "@babel/eslint-parser",
+
+  parser: "@babel/eslint-parser",// Парсер для обработки jsx кода
 
   parserOptions: {
     requireConfigFile: false,
@@ -42,9 +43,10 @@ module.exports = {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 2018,
-    sourceType: "module",
+    ecmaVersion: 11, // версия стандарта JavaScript. Последний 12 (2021).
+    sourceType: "module", // Позволяет использовать import/export
   },
+
   plugins: ["react"],
 
   settings: {
