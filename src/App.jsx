@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import { Dishes } from "./pages/Dishes";
 import { Toppings } from "./pages/Toppings";
 import { Extras } from "./pages/Extras";
+import { Types } from "./pages/Types";
 import { MenuBar } from "./components/MenuBar";
 import { Typography } from "@mui/material";
 // import LoginButton from "./components/LoginButton";
@@ -46,6 +47,7 @@ function App() {
 
               <Route path="/toppings" element={<Toppings />} />
               <Route path="/extras" element={<Extras />} />
+              <Route path="/types" element={<Types />} />
               <Route path="/dishes" element={<Dishes />} />
             </Routes>
           </Router>
