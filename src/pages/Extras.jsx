@@ -21,6 +21,7 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
 import { FlexRowContainer, StyledButton } from "components/AllHelpComponents";
+import { baseURL } from "constants/api";
 
 export function Extras() {
   const { user } = useAuth0();
@@ -35,9 +36,7 @@ export function Extras() {
   const getExtras = async () => {
     const restaurant_id = 2;
     try {
-      const response = await axios.get(
-        "https://burgerim.ru/extras/" + restaurant_id
-      );
+      const response = await axios.get(`${baseURL}/extras/${restaurant_id}`);
       setExtrasList(response.data);
       console.log("getExtras", response.data);
     } catch (error) {
@@ -58,8 +57,8 @@ export function Extras() {
 
     try {
       const response = await axios.post(
-        "https://burgerim.ru/extras/",
-        // "https://burgerim.ru/extras/" + restaurant_id,
+        `${baseURL}/extras/`,
+
         data
       );
       console.log('Запрос "addExtra" успешно выполнен');
@@ -86,8 +85,8 @@ export function Extras() {
     const updatedExtra = extrasList[index];
     try {
       await axios.put(
-        `https://burgerim.ru/extras`,
-        // `https://burgerim.ru/extras/${updatedExtra.id}`,
+        `${baseURL}/extras/`,
+
         updatedExtra
       );
       setSuccessAlert(true);
@@ -105,7 +104,7 @@ export function Extras() {
   const deleteExtra = async (index) => {
     try {
       const extraIdToDelete = extrasList[index].id;
-      await axios.delete(`https://burgerim.ru/extras/${extraIdToDelete}`);
+      await axios.delete(`${baseURL}/types/${extraIdToDelete}`);
 
       setSuccessAlert(true);
       setTimeout(() => {

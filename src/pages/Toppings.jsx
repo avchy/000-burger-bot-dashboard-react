@@ -21,6 +21,7 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
 import { FlexRowContainer, StyledButton } from "components/AllHelpComponents";
+import { baseURL } from "constants/api";
 
 export function Toppings() {
   const { user } = useAuth0();
@@ -36,9 +37,7 @@ export function Toppings() {
   const getToppings = async () => {
     const restaurant_id = 2;
     try {
-      const response = await axios.get(
-        "https://burgerim.ru/toppings/" + restaurant_id
-      );
+      const response = await axios.get(`${baseURL}/toppings/${restaurant_id}`);
       setToppingsList(response.data);
     } catch (error) {
       console.error('Ошибка при выполнении запроса "getToppings":', error);
@@ -59,8 +58,8 @@ export function Toppings() {
 
     try {
       const response = await axios.post(
-        "https://burgerim.ru/toppings/",
-        // "https://burgerim.ru/toppings/" + restaurant_id,
+        `${baseURL}/toppings/`,
+
         data
       );
       console.log('Запрос "addMenuItem" успешно выполнен');
@@ -70,6 +69,7 @@ export function Toppings() {
         price: "",
         image: "",
       });
+      setLogoImage(null);
 
       getToppings();
       setSuccessAlert(true);
@@ -87,7 +87,8 @@ export function Toppings() {
     const updatedTopping = toppingsList[index];
     try {
       await axios.put(
-        `https://burgerim.ru/toppings/${updatedTopping.id}`,
+        `${baseURL}/toppings/${updatedTopping.id}`,
+
         updatedTopping
       );
       setSuccessAlert(true);
@@ -105,7 +106,7 @@ export function Toppings() {
   const deleteTopping = async (index) => {
     try {
       const toppingIdToDelete = toppingsList[index].id;
-      await axios.delete(`https://burgerim.ru/toppings/${toppingIdToDelete}`);
+      await axios.delete(`${baseURL}/toppings/${toppingIdToDelete}`);
 
       setSuccessAlert(true);
       setTimeout(() => {

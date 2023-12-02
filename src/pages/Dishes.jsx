@@ -21,6 +21,7 @@ import { ImagePreview } from "styles/styledComponents";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { baseURL } from "constants/api";
 
 export function Dishes() {
   const { user } = useAuth0();
@@ -94,9 +95,7 @@ export function Dishes() {
     const restaurant_id = 2;
 
     try {
-      const response = await axios.get(
-        "https://burgerim.ru/dishes/" + restaurant_id
-      );
+      const response = await axios.get(`${baseURL}/dishes/` + restaurant_id);
 
       console.log("getMenu_response.data", response.data);
       setDishes(response.data);
@@ -113,9 +112,7 @@ export function Dishes() {
     const restaurant_id = 2;
 
     try {
-      const response = await axios.get(
-        "https://burgerim.ru/toppings/" + restaurant_id
-      );
+      const response = await axios.get(`${baseURL}/toppings/${restaurant_id}`);
 
       console.log("getToppings_response.data", response.data);
       setToppings(response.data);
@@ -131,9 +128,7 @@ export function Dishes() {
     const restaurant_id = 2;
 
     try {
-      const response = await axios.get(
-        "https://burgerim.ru/extras/" + restaurant_id
-      );
+      const response = await axios.get(`${baseURL}/extras/${restaurant_id}`);
 
       console.log("getExtras.data", response.data);
       setExtras(response.data);
@@ -162,7 +157,7 @@ export function Dishes() {
     console.log("newDish :>> ", newDish);
 
     try {
-      const response = await axios.post("https://burgerim.ru/dishes", newDish);
+      const response = await axios.post(`${baseURL}/dishes/`, newDish);
       console.log('Запрос "addMenuItem" успешно выполнен');
       setSuccessAlert(true);
       setProductImg(null);
@@ -199,10 +194,9 @@ export function Dishes() {
 
     try {
       const response = await axios.put(
-        `https://burgerim.ru/dishes/${updatedItem.id}`,
+        `${baseURL}/dishes/${updatedItem.id}`,
         updatedDish
       );
-      // const response = await axios.put(`https://burgerim.ru/dishes/${updatedItem.id}`, updatedDish);
       console.log('Запрос "updateMenuItem" успешно выполнен');
       const updatedDishes = [...dishes];
       updatedDishes[index] = updatedDish;
@@ -225,7 +219,7 @@ export function Dishes() {
     try {
       const dishIdToDelete = dishes[index].id; // Получаем ID блюда для удаления
       const response = await axios.delete(
-        `https://burgerim.ru/dishes/${dishIdToDelete}`
+        `${baseURL}/dishes/${dishIdToDelete}`
       );
 
       console.log('Запрос "deleteMenuItem" успешно выполнен');

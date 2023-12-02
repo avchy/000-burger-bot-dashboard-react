@@ -16,6 +16,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import { baseURL } from "constants/api";
+import { FlexRowContainer, StyledButton } from "components/AllHelpComponents";
 
 export function Types() {
   const { user } = useAuth0();
@@ -42,10 +43,7 @@ export function Types() {
 
     try {
       await axios.post(`${baseURL}/types/`, data);
-      setType({
-        type: "",
-        restaurant_id: restaurant_id,
-      });
+      setType("");
       getTypes();
       setSuccessAlert(true);
 
@@ -78,13 +76,6 @@ export function Types() {
   };
 
   const deleteType = async (id) => {
-    
-    // const data = {
-    //   id: id,
-    //   restaurant_id: restaurant_id,
-    // };
-    // console.log("data :>> ", data);
-    
     try {
       await axios.delete(`${baseURL}/types/${id}`);
 
@@ -103,8 +94,6 @@ export function Types() {
   }, [user.nickname, restaurant_id]);
 
   const handleInputChange = (event) => {
-    // const { name, value } = event.target;
-    console.log("event.target.value :>> ", event.target.value);
     setType(event.target.value);
   };
 
@@ -151,20 +140,20 @@ export function Types() {
                 </TableCell>
 
                 <TableCell>
-                  <Button
+                  <StyledButton
                     variant="contained"
                     color="primary"
                     onClick={() => updateType(type.id, type)}
                   >
                     Update
-                  </Button>
-                  <Button
+                  </StyledButton>
+                  <StyledButton
                     variant="contained"
                     color="secondary"
                     onClick={() => deleteType(type.id)}
                   >
                     Delete
-                  </Button>
+                  </StyledButton>
                 </TableCell>
               </TableRow>
             ))}
@@ -186,9 +175,13 @@ export function Types() {
               </TableCell>
 
               <TableCell>
-                <Button variant="contained" color="primary" onClick={addType}>
+                <StyledButton
+                  variant="contained"
+                  color="primary"
+                  onClick={addType}
+                >
                   Add Type
-                </Button>
+                </StyledButton>
               </TableCell>
             </TableRow>
           </TableBody>
