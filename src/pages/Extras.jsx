@@ -65,7 +65,7 @@ export function Extras() {
 
       setNewExtra({
         title: "",
-        image: "",
+        image: null,
       });
 
       setLogoImage(null);

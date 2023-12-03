@@ -22,6 +22,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 
 import { FlexRowContainer, StyledButton } from "components/AllHelpComponents";
 import { baseURL } from "constants/api";
+import { LoadingOverlay } from "components/LoadingOverlay";
 
 export function Toppings() {
   const { user } = useAuth0();
@@ -33,13 +34,20 @@ export function Toppings() {
   });
   const [logoImage, setLogoImage] = useState("");
   const [successAlert, setSuccessAlert] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const getToppings = async () => {
     const restaurant_id = 2;
+    setLoading(true);
+
     try {
       const response = await axios.get(`${baseURL}/toppings/${restaurant_id}`);
+      console.log('getToppings_response.data', response.data)
       setToppingsList(response.data);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+
       console.error('Ошибка при выполнении запроса "getToppings":', error);
     }
   };
@@ -55,6 +63,7 @@ export function Toppings() {
     };
 
     console.log("newDish :>> ", data);
+    setLoading(true);
 
     try {
       const response = await axios.post(
@@ -63,11 +72,12 @@ export function Toppings() {
         data
       );
       console.log('Запрос "addMenuItem" успешно выполнен');
+      setLoading(false);
 
       setNewTopping({
         title: "",
         price: "",
-        image: "",
+        image: null,
       });
       setLogoImage(null);
 
@@ -78,6 +88,8 @@ export function Toppings() {
         setSuccessAlert(false);
       }, 3000);
     } catch (error) {
+      setLoading(false);
+
       console.error('Ошибка при выполнении запроса "addMenuItem":', error);
       return;
     }
@@ -85,12 +97,15 @@ export function Toppings() {
 
   const updateTopping = async (index) => {
     const updatedTopping = toppingsList[index];
+    setLoading(true);
+
     try {
       await axios.put(
         `${baseURL}/toppings/${updatedTopping.id}`,
-
         updatedTopping
       );
+      setLoading(false);
+
       setSuccessAlert(true);
 
       setTimeout(() => {
@@ -99,14 +114,19 @@ export function Toppings() {
       console.log("Топпинг успешно обновлен");
       getToppings();
     } catch (error) {
+      setLoading(false);
+
       console.error("Ошибка при обновлении топпинга:", error);
     }
   };
 
   const deleteTopping = async (index) => {
+    setLoading(true);
+
     try {
       const toppingIdToDelete = toppingsList[index].id;
       await axios.delete(`${baseURL}/toppings/${toppingIdToDelete}`);
+      setLoading(false);
 
       setSuccessAlert(true);
       setTimeout(() => {
@@ -115,6 +135,8 @@ export function Toppings() {
       console.log("Топпинг успешно удален");
       getToppings();
     } catch (error) {
+      setLoading(false);
+
       console.error("Ошибка при удалении топпинга:", error);
     }
   };
@@ -171,6 +193,12 @@ export function Toppings() {
       {toppingsList.length === 0 && (
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
+        </Box>
+      )}
+      {console.log("loading", loading)}
+      {loading && (
+        <Box sx={{ width: "100%" }}>
+          <LoadingOverlay />
         </Box>
       )}
 

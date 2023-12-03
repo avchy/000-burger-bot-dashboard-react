@@ -18,8 +18,8 @@
     "styled-components": "^6.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "dev": "NODE_ENV=development react-scripts start"
+    "start": "REACT_APP_STAGE=prod react-scripts start",
+    "dev": "REACT_APP_STAGE=local react-scripts start"
   },
   "eslintConfig": {
     "extends": [

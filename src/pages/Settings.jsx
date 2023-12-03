@@ -45,12 +45,22 @@ export function Settings() {
   const [showApplePayButton, setShowApplePayButton] = useState(false);
   const [showGooglePayButton, setShowGooglePayButton] = useState(false);
   const [showOrderButton, setShowOrderButton] = useState(false);
-  const [successAlert, setSuccessAlert] = useState(false);
+
+  // const [successAlert, setSuccessAlert] = useState(false);
+  // const [unsuccessAlert, setUnuccessAlert] = useState(false);
+
+  const [alertDetail, setAlertDetail] = useState({
+    isShow: false,
+    severity: "error",
+    message: "This is an info alert — check it out!",
+  });
 
   const getSettings = async () => {
     const restaurant_id = 2;
 
     try {
+      setLoading(true);
+
       const response = await axios.get(`${baseURL}/settings/${restaurant_id}`);
 
       console.log("getSettings-response.data", response.data);
@@ -59,6 +69,19 @@ export function Settings() {
       console.log('Запрос "getSettings" успешно выполнен');
       setLoading(false);
     } catch (error) {
+      setAlertDetail({
+        isShow: true,
+        severity: "error",
+        message: "The operation was a failure",
+      });
+
+      setTimeout(() => {
+        setAlertDetail({
+          ...alertDetail,
+          isShow: false,
+        });
+      }, 2000);
+
       setLoading(false);
 
       console.error('Ошибка при выполнении запроса "getSettings":', error);
@@ -118,11 +141,32 @@ export function Settings() {
       console.log('Запрос "saveChanges" успешно выполнен');
       setLoading(false);
 
-      setSuccessAlert(true);
+      setAlertDetail({
+        isShow: true,
+        severity: "success",
+        message: "The operation was a success!",
+      });
+
       setTimeout(() => {
-        setSuccessAlert(false);
+        setAlertDetail({
+          ...alertDetail,
+          isShow: false,
+        });
       }, 2000);
     } catch (error) {
+      setAlertDetail({
+        isShow: true,
+        severity: "error",
+        message: "The operation was a failure",
+      });
+
+      setTimeout(() => {
+        setAlertDetail({
+          ...alertDetail,
+          isShow: false,
+        });
+      }, 2000);
+
       setLoading(false);
 
       console.error('Ошибка при выполнении запроса "saveChanges":', error);
@@ -142,14 +186,6 @@ export function Settings() {
 
   return (
     <>
-      {successAlert && (
-        <Box className="notification">
-          <Alert severity="success">
-            <AlertTitle>Success</AlertTitle>
-            The operation was a — <strong>success!</strong>
-          </Alert>
-        </Box>
-      )}
       {/* {loading ? (
 				<TableRow>
 					<TableCell align="center" colSpan={11}>
@@ -279,6 +315,25 @@ export function Settings() {
           save
         </Button>
       </FlexColumnContainer>
+
+      {alertDetail.isShow && (
+        <Box className="notification">
+          <Alert severity={alertDetail.severity}>
+            <AlertTitle>{alertDetail.severity}</AlertTitle>
+            {alertDetail.message}
+          </Alert>
+        </Box>
+      )}
+
+      {/* {successAlert && (
+        <Box className="notification">
+          <Alert severity="success">
+            <AlertTitle>Success</AlertTitle>
+            The operation was a — <strong>success!</strong>
+          </Alert>
+        </Box>
+      )}
+ */}
     </>
   );
 }
