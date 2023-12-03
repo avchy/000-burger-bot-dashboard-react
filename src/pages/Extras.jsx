@@ -28,10 +28,17 @@ export function Extras() {
   const [extrasList, setExtrasList] = useState([]);
   const [newExtra, setNewExtra] = useState({
     title: "",
-    image: "",
+    image: null,
+    type: "", // Добавлено новое поле types
   });
   const [logoImage, setLogoImage] = useState("");
   const [successAlert, setSuccessAlert] = useState(false);
+
+  const [typesList, setTypesList] = useState([
+    { id: 1, type: "salad" },
+    { id: 2, type: "bread" },
+  ]);
+  // const [typesList, setTypesList] = useState(["Type 1", "Type 2", "Type 3"]);
 
   const getExtras = async () => {
     const restaurant_id = 2;
@@ -41,6 +48,18 @@ export function Extras() {
       console.log("getExtras", response.data);
     } catch (error) {
       console.error('Ошибка при выполнении запроса "getExtras":', error);
+    }
+  };
+
+  const getTypes = async () => {
+    const restaurant_id = 2;
+
+    try {
+      const response = await axios.get(`${baseURL}/types/` + restaurant_id);
+      console.log('getTypes_response.data', response.data)
+      setTypesList(response.data);
+    } catch (error) {
+      console.error('Ошибка при выполнении запроса "getTypes":', error);
     }
   };
 
@@ -119,6 +138,7 @@ export function Extras() {
 
   useEffect(() => {
     getExtras();
+    getTypes();
   }, [user.nickname]);
 
   const handleProductImageUpload = (e) => {
@@ -171,6 +191,7 @@ export function Extras() {
           <TableHead>
             <TableRow sx={{ backgroundColor: "lightBlue" }}>
               <TableCell>Title</TableCell>
+              <TableCell>Type</TableCell> {/* Заголовок для столбца types */}
               <TableCell>Image</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
@@ -188,6 +209,27 @@ export function Extras() {
                         setExtrasList(updatedList);
                       }}
                     />
+                  </TableCell>
+
+                  <TableCell>
+                    <TextField
+                      select
+                      value={extra.type}
+                      onChange={(e) => {
+                        const updatedList = [...extrasList];
+                        updatedList[index].types = e.target.value;
+                        setExtrasList(updatedList);
+                      }}
+                      SelectProps={{
+                        native: true,
+                      }}
+                    >
+                      {typesList.map((type) => (
+                        <option key={type.id} value={type.type}>
+                          {type.type}
+                        </option>
+                      ))}
+                    </TextField>
                   </TableCell>
 
                   <TableCell>
@@ -264,6 +306,7 @@ export function Extras() {
 
             <TableRow sx={{ backgroundColor: "lightBlue" }}>
               <TableCell>Title</TableCell>
+              <TableCell>Type</TableCell>
               <TableCell>Image</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
@@ -277,6 +320,26 @@ export function Extras() {
                   onChange={handleInputChange}
                   sx={{ m: "10px" }}
                 />
+              </TableCell>
+
+              <TableCell>
+                <TextField
+                  select
+                  label="Types"
+                  name="types"
+                  value={newExtra.type}
+                  onChange={handleInputChange}
+                  SelectProps={{
+                    native: true,
+                  }}
+                >
+                  <option value="">None</option>
+                  {typesList.map((type) => (
+                    <option key={type.id} value={type.type}>
+                      {type.type}
+                    </option>
+                  ))}
+                </TextField>
               </TableCell>
 
               <TableCell>
