@@ -25,7 +25,7 @@ import AudioPlayer from "components/AudioPlayer.jsx";
 import { useAuth0 } from "@auth0/auth0-react";
 import { baseURL } from "constants/api";
 
-export function TableOrders() {
+export function Orders() {
   const { isAuthenticated } = useAuth0();
   // const isAuthenticated = true;
 
