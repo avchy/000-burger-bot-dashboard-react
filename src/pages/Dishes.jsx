@@ -297,7 +297,7 @@ export function Dishes() {
                       }
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{width:100}}>
                     <TextField
                       value={item.price}
                       onChange={(e) => handleEditChange(e, index, "price")}
@@ -484,7 +484,7 @@ export function Dishes() {
                     variant="outlined"
                   />
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{width:100}}>
                   <TextField
                     name="price"
                     value={menuItem.price}

@@ -56,7 +56,7 @@ export function Extras() {
 
     try {
       const response = await axios.get(`${baseURL}/types/` + restaurant_id);
-      console.log('getTypes_response.data', response.data)
+      console.log("getTypes_response.data", response.data);
       setTypesList(response.data);
     } catch (error) {
       console.error('Ошибка при выполнении запроса "getTypes":', error);
@@ -70,9 +70,10 @@ export function Extras() {
       title: newExtra.title,
       image: logoImage,
       restaurant_id: restaurant_id,
+      type_id: typesList.find((item) => item.type === newExtra.type).id, // Добавлено новое поле types
     };
 
-    console.log("newExtra :>> ", data);
+    console.log("data_newExtra :>> ", data);
 
     try {
       const response = await axios.post(
@@ -322,11 +323,12 @@ export function Extras() {
                 />
               </TableCell>
 
+              {console.log("newExtra", newExtra)}
               <TableCell>
                 <TextField
                   select
-                  label="Types"
-                  name="types"
+                  // label="Type"
+                  name="type"
                   value={newExtra.type}
                   onChange={handleInputChange}
                   SelectProps={{

@@ -226,7 +226,7 @@ export function Toppings() {
                       }}
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{width:100}}>
                     <TextField
                       value={topping.price}
                       onChange={(e) => {
@@ -337,7 +337,7 @@ export function Toppings() {
                 />
               </TableCell>
 
-              <TableCell>
+              <TableCell sx={{width:100}}>
                 <TextField
                   label="Price"
                   name="price"
