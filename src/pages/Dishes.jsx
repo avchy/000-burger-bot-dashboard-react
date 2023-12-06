@@ -31,17 +31,20 @@ export function Dishes() {
 	// 	picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
 	// };
 	const [productImg, setProductImg] = useState("")
+
 	const [selectedToppings, setSelectedToppings] = useState([])
 	const [newSelectedToppings, setNewSelectedToppings] = useState([])
 
 	const [selectedExtras, setSelectedExtras] = useState([])
 	const [newSelectedExtras, setNewSelectedExtras] = useState([])
+
 	const [successAlert, setSuccessAlert] = useState(false)
 
 	const [dishes, setDishes] = useState([])
+	const [originalDishes, setOriginalDishes] = useState([])
 	const [toppings, setToppings] = useState([])
 	const [extras, setExtras] = useState([])
-	const [menuItem, setMenuItem] = useState({
+	const [newDish, setNewDish] = useState({
 		title: "",
 		description: "",
 		price: "",
@@ -50,7 +53,7 @@ export function Dishes() {
 		image: "",
 	})
 	const [loading, setLoading] = useState(false)
-	const [selectedDish, setSelectedDish] = useState({})
+	// const [selectedDish, setSelectedDish] = useState({})
 
 	const handleEditChange = (e, index, field) => {
 		const { value } = e.target
@@ -82,7 +85,7 @@ export function Dishes() {
 		}
 	}
 
-	const handleMenuItemChange = (e) => {
+	const handleNewDishChange = (e) => {
 		const { name, value } = e.target
 
 		// Проверяем, что вводимое значение содержит только цифры
@@ -90,7 +93,7 @@ export function Dishes() {
 			return // Прерываем выполнение функции, если ввод не является числом
 		}
 
-		setMenuItem({ ...menuItem, [name]: value })
+		setNewDish({ ...newDish, [name]: value })
 	}
 
 	const getMenu = async () => {
@@ -104,6 +107,7 @@ export function Dishes() {
 
 			console.log("getMenu_response.data", response.data)
 			setDishes(response.data)
+			setOriginalDishes(response.data)
 
 			console.log('Запрос "getMenu" успешно выполнен')
 		} catch (error) {
@@ -147,57 +151,53 @@ export function Dishes() {
 		}
 	}
 
-	const addMenuItem = async () => {
-		console.log("menuItem :>> ", menuItem)
-		const restaurant_id = 2
-
-		console.log("newSelectedToppings", newSelectedToppings)
-
-		const newDish = {
-			...menuItem,
+	const addNewDish = async (index) => {
+		const restaurant_id = 2;
+	
+		const dishToAdd = {
+			...newDish,
 			image: productImg,
 			restaurant_id: restaurant_id,
-			toppings: newSelectedToppings, // Добавление выбранных топингов в объект menuItem
-			extras: newSelectedExtras, // Добавление выбранных Extras в объект menuItem
-		}
-
-		console.log("newDish :>> ", newDish)
-		setLoading(true)
-
+			toppings: newSelectedToppings,
+			extras: newSelectedExtras,
+		};
+	
+		setLoading(true);
+	
 		try {
-			const response = await axios.post(`${baseURL}/dishes/`, newDish)
-			setLoading(false)
-
-			console.log('Запрос "addMenuItem" успешно выполнен')
-			setSuccessAlert(true)
-			setProductImg(null)
+			const response = await axios.post(`${baseURL}/dishes/`, dishToAdd);
+			setLoading(false);
+	
+			console.log('Запрос "addNewDish" успешно выполнен');
+			setSuccessAlert(true);
+			setProductImg(null);
 			setTimeout(() => {
-				setSuccessAlert(false)
-			}, 2000)
+				setSuccessAlert(false);
+			}, 2000);
 		} catch (error) {
-			setLoading(false)
-
-			console.error('Ошибка при выполнении запроса "addMenuItem":', error)
-			return
+			setLoading(false);
+			console.error('Ошибка при выполнении запроса "addNewDish":', error);
+			return;
 		}
-		setDishes([...dishes, newDish])
-
-		setMenuItem({
+		setDishes([...dishes, dishToAdd]);
+	
+		setNewDish({
 			title: "",
 			description: "",
 			price: "",
 			toppings: [],
 			image: "",
-		})
-	}
-
+		});
+	};
+	
 	const updateMenuItem = async (index) => {
 		const updatedItem = dishes[index]
 
 		const updatedDish = {
 			...updatedItem,
-			toppings: selectedToppings,
-			extras: selectedExtras,
+			toppings: dishes[index].toppings, // Добавление выбранных топингов в объект newDish
+			extras: dishes[index].extras, // Добавление выбранных Extras в объект newDish
+
 			restaurant_id: 2,
 		}
 		// console.log("updatedItem.id", updatedItem.id);
@@ -219,8 +219,8 @@ export function Dishes() {
 
 			setDishes(updatedDishes)
 			getMenu()
-			setSelectedToppings([])
-			setSelectedExtras([])
+			// setSelectedToppings([])
+			// setSelectedExtras([])
 
 			setSuccessAlert(true)
 			setTimeout(() => {
@@ -257,25 +257,39 @@ export function Dishes() {
 			console.error('Ошибка при выполнении запроса "deleteMenuItem":', error)
 		}
 	}
-  
-  const updateAllDishes = async () => {
-    setLoading(true)
-    try {
-      dishes.map(async (dish) => {
-        const response = await axios.put(`${baseURL}/dishes/${dish.id}`, dish)
-        setLoading(false)
-        console.log('Запрос "updateAllDishes" успешно выполнен')
-      })
-      setSuccessAlert(true)
-      setTimeout(() => {
-        setSuccessAlert(false)
-      }, 2000)
-    } catch (error) {
-      setLoading(false)
-      console.error('Ошибка при выполнении запроса "updateAllDishes":', error)
-    }
-  }
-  
+
+	const updateAllDishes = async () => {
+		console.log('dishes', dishes)
+		console.log('originalDishes', originalDishes)
+		
+		
+		setLoading(true);
+		try {
+		  const promises = dishes.map(async (dish) => {
+			const original = originalDishes.find((originalDish) => originalDish.id === dish.id);
+			if (!isEqual(original, dish)) {
+			//   const response = await axios.put(`${baseURL}/dishes/${dish.id}`, dish);
+			  console.log(`Блюдо с ID ${dish.id} успешно обновлено`);
+			}
+		  });
+	  
+		  await Promise.all(promises);
+	  
+		  setLoading(false);
+		  setSuccessAlert(true);
+		  setTimeout(() => {
+			setSuccessAlert(false);
+		  }, 2000);
+		} catch (error) {
+		  setLoading(false);
+		  console.error('Ошибка при выполнении запроса "updateAllDishes":', error);
+		}
+	  };
+	  
+	  // Функция для сравнения объектов
+	  const isEqual = (obj1, obj2) => {
+		return JSON.stringify(obj1) === JSON.stringify(obj2);
+	  };
 
 	useEffect(() => {
 		getMenu()
@@ -432,9 +446,17 @@ export function Dishes() {
 													getOptionLabel={(option) => option.title}
 													defaultValue={[...item.toppings]}
 													filterSelectedOptions
+													// onChange={(event, newValue) => {
+													// 	// setSelectedToppings(newValue)
+													// 	// setSelectedDish(newValue)
+													// }}
+
 													onChange={(event, newValue) => {
-														setSelectedToppings(newValue)
-														setSelectedDish(newValue)
+														handleEditChange(
+															{ target: { value: newValue } }, // Создаем фейковое событие для передачи в handleEditChange
+															index,
+															"toppings"
+														)
 													}}
 													// isOptionEqualToValue={(option, value) => option.id === value.id} // Добавьте это свойство
 
@@ -469,9 +491,16 @@ export function Dishes() {
 													defaultValue={[...item.extras]}
 													filterSelectedOptions
 													onChange={(event, newValue) => {
-														console.log("_onChange_newValue", newValue)
-														setSelectedExtras(newValue)
+														handleEditChange(
+															{ target: { value: newValue } }, // Создаем фейковое событие для передачи в handleEditChange
+															index,
+															"extras"
+														)
 													}}
+													// onChange={(event, newValue) => {
+													// 	console.log("_onChange_newValue", newValue)
+													// 	setSelectedExtras(newValue)
+													// }}
 													// isOptionEqualToValue={(option, value) => option.id === value.id} // Добавьте это свойство
 
 													renderInput={(params) => (
@@ -487,14 +516,14 @@ export function Dishes() {
 									</StyledTableCell>
 
 									<StyledTableCell>
-										<Button
+										{/* <Button
 											sx={{ m: "5px 0px" }}
 											variant="contained"
 											color="primary"
 											onClick={() => updateMenuItem(index)}
 										>
 											Update
-										</Button>
+										</Button> */}
 										<Button
 											variant="contained"
 											color="secondary"
@@ -506,6 +535,8 @@ export function Dishes() {
 								</TableRow>
 							))}
 							{/* table for adding  new dish ================================================ */}
+							{/*  ================================================ */}
+							{/*   ================================================ */}
 							<TableRow sx={{ backgroundColor: "lightBlue" }}>
 								<StyledTableCell>ID</StyledTableCell>
 								<StyledTableCell>Title</StyledTableCell>
@@ -524,24 +555,24 @@ export function Dishes() {
 								<StyledTableCell>
 									<TextField
 										name="title"
-										value={menuItem.title}
-										onChange={handleMenuItemChange}
+										value={newDish.title}
+										onChange={handleNewDishChange}
 										variant="outlined"
 									/>
 								</StyledTableCell>
 								<StyledTableCell>
 									<TextField
 										name="description"
-										value={menuItem.description}
-										onChange={handleMenuItemChange}
+										value={newDish.description}
+										onChange={handleNewDishChange}
 										variant="outlined"
 									/>
 								</StyledTableCell>
 								<StyledTableCell sx={{ width: 100 }}>
 									<TextField
 										name="price"
-										value={menuItem.price}
-										onChange={handleMenuItemChange}
+										value={newDish.price}
+										onChange={handleNewDishChange}
 										variant="outlined"
 									/>
 								</StyledTableCell>
@@ -598,6 +629,8 @@ export function Dishes() {
 												onChange={(event, newValue) => {
 													setNewSelectedToppings(newValue)
 												}}
+												// onChange={(e) => handleEditChange(e, index, "title")}
+
 												value={newSelectedToppings} // Установка выбранных значений из состояния
 												renderInput={(params) => (
 													<TextField
@@ -643,7 +676,7 @@ export function Dishes() {
 									<Button
 										variant="contained"
 										color="primary"
-										onClick={addMenuItem}
+										onClick={addNewDish}
 									>
 										Add
 									</Button>

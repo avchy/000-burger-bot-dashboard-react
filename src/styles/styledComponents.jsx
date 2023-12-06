@@ -67,7 +67,7 @@ export const FiveBlackBoxes = () => {
 }
 
 export const StyledTableCell = styled(TableCell)`
-	background-color: #f5f5f5;
+	/* background-color: #f5f5f5; */
 	font-weight: bold;
 	border: 1px solid #ddd;
 	padding: 10px;
