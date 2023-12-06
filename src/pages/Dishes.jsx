@@ -42,7 +42,6 @@ export function Dishes() {
 
   const [dishes, setDishes] = useState([])
   const [originalDishes, setOriginalDishes] = useState([])
-  
   const [toppings, setToppings] = useState([])
   const [extras, setExtras] = useState([])
   const [newDish, setNewDish] = useState({
@@ -105,15 +104,12 @@ export function Dishes() {
     try {
       const response = await axios.get(`${baseURL}/dishes/` + restaurant_id)
       setLoading(false)
-
       console.log("getMenu_response.data", response.data)
       setDishes(response.data)
-      setOriginalDishes(response.data)
-
+      setOriginalDishes(response.data) // Обновление originalDishes
       console.log('Запрос "getMenu" успешно выполнен')
     } catch (error) {
       setLoading(false)
-
       console.error('Ошибка при выполнении запроса "getMenu":', error)
       return
     }
@@ -129,9 +125,9 @@ export function Dishes() {
       console.log("getToppings_response.data", response.data)
       setToppings(response.data)
 
-      console.log('Запрос "getMenu" успешно выполнен')
+      console.log('Запрос "getToppings" успешно выполнен')
     } catch (error) {
-      console.error('Ошибка при выполнении запроса "getMenu":', error)
+      console.error('Ошибка при выполнении запроса "getToppings":', error)
       return
     }
   }
@@ -219,9 +215,6 @@ export function Dishes() {
       updatedDishes[index] = updatedDish
 
       setDishes(updatedDishes)
-      getMenu()
-      // setSelectedToppings([])
-      // setSelectedExtras([])
 
       setSuccessAlert(true)
       setTimeout(() => {
@@ -266,12 +259,13 @@ export function Dishes() {
     setLoading(true)
     try {
       const promises = dishes.map(async (dish) => {
-        const original = originalDishes.find(
-          (originalDish) => originalDish.id === dish.id
-        )
+        const originalDish = originalDishes.find((d) => d.id === dish.id)
 
-        console.log("original111", original)
-        if (!isEqual(original, dish)) {
+        console.log("originalDish111", originalDish)
+
+        if (!isEqual(originalDish, dish)) {
+          console.log("isEqual2222221", originalDish)
+
           //   const response = await axios.put(`${baseURL}/dishes/${dish.id}`, dish);
           console.log(`Блюдо с ID ${dish.id} успешно обновлено`)
           console.log(`Блюдо с title ${dish.title} успешно обновлено`)
@@ -510,14 +504,11 @@ export function Dishes() {
                           multiple
                           id="tags-outlined"
                           options={extras}
-                        //   defaultValue={item.extras}
-						//   defaultValue={extras.filter(option => item.extras.includes(option.id))}
+                          //   defaultValue={item.extras}
+                          //   defaultValue={extras.filter(option => item.extras.includes(option.id))}
 
                           getOptionLabel={(option) => option.title}
-						  
                           value={item.extras}
-						  
-						  
                           onChange={(event, newValue) => {
                             // setSelectedExtras(newValue)
                             handleEditChange(
@@ -540,14 +531,14 @@ export function Dishes() {
                   </StyledTableCell>
 
                   <StyledTableCell>
-                    {/* <Button
-											sx={{ m: "5px 0px" }}
-											variant="contained"
-											color="primary"
-											onClick={() => updateMenuItem(index)}
-										>
-											Update
-										</Button> */}
+                    <Button
+                      sx={{ m: "5px 0px" }}
+                      variant="contained"
+                      color="primary"
+                      onClick={() => updateMenuItem(index)}
+                    >
+                      Update
+                    </Button>
                     <Button
                       variant="contained"
                       color="secondary"
