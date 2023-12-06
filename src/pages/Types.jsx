@@ -16,7 +16,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import { baseURL } from "constants/api";
-import { FlexRowContainer, StyledButton } from "components/AllHelpComponents";
+import { FlexRowContainer, StyledButton } from "styles/styledComponents";
 
 export function Types() {
   const { user } = useAuth0();

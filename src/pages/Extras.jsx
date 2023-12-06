@@ -20,7 +20,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload"
 import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
 
-import { FlexRowContainer, StyledButton } from "components/AllHelpComponents"
+import { FlexRowContainer, StyledButton } from "styles/styledComponents"
 import { baseURL, getExtras } from "constants/api"
 
 export function Extras() {
@@ -39,6 +39,18 @@ export function Extras() {
 		{ id: 2, type: "bread" },
 	])
 	const restaurant_id = 2
+
+	//TODO  enable getRestaurantIdByNickname( user )
+	// const getRestaurantIdByNickname = async (user) => {
+	// 	// const restaurant_id = 2
+	// 	try {
+	// 		const response = await axios.get(`${baseURL}/restaurant/${user.nickname}`)
+	// 		setExtrasList(response.data)
+	// 		console.log("extrasList", response.data)
+	// 	} catch (error) {
+	// 		console.error('Ошибка при выполнении запроса "getExtras":', error)
+	// 	}
+	// }
 
 	const getExtras = async () => {
 		const restaurant_id = 2
@@ -144,7 +156,6 @@ export function Extras() {
 
 	useEffect(() => {
 		getExtras(restaurant_id)
-      
 		getTypes(restaurant_id)
 	}, [user.nickname])
 

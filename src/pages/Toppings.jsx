@@ -20,7 +20,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 
-import { FlexRowContainer, StyledButton } from "components/AllHelpComponents";
+import { FlexRowContainer, StyledButton } from "styles/styledComponents";
 import { baseURL } from "constants/api";
 import { LoadingOverlay } from "components/LoadingOverlay";
 

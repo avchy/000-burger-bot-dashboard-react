@@ -5,7 +5,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
-import { FlexColumnContainer } from "components/AllHelpComponents";
+import { FlexColumnContainer } from "styles/styledComponents";
 
 export const Profile = () => {
   const { user, isAuthenticated } = useAuth0();

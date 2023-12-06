@@ -1,639 +1,667 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import {
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Typography,
-  Button,
-  TextField,
-  LinearProgress,
-  Box,
-  Input,
-} from "@mui/material";
-import Autocomplete from "@mui/material/Autocomplete";
-import Stack from "@mui/material/Stack";
-import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
-import { ImagePreview } from "styles/styledComponents";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { baseURL } from "constants/api";
-import { LoadingOverlay } from "components/LoadingOverlay";
+	Paper,
+	Table,
+	TableHead,
+	TableRow,
+	TableCell,
+	TableBody,
+	Typography,
+	Button,
+	TextField,
+	LinearProgress,
+	Box,
+	Input,
+} from "@mui/material"
+import Autocomplete from "@mui/material/Autocomplete"
+import Stack from "@mui/material/Stack"
+import axios from "axios"
+import { useAuth0 } from "@auth0/auth0-react"
+import { ImagePreview, StyledTableCell } from "styles/styledComponents"
+import Alert from "@mui/material/Alert"
+import AlertTitle from "@mui/material/AlertTitle"
+import CloudUploadIcon from "@mui/icons-material/CloudUpload"
+import { baseURL } from "constants/api"
+import { LoadingOverlay } from "components/LoadingOverlay"
 
 export function Dishes() {
-  const { user } = useAuth0();
-  // const user = {
-  // 	nickname: "cafecafe",
-  // 	picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
-  // };
-  const [productImg, setProductImg] = useState("");
-  const [selectedToppings, setSelectedToppings] = useState([]);
-  const [newSelectedToppings, setNewSelectedToppings] = useState([]);
+	const { user } = useAuth0()
+	// const user = {
+	// 	nickname: "cafecafe",
+	// 	picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
+	// };
+	const [productImg, setProductImg] = useState("")
+	const [selectedToppings, setSelectedToppings] = useState([])
+	const [newSelectedToppings, setNewSelectedToppings] = useState([])
 
-  const [selectedExtras, setSelectedExtras] = useState([]);
-  const [newSelectedExtras, setNewSelectedExtras] = useState([]);
-  const [successAlert, setSuccessAlert] = useState(false);
+	const [selectedExtras, setSelectedExtras] = useState([])
+	const [newSelectedExtras, setNewSelectedExtras] = useState([])
+	const [successAlert, setSuccessAlert] = useState(false)
 
-  const [dishes, setDishes] = useState([]);
-  const [toppings, setToppings] = useState([]);
-  const [extras, setExtras] = useState([]);
-  const [menuItem, setMenuItem] = useState({
-    title: "",
-    description: "",
-    price: "",
-    toppings: [],
-    extras: [],
-    image: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [selectedDish, setSelectedDish] = useState({});
+	const [dishes, setDishes] = useState([])
+	const [toppings, setToppings] = useState([])
+	const [extras, setExtras] = useState([])
+	const [menuItem, setMenuItem] = useState({
+		title: "",
+		description: "",
+		price: "",
+		toppings: [],
+		extras: [],
+		image: "",
+	})
+	const [loading, setLoading] = useState(false)
+	const [selectedDish, setSelectedDish] = useState({})
 
-  const handleEditChange = (e, index, field) => {
-    const { value } = e.target;
-    // Проверяем, что вводимое значение содержит только цифры
-    if (!/^\d*$/.test(value) && field === "price") {
-      return; // Прерываем выполнение функции, если ввод не является числом
-    }
+	const handleEditChange = (e, index, field) => {
+		const { value } = e.target
+		// Проверяем, что вводимое значение содержит только цифры
+		if (field === "price" && !/^\d*$/.test(value)) {
+			return // Прерываем выполнение функции, если ввод не является числом
+		}
 
-    const updatedDishes = [...dishes];
-    updatedDishes[index][field] = e.target.value;
-    setDishes(updatedDishes);
-  };
+		const updatedDishes = [...dishes]
+		updatedDishes[index][field] = e.target.value
+		setDishes(updatedDishes)
+	}
 
-  const handleProductImageUpload = (e) => {
-    const file = e.target.files[0];
-    TransformFileData(file);
-  };
+	const handleProductImageUpload = (e) => {
+		const file = e.target.files[0]
+		TransformFileData(file)
+	}
 
-  const TransformFileData = (file) => {
-    const reader = new FileReader();
+	const TransformFileData = (file) => {
+		const reader = new FileReader()
 
-    if (file) {
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setProductImg(reader.result);
-      };
-    } else {
-      setProductImg("");
-    }
-  };
+		if (file) {
+			reader.readAsDataURL(file)
+			reader.onloadend = () => {
+				setProductImg(reader.result)
+			}
+		} else {
+			setProductImg("")
+		}
+	}
 
-  const handleMenuItemChange = (e) => {
-    const { name, value } = e.target;
+	const handleMenuItemChange = (e) => {
+		const { name, value } = e.target
 
-    // Проверяем, что вводимое значение содержит только цифры
-    if (!/^\d*$/.test(value) && name === "price") {
-      return; // Прерываем выполнение функции, если ввод не является числом
-    }
+		// Проверяем, что вводимое значение содержит только цифры
+		if (!/^\d*$/.test(value) && name === "price") {
+			return // Прерываем выполнение функции, если ввод не является числом
+		}
 
-    setMenuItem({ ...menuItem, [name]: value });
-  };
+		setMenuItem({ ...menuItem, [name]: value })
+	}
 
-  const getMenu = async () => {
-    // const restaurant = user.nickname
-    const restaurant_id = 2;
-    setLoading(true);
+	const getMenu = async () => {
+		// const restaurant = user.nickname
+		const restaurant_id = 2
+		setLoading(true)
 
+		try {
+			const response = await axios.get(`${baseURL}/dishes/` + restaurant_id)
+			setLoading(false)
+
+			console.log("getMenu_response.data", response.data)
+			setDishes(response.data)
+
+			console.log('Запрос "getMenu" успешно выполнен')
+		} catch (error) {
+			setLoading(false)
+
+			console.error('Ошибка при выполнении запроса "getMenu":', error)
+			return
+		}
+	}
+
+	const getToppings = async () => {
+		// const restaurant = user.nickname
+		const restaurant_id = 2
+
+		try {
+			const response = await axios.get(`${baseURL}/toppings/${restaurant_id}`)
+
+			console.log("getToppings_response.data", response.data)
+			setToppings(response.data)
+
+			console.log('Запрос "getMenu" успешно выполнен')
+		} catch (error) {
+			console.error('Ошибка при выполнении запроса "getMenu":', error)
+			return
+		}
+	}
+	const getExtras = async () => {
+		// const restaurant = user.nickname
+		const restaurant_id = 2
+
+		try {
+			const response = await axios.get(`${baseURL}/extras/${restaurant_id}`)
+
+			console.log("getExtras.data", response.data)
+			setExtras(response.data)
+
+			console.log('Запрос "getExtras" успешно выполнен')
+		} catch (error) {
+			console.error('Ошибка при выполнении запроса "getExtras":', error)
+			return
+		}
+	}
+
+	const addMenuItem = async () => {
+		console.log("menuItem :>> ", menuItem)
+		const restaurant_id = 2
+
+		console.log("newSelectedToppings", newSelectedToppings)
+
+		const newDish = {
+			...menuItem,
+			image: productImg,
+			restaurant_id: restaurant_id,
+			toppings: newSelectedToppings, // Добавление выбранных топингов в объект menuItem
+			extras: newSelectedExtras, // Добавление выбранных Extras в объект menuItem
+		}
+
+		console.log("newDish :>> ", newDish)
+		setLoading(true)
+
+		try {
+			const response = await axios.post(`${baseURL}/dishes/`, newDish)
+			setLoading(false)
+
+			console.log('Запрос "addMenuItem" успешно выполнен')
+			setSuccessAlert(true)
+			setProductImg(null)
+			setTimeout(() => {
+				setSuccessAlert(false)
+			}, 2000)
+		} catch (error) {
+			setLoading(false)
+
+			console.error('Ошибка при выполнении запроса "addMenuItem":', error)
+			return
+		}
+		setDishes([...dishes, newDish])
+
+		setMenuItem({
+			title: "",
+			description: "",
+			price: "",
+			toppings: [],
+			image: "",
+		})
+	}
+
+	const updateMenuItem = async (index) => {
+		const updatedItem = dishes[index]
+
+		const updatedDish = {
+			...updatedItem,
+			toppings: selectedToppings,
+			extras: selectedExtras,
+			restaurant_id: 2,
+		}
+		// console.log("updatedItem.id", updatedItem.id);
+		// console.log("selectedToppings222", selectedToppings);
+		// console.log("selectedExtras222", selectedExtras);
+		console.log("updatedDish333", updatedDish)
+		setLoading(true)
+
+		try {
+			const response = await axios.put(
+				`${baseURL}/dishes/${updatedItem.id}`,
+				updatedDish
+			)
+			setLoading(false)
+
+			console.log('Запрос "updateMenuItem" успешно выполнен')
+			const updatedDishes = [...dishes]
+			updatedDishes[index] = updatedDish
+
+			setDishes(updatedDishes)
+			getMenu()
+			setSelectedToppings([])
+			setSelectedExtras([])
+
+			setSuccessAlert(true)
+			setTimeout(() => {
+				setSuccessAlert(false)
+			}, 2000)
+		} catch (error) {
+			setLoading(false)
+
+			console.error('Ошибка при выполнении запроса "updateMenuItem":', error)
+		}
+	}
+
+	const deleteMenuItem = async (index) => {
+		setLoading(true)
+
+		try {
+			const dishIdToDelete = dishes[index].id // Получаем ID блюда для удаления
+			const response = await axios.delete(`${baseURL}/dishes/${dishIdToDelete}`)
+			setLoading(false)
+
+			console.log('Запрос "deleteMenuItem" успешно выполнен')
+
+			const updatedDishes = [...dishes]
+			updatedDishes.splice(index, 1) // Удаляем элемент из массива
+			setDishes(updatedDishes)
+
+			setSuccessAlert(true)
+			setTimeout(() => {
+				setSuccessAlert(false)
+			}, 2000)
+		} catch (error) {
+			setLoading(false)
+
+			console.error('Ошибка при выполнении запроса "deleteMenuItem":', error)
+		}
+	}
+  
+  const updateAllDishes = async () => {
+    setLoading(true)
     try {
-      const response = await axios.get(`${baseURL}/dishes/` + restaurant_id);
-      setLoading(false);
-
-      console.log("getMenu_response.data", response.data);
-      setDishes(response.data);
-
-      console.log('Запрос "getMenu" успешно выполнен');
-    } catch (error) {
-      setLoading(false);
-
-      console.error('Ошибка при выполнении запроса "getMenu":', error);
-      return;
-    }
-  };
-
-  const getToppings = async () => {
-    // const restaurant = user.nickname
-    const restaurant_id = 2;
-
-    try {
-      const response = await axios.get(`${baseURL}/toppings/${restaurant_id}`);
-
-      console.log("getToppings_response.data", response.data);
-      setToppings(response.data);
-
-      console.log('Запрос "getMenu" успешно выполнен');
-    } catch (error) {
-      console.error('Ошибка при выполнении запроса "getMenu":', error);
-      return;
-    }
-  };
-  const getExtras = async () => {
-    // const restaurant = user.nickname
-    const restaurant_id = 2;
-
-    try {
-      const response = await axios.get(`${baseURL}/extras/${restaurant_id}`);
-
-      console.log("getExtras.data", response.data);
-      setExtras(response.data);
-
-      console.log('Запрос "getExtras" успешно выполнен');
-    } catch (error) {
-      console.error('Ошибка при выполнении запроса "getExtras":', error);
-      return;
-    }
-  };
-
-  const addMenuItem = async () => {
-    console.log("menuItem :>> ", menuItem);
-    const restaurant_id = 2;
-
-    console.log("newSelectedToppings", newSelectedToppings);
-
-    const newDish = {
-      ...menuItem,
-      image: productImg,
-      restaurant_id: restaurant_id,
-      toppings: newSelectedToppings, // Добавление выбранных топингов в объект menuItem
-      extras: newSelectedExtras, // Добавление выбранных Extras в объект menuItem
-    };
-
-    console.log("newDish :>> ", newDish);
-    setLoading(true);
-
-    try {
-      const response = await axios.post(`${baseURL}/dishes/`, newDish);
-      setLoading(false);
-
-      console.log('Запрос "addMenuItem" успешно выполнен');
-      setSuccessAlert(true);
-      setProductImg(null);
+      dishes.map(async (dish) => {
+        const response = await axios.put(`${baseURL}/dishes/${dish.id}`, dish)
+        setLoading(false)
+        console.log('Запрос "updateAllDishes" успешно выполнен')
+      })
+      setSuccessAlert(true)
       setTimeout(() => {
-        setSuccessAlert(false);
-      }, 2000);
+        setSuccessAlert(false)
+      }, 2000)
     } catch (error) {
-      setLoading(false);
-
-      console.error('Ошибка при выполнении запроса "addMenuItem":', error);
-      return;
+      setLoading(false)
+      console.error('Ошибка при выполнении запроса "updateAllDishes":', error)
     }
-    setDishes([...dishes, newDish]);
+  }
+  
 
-    setMenuItem({
-      title: "",
-      description: "",
-      price: "",
-      toppings: [],
-      image: "",
-    });
-  };
+	useEffect(() => {
+		getMenu()
+		getToppings()
+		getExtras()
+	}, [user.nickname])
 
-  const updateMenuItem = async (index) => {
-    const updatedItem = dishes[index];
+	return (
+		<>
+			{successAlert && (
+				<Box className="notification">
+					<Alert severity="success">
+						<AlertTitle>Success</AlertTitle>
+						The operation was a — <strong>success!</strong>
+					</Alert>
+				</Box>
+			)}
 
-    const updatedDish = {
-      ...updatedItem,
-      toppings: selectedToppings,
-      extras: selectedExtras,
-      restaurant_id: 2,
-    };
-    // console.log("updatedItem.id", updatedItem.id);
-    // console.log("selectedToppings222", selectedToppings);
-    // console.log("selectedExtras222", selectedExtras);
-    console.log("updatedDish333", updatedDish);
-    setLoading(true);
+			{dishes.length == 0 && (
+				<Box sx={{ width: "100%" }}>
+					<LinearProgress />
+				</Box>
+			)}
 
-    try {
-      const response = await axios.put(
-        `${baseURL}/dishes/${updatedItem.id}`,
-        updatedDish
-      );
-      setLoading(false);
+			{dishes.length > 0 && (
+				<Paper>
+					<Box sx={{ textAlign: "right" }}>
+						<Button
+							sx={{ m: "5px " }}
+							variant="contained"
+							color="primary"
+							onClick={() => updateAllDishes()}
+						>
+							Save All
+						</Button>
+					</Box>
+					<Table>
+						<TableHead>
+							<TableRow sx={{ backgroundColor: "lightBlue" }}>
+								<StyledTableCell width="5%">ID</StyledTableCell>
+								<StyledTableCell width="20%">Title</StyledTableCell>
+								<StyledTableCell width="20%">Description</StyledTableCell>
+								<StyledTableCell width="10%">Price</StyledTableCell>
+								<StyledTableCell width="20%">image</StyledTableCell>
+								<StyledTableCell width="15%">Toppings</StyledTableCell>
+								<StyledTableCell width="10%">Extras</StyledTableCell>
+								<StyledTableCell width="5%">Actions</StyledTableCell>
+							</TableRow>
+						</TableHead>
 
-      console.log('Запрос "updateMenuItem" успешно выполнен');
-      const updatedDishes = [...dishes];
-      updatedDishes[index] = updatedDish;
+						<TableBody>
+							{console.log("dishes111", dishes)}{" "}
+							{dishes.map((item, index) => (
+								<TableRow key={index}>
+									<StyledTableCell>{item.id}</StyledTableCell>
 
-      setDishes(updatedDishes);
-      getMenu();
-      setSelectedToppings([]);
-      setSelectedExtras([]);
+									<StyledTableCell>
+										<TextField
+											// sx={{ minWidth: "100px" }}
+											value={item.title}
+											onChange={(e) => handleEditChange(e, index, "title")}
+										/>
+									</StyledTableCell>
+									<StyledTableCell>
+										<TextField
+											// sx={{ minWidth: "150px" }}
+											value={item.description}
+											onChange={(e) =>
+												handleEditChange(e, index, "description")
+											}
+										/>
+									</StyledTableCell>
+									<StyledTableCell>
+										<TextField
+											value={item.price}
+											onChange={(e) => handleEditChange(e, index, "price")}
+										/>
+									</StyledTableCell>
 
-      setSuccessAlert(true);
-      setTimeout(() => {
-        setSuccessAlert(false);
-      }, 2000);
-    } catch (error) {
-      setLoading(false);
+									<StyledTableCell>
+										<Box>
+											<ImagePreview>
+												{item.image ? (
+													<>
+														<img src={item.image} alt="no_image!" />
+													</>
+												) : (
+													<Typography> Image Preview </Typography>
+												)}
+											</ImagePreview>
 
-      console.error('Ошибка при выполнении запроса "updateMenuItem":', error);
-    }
-  };
+											<label htmlFor={`imgUpload-${index}`}>
+												<Button
+													variant="contained"
+													component="span"
+													startIcon={<CloudUploadIcon />}
+													sx={{
+														"borderRadius": 8,
+														"backgroundColor": "#2196f3",
+														"color": "#fff",
+														"&:hover": { backgroundColor: "#1976d2" },
+													}}
+												>
+													Upload image
+												</Button>
+											</label>
 
-  const deleteMenuItem = async (index) => {
-    setLoading(true);
+											<Input
+												id={`imgUpload-${index}`}
+												type="file"
+												inputProps={{
+													accept: "image/*",
+													style: { display: "none" },
+												}}
+												onChange={(e) => {
+													const updatedList = [...dishes]
+													const file = e.target.files[0]
+													const reader = new FileReader()
 
-    try {
-      const dishIdToDelete = dishes[index].id; // Получаем ID блюда для удаления
-      const response = await axios.delete(
-        `${baseURL}/dishes/${dishIdToDelete}`
-      );
-      setLoading(false);
+													if (file) {
+														reader.readAsDataURL(file)
+														reader.onloadend = () => {
+															// setLogoImage(reader.result);
+															console.log("index", index)
+															updatedList[index].image = reader.result
+															console.log("updatedList", updatedList)
 
-      console.log('Запрос "deleteMenuItem" успешно выполнен');
+															setDishes(updatedList)
+														}
+													} else {
+														setDishes([...dishes])
+													}
+												}}
+												required
+											/>
+										</Box>
+									</StyledTableCell>
 
-      const updatedDishes = [...dishes];
-      updatedDishes.splice(index, 1); // Удаляем элемент из массива
-      setDishes(updatedDishes);
+									{/* list of toppings in dish ================================================ */}
+									{/* {console.log("item.toppings ", item.toppings)} */}
 
-      setSuccessAlert(true);
-      setTimeout(() => {
-        setSuccessAlert(false);
-      }, 2000);
-    } catch (error) {
-      setLoading(false);
+									<StyledTableCell>
+										{item.toppings && (
+											<Stack spacing={3}>
+												<Autocomplete
+													multiple
+													id="tags-outlined"
+													options={toppings.filter(
+														(topping) =>
+															!item.toppings.some(
+																(selected) => selected.id === topping.id
+															)
+													)}
+													getOptionLabel={(option) => option.title}
+													defaultValue={[...item.toppings]}
+													filterSelectedOptions
+													onChange={(event, newValue) => {
+														setSelectedToppings(newValue)
+														setSelectedDish(newValue)
+													}}
+													// isOptionEqualToValue={(option, value) => option.id === value.id} // Добавьте это свойство
 
-      console.error('Ошибка при выполнении запроса "deleteMenuItem":', error);
-    }
-  };
+													renderInput={(params) => (
+														<TextField
+															{...params}
+															label="toppings for this dish"
+															placeholder="..."
+														/>
+													)}
+												/>
+											</Stack>
+										)}
+									</StyledTableCell>
 
-  useEffect(() => {
-    getMenu();
-    getToppings();
-    getExtras();
-  }, [user.nickname]);
+									{/* list of extras in dish ================================================ */}
+									{/* {console.log("item.extras ", item.extras)} */}
 
-  return (
-    <>
-      {successAlert && (
-        <Box className="notification">
-          <Alert severity="success">
-            <AlertTitle>Success</AlertTitle>
-            The operation was a — <strong>success!</strong>
-          </Alert>
-        </Box>
-      )}
+									<StyledTableCell>
+										{item.extras && (
+											<Stack spacing={3}>
+												<Autocomplete
+													multiple
+													id="tags-outlined"
+													options={extras.filter(
+														(topping) =>
+															!item.extras.some(
+																(selected) => selected.id === topping.id
+															)
+													)}
+													getOptionLabel={(option) => option.title}
+													defaultValue={[...item.extras]}
+													filterSelectedOptions
+													onChange={(event, newValue) => {
+														console.log("_onChange_newValue", newValue)
+														setSelectedExtras(newValue)
+													}}
+													// isOptionEqualToValue={(option, value) => option.id === value.id} // Добавьте это свойство
 
-      {dishes.length == 0 && (
-        <Box sx={{ width: "100%" }}>
-          <LinearProgress />
-        </Box>
-      )}
-      {dishes.length > 0 && (
-        <Paper>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "lightBlue" }}>
-                <TableCell>ID</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>image</TableCell>
-                <TableCell>Toppings</TableCell>
-                <TableCell>Extras</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
+													renderInput={(params) => (
+														<TextField
+															{...params}
+															label="extras for this dish"
+															placeholder="..."
+														/>
+													)}
+												/>
+											</Stack>
+										)}
+									</StyledTableCell>
 
-            <TableBody>
-              {console.log("dishes111", dishes)}{" "}
-              {dishes.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell>{item.id}</TableCell>
+									<StyledTableCell>
+										<Button
+											sx={{ m: "5px 0px" }}
+											variant="contained"
+											color="primary"
+											onClick={() => updateMenuItem(index)}
+										>
+											Update
+										</Button>
+										<Button
+											variant="contained"
+											color="secondary"
+											onClick={() => deleteMenuItem(index)}
+										>
+											Delete
+										</Button>
+									</StyledTableCell>
+								</TableRow>
+							))}
+							{/* table for adding  new dish ================================================ */}
+							<TableRow sx={{ backgroundColor: "lightBlue" }}>
+								<StyledTableCell>ID</StyledTableCell>
+								<StyledTableCell>Title</StyledTableCell>
+								<StyledTableCell>Description</StyledTableCell>
+								<StyledTableCell>Price</StyledTableCell>
+								<StyledTableCell>image</StyledTableCell>
+								<StyledTableCell>Toppings</StyledTableCell>
+								<StyledTableCell>Extras</StyledTableCell>
+								<StyledTableCell>Actions</StyledTableCell>
+							</TableRow>
+							{/* creating a new dish ================================================ */}
+							<TableRow sx={{ backgroundColor: "lightBlue" }}>
+								<StyledTableCell>
+									{/* <TextField name='id'   variant='outlined' /> */}
+								</StyledTableCell>
+								<StyledTableCell>
+									<TextField
+										name="title"
+										value={menuItem.title}
+										onChange={handleMenuItemChange}
+										variant="outlined"
+									/>
+								</StyledTableCell>
+								<StyledTableCell>
+									<TextField
+										name="description"
+										value={menuItem.description}
+										onChange={handleMenuItemChange}
+										variant="outlined"
+									/>
+								</StyledTableCell>
+								<StyledTableCell sx={{ width: 100 }}>
+									<TextField
+										name="price"
+										value={menuItem.price}
+										onChange={handleMenuItemChange}
+										variant="outlined"
+									/>
+								</StyledTableCell>
 
-                  <TableCell>
-                    <TextField
-                      sx={{ minWidth: "100px" }}
-                      value={item.title}
-                      onChange={(e) => handleEditChange(e, index, "title")}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <TextField
-                      sx={{ minWidth: "150px" }}
-                      value={item.description}
-                      onChange={(e) =>
-                        handleEditChange(e, index, "description")
-                      }
-                    />
-                  </TableCell>
-                  <TableCell sx={{ width: 100 }}>
-                    <TextField
-                      value={item.price}
-                      onChange={(e) => handleEditChange(e, index, "price")}
-                    />
-                  </TableCell>
+								<StyledTableCell>
+									<ImagePreview>
+										{productImg ? (
+											<>
+												<img src={productImg} alt="error!" />
+											</>
+										) : (
+											<p> Image Preview </p>
+										)}
+									</ImagePreview>
+									<label htmlFor={`imgUpload`}>
+										<Button
+											variant="contained"
+											component="span"
+											startIcon={<CloudUploadIcon />}
+											sx={{
+												"borderRadius": 8,
+												"backgroundColor": "#2196f3",
+												"color": "#fff",
+												"&:hover": { backgroundColor: "#1976d2" },
+											}}
+										>
+											Upload image
+										</Button>
+									</label>
+									<Input
+										id={`imgUpload`}
+										type="file"
+										inputProps={{
+											accept: "image/*",
+											style: { display: "none" },
+										}}
+										onChange={handleProductImageUpload}
+										required
+									/>{" "}
+								</StyledTableCell>
 
-                  <TableCell>
-                    <Box>
-                      <ImagePreview>
-                        {item.image ? (
-                          <>
-                            <img src={item.image} alt="no_image!" />
-                          </>
-                        ) : (
-                          <Typography> Image Preview </Typography>
-                        )}
-                      </ImagePreview>
+								{/* choose toppings in new dish================ */}
 
-                      <label htmlFor={`imgUpload-${index}`}>
-                        <Button
-                          variant="contained"
-                          component="span"
-                          startIcon={<CloudUploadIcon />}
-                          sx={{
-                            "borderRadius": 8,
-                            "backgroundColor": "#2196f3",
-                            "color": "#fff",
-                            "&:hover": { backgroundColor: "#1976d2" },
-                          }}
-                        >
-                          Upload image
-                        </Button>
-                      </label>
+								<StyledTableCell>
+									{toppings && (
+										<Stack spacing={3}>
+											<Autocomplete
+												multiple
+												id="tags-outlined"
+												options={toppings}
+												getOptionLabel={(option) => option.title}
+												defaultValue={[...toppings]}
+												filterSelectedOptions
+												onChange={(event, newValue) => {
+													setNewSelectedToppings(newValue)
+												}}
+												value={newSelectedToppings} // Установка выбранных значений из состояния
+												renderInput={(params) => (
+													<TextField
+														{...params}
+														label="toppings for this dish"
+														placeholder="..."
+													/>
+												)}
+											/>
+										</Stack>
+									)}
+								</StyledTableCell>
 
-                      <Input
-                        id={`imgUpload-${index}`}
-                        type="file"
-                        inputProps={{
-                          accept: "image/*",
-                          style: { display: "none" },
-                        }}
-                        onChange={(e) => {
-                          const updatedList = [...dishes];
-                          const file = e.target.files[0];
-                          const reader = new FileReader();
+								{/* choose extras in new dish================ */}
 
-                          if (file) {
-                            reader.readAsDataURL(file);
-                            reader.onloadend = () => {
-                              // setLogoImage(reader.result);
-                              console.log("index", index);
-                              updatedList[index].image = reader.result;
-                              console.log("updatedList", updatedList);
+								<StyledTableCell>
+									{extras && (
+										<Stack spacing={3}>
+											<Autocomplete
+												multiple
+												id="tags-outlined"
+												options={extras}
+												getOptionLabel={(option) => option.title}
+												defaultValue={[...extras]}
+												filterSelectedOptions
+												onChange={(event, newValue) => {
+													setNewSelectedExtras(newValue)
+												}}
+												value={newSelectedExtras} // Установка выбранных значений из состояния
+												renderInput={(params) => (
+													<TextField
+														{...params}
+														label="extras for this dish"
+														placeholder="..."
+													/>
+												)}
+											/>
+										</Stack>
+									)}
+								</StyledTableCell>
 
-                              setDishes(updatedList);
-                            };
-                          } else {
-                            setDishes([...dishes]);
-                          }
-                        }}
-                        required
-                      />
-                    </Box>
-                  </TableCell>
+								<StyledTableCell>
+									<Button
+										variant="contained"
+										color="primary"
+										onClick={addMenuItem}
+									>
+										Add
+									</Button>
+								</StyledTableCell>
+							</TableRow>
+						</TableBody>
+					</Table>
 
-                  {/* list of toppings in dish ================================================ */}
-                  {/* {console.log("item.toppings ", item.toppings)} */}
+					{/* </TableBody> */}
+					{/* </Table> */}
+				</Paper>
+			)}
 
-                  <TableCell>
-                    {item.toppings && (
-                      <Stack spacing={3}>
-                        <Autocomplete
-                          multiple
-                          id="tags-outlined"
-                          options={toppings.filter(
-                            (topping) =>
-                              !item.toppings.some(
-                                (selected) => selected.id === topping.id
-                              )
-                          )}
-                          getOptionLabel={(option) => option.title}
-                          defaultValue={[...item.toppings]}
-                          filterSelectedOptions
-                          onChange={(event, newValue) => {
-                            setSelectedToppings(newValue);
-                            setSelectedDish(newValue);
-                          }}
-                          // isOptionEqualToValue={(option, value) => option.id === value.id} // Добавьте это свойство
-
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="toppings for this dish"
-                              placeholder="..."
-                            />
-                          )}
-                        />
-                      </Stack>
-                    )}
-                  </TableCell>
-
-                  {/* list of extras in dish ================================================ */}
-                  {/* {console.log("item.extras ", item.extras)} */}
-
-                  <TableCell>
-                    {item.extras && (
-                      <Stack spacing={3}>
-                        <Autocomplete
-                          multiple
-                          id="tags-outlined"
-                          options={extras.filter(
-                            (topping) =>
-                              !item.extras.some(
-                                (selected) => selected.id === topping.id
-                              )
-                          )}
-                          getOptionLabel={(option) => option.title}
-                          defaultValue={[...item.extras]}
-                          filterSelectedOptions
-                          onChange={(event, newValue) => {
-                            console.log("_onChange_newValue", newValue);
-                            setSelectedExtras(newValue);
-                          }}
-                          // isOptionEqualToValue={(option, value) => option.id === value.id} // Добавьте это свойство
-
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="extras for this dish"
-                              placeholder="..."
-                            />
-                          )}
-                        />
-                      </Stack>
-                    )}
-                  </TableCell>
-
-                  <TableCell>
-                    <Button
-                      sx={{ m: "5px 0px" }}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => updateMenuItem(index)}
-                    >
-                      Update
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => deleteMenuItem(index)}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {/* table for adding  new dish ================================================ */}
-              <TableRow sx={{ backgroundColor: "lightBlue" }}>
-                <TableCell>ID</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>image</TableCell>
-                <TableCell>Toppings</TableCell>
-                <TableCell>Extras</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-              {/* creating a new dish ================================================ */}
-              <TableRow sx={{ backgroundColor: "lightBlue" }}>
-                <TableCell>
-                  {/* <TextField name='id'   variant='outlined' /> */}
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    name="title"
-                    value={menuItem.title}
-                    onChange={handleMenuItemChange}
-                    variant="outlined"
-                  />
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    name="description"
-                    value={menuItem.description}
-                    onChange={handleMenuItemChange}
-                    variant="outlined"
-                  />
-                </TableCell>
-                <TableCell sx={{ width: 100 }}>
-                  <TextField
-                    name="price"
-                    value={menuItem.price}
-                    onChange={handleMenuItemChange}
-                    variant="outlined"
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <ImagePreview>
-                    {productImg ? (
-                      <>
-                        <img src={productImg} alt="error!" />
-                      </>
-                    ) : (
-                      <p> Image Preview </p>
-                    )}
-                  </ImagePreview>
-                  <label htmlFor={`imgUpload`}>
-                    <Button
-                      variant="contained"
-                      component="span"
-                      startIcon={<CloudUploadIcon />}
-                      sx={{
-                        "borderRadius": 8,
-                        "backgroundColor": "#2196f3",
-                        "color": "#fff",
-                        "&:hover": { backgroundColor: "#1976d2" },
-                      }}
-                    >
-                      Upload image
-                    </Button>
-                  </label>
-                  <Input
-                    id={`imgUpload`}
-                    type="file"
-                    inputProps={{
-                      accept: "image/*",
-                      style: { display: "none" },
-                    }}
-                    onChange={handleProductImageUpload}
-                    required
-                  />{" "}
-                </TableCell>
-
-                {/* choose toppings in new dish================ */}
-
-                <TableCell>
-                  {toppings && (
-                    <Stack spacing={3}>
-                      <Autocomplete
-                        multiple
-                        id="tags-outlined"
-                        options={toppings}
-                        getOptionLabel={(option) => option.title}
-                        defaultValue={[...toppings]}
-                        filterSelectedOptions
-                        onChange={(event, newValue) => {
-                          setNewSelectedToppings(newValue);
-                        }}
-                        value={newSelectedToppings} // Установка выбранных значений из состояния
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="toppings for this dish"
-                            placeholder="..."
-                          />
-                        )}
-                      />
-                    </Stack>
-                  )}
-                </TableCell>
-
-                {/* choose extras in new dish================ */}
-
-                <TableCell>
-                  {extras && (
-                    <Stack spacing={3}>
-                      <Autocomplete
-                        multiple
-                        id="tags-outlined"
-                        options={extras}
-                        getOptionLabel={(option) => option.title}
-                        defaultValue={[...extras]}
-                        filterSelectedOptions
-                        onChange={(event, newValue) => {
-                          setNewSelectedExtras(newValue);
-                        }}
-                        value={newSelectedExtras} // Установка выбранных значений из состояния
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="extras for this dish"
-                            placeholder="..."
-                          />
-                        )}
-                      />
-                    </Stack>
-                  )}
-                </TableCell>
-
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={addMenuItem}
-                  >
-                    Add
-                  </Button>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-
-          {/* </TableBody> */}
-          {/* </Table> */}
-        </Paper>
-      )}
-
-      {loading && (
-        <Box sx={{ width: "100%" }}>
-          <LoadingOverlay />
-        </Box>
-      )}
-    </>
-  );
+			{loading && (
+				<Box sx={{ width: "100%" }}>
+					<LoadingOverlay />
+				</Box>
+			)}
+		</>
+	)
 }

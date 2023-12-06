@@ -23,7 +23,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import {
   FlexRowContainer,
   FlexColumnContainer,
-} from "components/AllHelpComponents";
+} from "styles/styledComponents";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import { baseURL } from "constants/api";
