@@ -464,7 +464,6 @@ export function Dishes() {
                       <Stack spacing={3}>
                         <Autocomplete
                           multiple
-                          id="tags-outlined"
                           options={toppings}
                           getOptionLabel={(option) => option.title}
                           value={item.toppings}
@@ -502,15 +501,11 @@ export function Dishes() {
                       <Stack spacing={3}>
                         <Autocomplete
                           multiple
-                          id="tags-outlined"
-                          options={extras}
-                          //   defaultValue={item.extras}
-                          //   defaultValue={extras.filter(option => item.extras.includes(option.id))}
-
                           getOptionLabel={(option) => option.title}
+                          defaultValue={item.extras}
+                          options={extras}
                           value={item.extras}
                           onChange={(event, newValue) => {
-                            // setSelectedExtras(newValue)
                             handleEditChange(
                               { target: { value: newValue } }, // Создаем фейковое событие для передачи в handleEditChange
                               index,
@@ -518,6 +513,9 @@ export function Dishes() {
                             )
                           }}
                           filterSelectedOptions
+                          isOptionEqualToValue={(option, value) =>
+                            option.id === value.id
+                          } // Добавьте это свойство
                           renderInput={(params) => (
                             <TextField
                               {...params}
@@ -636,7 +634,6 @@ export function Dishes() {
                     <Stack spacing={3}>
                       <Autocomplete
                         multiple
-                        id="tags-outlined"
                         options={toppings}
                         getOptionLabel={(option) => option.title}
                         defaultValue={[...toppings]}
@@ -666,7 +663,6 @@ export function Dishes() {
                     <Stack spacing={3}>
                       <Autocomplete
                         multiple
-                        id="tags-outlined"
                         options={extras}
                         getOptionLabel={(option) => option.title}
                         defaultValue={[...extras]}
