@@ -5,6 +5,10 @@ import theme from "styles/theme";
 export const Header = () => {
   const location = useLocation();
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   return (
     <>
       <Box
@@ -14,7 +18,9 @@ export const Header = () => {
           textAlign: "center",
         }}
       >
-        <Typography variant="h4" p="10px" > {location.pathname.slice(1)}</Typography>
+        <Typography variant="h4" p="10px">
+          {capitalizeFirstLetter(location.pathname.slice(1))}
+        </Typography>
       </Box>
     </>
   );

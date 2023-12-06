@@ -22,6 +22,7 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { baseURL } from "constants/api";
+import { LoadingOverlay } from "components/LoadingOverlay";
 
 export function Dishes() {
   const { user } = useAuth0();
@@ -48,6 +49,8 @@ export function Dishes() {
     extras: [],
     image: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [selectedDish, setSelectedDish] = useState({});
 
   const handleEditChange = (e, index, field) => {
     const { value } = e.target;
@@ -93,15 +96,19 @@ export function Dishes() {
   const getMenu = async () => {
     // const restaurant = user.nickname
     const restaurant_id = 2;
+    setLoading(true);
 
     try {
       const response = await axios.get(`${baseURL}/dishes/` + restaurant_id);
+      setLoading(false);
 
       console.log("getMenu_response.data", response.data);
       setDishes(response.data);
 
       console.log('Запрос "getMenu" успешно выполнен');
     } catch (error) {
+      setLoading(false);
+
       console.error('Ошибка при выполнении запроса "getMenu":', error);
       return;
     }
@@ -155,9 +162,12 @@ export function Dishes() {
     };
 
     console.log("newDish :>> ", newDish);
+    setLoading(true);
 
     try {
       const response = await axios.post(`${baseURL}/dishes/`, newDish);
+      setLoading(false);
+
       console.log('Запрос "addMenuItem" успешно выполнен');
       setSuccessAlert(true);
       setProductImg(null);
@@ -165,6 +175,8 @@ export function Dishes() {
         setSuccessAlert(false);
       }, 2000);
     } catch (error) {
+      setLoading(false);
+
       console.error('Ошибка при выполнении запроса "addMenuItem":', error);
       return;
     }
@@ -186,23 +198,27 @@ export function Dishes() {
       ...updatedItem,
       toppings: selectedToppings,
       extras: selectedExtras,
-      restaurant_id: 2, // Укажите соответствующий restaurant_id
+      restaurant_id: 2,
     };
-
-    console.log("selectedToppings", selectedToppings);
-    console.log("selectedExtras", selectedExtras);
+    // console.log("updatedItem.id", updatedItem.id);
+    // console.log("selectedToppings222", selectedToppings);
+    // console.log("selectedExtras222", selectedExtras);
+    console.log("updatedDish333", updatedDish);
+    setLoading(true);
 
     try {
       const response = await axios.put(
         `${baseURL}/dishes/${updatedItem.id}`,
         updatedDish
       );
+      setLoading(false);
+
       console.log('Запрос "updateMenuItem" успешно выполнен');
       const updatedDishes = [...dishes];
       updatedDishes[index] = updatedDish;
 
       setDishes(updatedDishes);
-
+      getMenu();
       setSelectedToppings([]);
       setSelectedExtras([]);
 
@@ -211,16 +227,21 @@ export function Dishes() {
         setSuccessAlert(false);
       }, 2000);
     } catch (error) {
+      setLoading(false);
+
       console.error('Ошибка при выполнении запроса "updateMenuItem":', error);
     }
   };
 
   const deleteMenuItem = async (index) => {
+    setLoading(true);
+
     try {
       const dishIdToDelete = dishes[index].id; // Получаем ID блюда для удаления
       const response = await axios.delete(
         `${baseURL}/dishes/${dishIdToDelete}`
       );
+      setLoading(false);
 
       console.log('Запрос "deleteMenuItem" успешно выполнен');
 
@@ -233,6 +254,8 @@ export function Dishes() {
         setSuccessAlert(false);
       }, 2000);
     } catch (error) {
+      setLoading(false);
+
       console.error('Ошибка при выполнении запроса "deleteMenuItem":', error);
     }
   };
@@ -297,7 +320,7 @@ export function Dishes() {
                       }
                     />
                   </TableCell>
-                  <TableCell sx={{width:100}}>
+                  <TableCell sx={{ width: 100 }}>
                     <TextField
                       value={item.price}
                       onChange={(e) => handleEditChange(e, index, "price")}
@@ -364,7 +387,7 @@ export function Dishes() {
                   </TableCell>
 
                   {/* list of toppings in dish ================================================ */}
-                  {console.log("item.toppings ", item.toppings)}
+                  {/* {console.log("item.toppings ", item.toppings)} */}
 
                   <TableCell>
                     {item.toppings && (
@@ -383,6 +406,7 @@ export function Dishes() {
                           filterSelectedOptions
                           onChange={(event, newValue) => {
                             setSelectedToppings(newValue);
+                            setSelectedDish(newValue);
                           }}
                           // isOptionEqualToValue={(option, value) => option.id === value.id} // Добавьте это свойство
 
@@ -399,7 +423,7 @@ export function Dishes() {
                   </TableCell>
 
                   {/* list of extras in dish ================================================ */}
-                  {console.log("item.extras ", item.extras)}
+                  {/* {console.log("item.extras ", item.extras)} */}
 
                   <TableCell>
                     {item.extras && (
@@ -417,6 +441,7 @@ export function Dishes() {
                           defaultValue={[...item.extras]}
                           filterSelectedOptions
                           onChange={(event, newValue) => {
+                            console.log("_onChange_newValue", newValue);
                             setSelectedExtras(newValue);
                           }}
                           // isOptionEqualToValue={(option, value) => option.id === value.id} // Добавьте это свойство
@@ -484,7 +509,7 @@ export function Dishes() {
                     variant="outlined"
                   />
                 </TableCell>
-                <TableCell sx={{width:100}}>
+                <TableCell sx={{ width: 100 }}>
                   <TextField
                     name="price"
                     value={menuItem.price}
@@ -602,6 +627,12 @@ export function Dishes() {
           {/* </TableBody> */}
           {/* </Table> */}
         </Paper>
+      )}
+
+      {loading && (
+        <Box sx={{ width: "100%" }}>
+          <LoadingOverlay />
+        </Box>
       )}
     </>
   );

@@ -195,7 +195,7 @@ export function Toppings() {
           <LinearProgress />
         </Box>
       )}
-      {console.log("loading", loading)}
+      {/* {console.log("loading", loading)} */}
       {loading && (
         <Box sx={{ width: "100%" }}>
           <LoadingOverlay />
@@ -398,6 +398,8 @@ export function Toppings() {
           </TableBody>
         </Table>
       </Paper>
+      
+   
     </>
   );
 }
