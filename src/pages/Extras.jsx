@@ -15,12 +15,15 @@ import {
 } from "@mui/material"
 import axios from "axios"
 import { useAuth0 } from "@auth0/auth0-react"
-import { ImagePreview } from "styles/styledComponents"
 import CloudUploadIcon from "@mui/icons-material/CloudUpload"
 import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
 
-import { FlexRowContainer, StyledButton } from "styles/styledComponents"
+import {
+  FlexRowContainer,
+  StyledButton,
+  ImagePreview,
+} from "styles/styledComponents"
 import { baseURL, getExtras } from "constants/api"
 
 export function Extras() {
