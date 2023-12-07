@@ -13,6 +13,7 @@ import {
   Box,
   Input,
 } from "@mui/material"
+
 import Autocomplete from "@mui/material/Autocomplete"
 import Stack from "@mui/material/Stack"
 import axios from "axios"
@@ -105,9 +106,20 @@ export function Dishes() {
       const response = await axios.get(`${baseURL}/dishes/` + restaurant_id)
       setLoading(false)
       console.log("getMenu_response.data", response.data)
+	  
+	  
       setDishes(response.data)
       setOriginalDishes(response.data) // Обновление originalDishes
       console.log('Запрос "getMenu" успешно выполнен')
+	  
+	  
+	  
+	//   const receivedDishes = response.data;
+	//   setDishes(receivedDishes);
+	//   setOriginalDishes([...receivedDishes]); // Создаем копию полученных блюд и сохраняем в originalDishes
+	//   console.log('Запрос "getMenu" успешно выполнен');
+	  
+	  
     } catch (error) {
       setLoading(false)
       console.error('Ошибка при выполнении запроса "getMenu":', error)
@@ -255,16 +267,19 @@ export function Dishes() {
   const updateAllDishes = async () => {
     console.log("dishes", dishes)
     console.log("originalDishes", originalDishes)
-
+ // Функция для сравнения объектов
+ const isEqual = (obj1, obj2) => {
+    return JSON.stringify(obj1) === JSON.stringify(obj2)
+  }
     setLoading(true)
     try {
       const promises = dishes.map(async (dish) => {
         const originalDish = originalDishes.find((d) => d.id === dish.id)
 
-        console.log("originalDish111", originalDish)
+        // console.log("originalDish111", originalDish) 
 
         if (!isEqual(originalDish, dish)) {
-          console.log("isEqual2222221", originalDish)
+          console.log("isEqual5555", originalDish)
 
           //   const response = await axios.put(`${baseURL}/dishes/${dish.id}`, dish);
           console.log(`Блюдо с ID ${dish.id} успешно обновлено`)
@@ -285,10 +300,7 @@ export function Dishes() {
     }
   }
 
-  // Функция для сравнения объектов
-  const isEqual = (obj1, obj2) => {
-    return JSON.stringify(obj1) === JSON.stringify(obj2)
-  }
+ 
 
   // function isEqual(obj1, obj2) {
   // 	function isObject(obj) {
@@ -321,7 +333,8 @@ export function Dishes() {
     getMenu()
     getToppings()
     getExtras()
-  }, [user.nickname])
+  }, [])
+//   }, [user.nickname])
 
   return (
     <>
@@ -348,6 +361,7 @@ export function Dishes() {
               variant="contained"
               color="primary"
               onClick={() => updateAllDishes()}
+			  disabled={true}
             >
               Save All
             </Button>
@@ -447,9 +461,10 @@ export function Dishes() {
 
                               setDishes(updatedList)
                             }
-                          } else {
-                            setDishes([...dishes])
                           }
+						//    else {
+                        //     setDishes([...dishes])
+                        //   }
                         }}
                         required
                       />
@@ -494,9 +509,6 @@ export function Dishes() {
                   {/* list of extras in dish ================================================ */}
 
                   <StyledTableCell>
-                    {/* {console.log("item.extras ", item.extras)} */}
-                    {/* {console.log(" extras ",  extras)} */}
-
                     {item.extras && (
                       <Stack spacing={3}>
                         <Autocomplete
