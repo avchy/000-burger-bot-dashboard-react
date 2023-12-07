@@ -19,7 +19,9 @@
   },
   "scripts": {
     "start": "REACT_APP_STAGE=prod react-scripts start",
-    "dev": "REACT_APP_STAGE=local react-scripts start"
+    "dev": "REACT_APP_STAGE=local react-scripts start",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "eslintConfig": {
     "extends": [
