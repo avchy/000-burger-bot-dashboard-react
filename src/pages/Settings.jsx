@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import {
   Paper,
   Table,
@@ -14,39 +14,39 @@ import {
   Input,
   Checkbox,
   CircularProgress,
-} from "@mui/material";
-import axios from "axios";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { LoadingOverlay } from "components/LoadingOverlay";
-import { useAuth0 } from "@auth0/auth0-react";
+} from "@mui/material"
+import axios from "axios"
+import CloudUploadIcon from "@mui/icons-material/CloudUpload"
+import { LoadingOverlay } from "components/LoadingOverlay"
+import { useAuth0 } from "@auth0/auth0-react"
 
 import {
   FlexRowContainer,
-  FlexColumnContainer,ImagePreview
-} from "styles/styledComponents";
-// import { ImagePreview } from "styles/styledComponents";
+  FlexColumnContainer,
+  ImagePreview,
+} from "styles/styledComponents"
 
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
-import { baseURL } from "constants/api";
+import Alert from "@mui/material/Alert"
+import AlertTitle from "@mui/material/AlertTitle"
+import { baseURL } from "constants/api"
 
 export function Settings() {
-  const { user } = useAuth0();
+  const { user } = useAuth0()
 
   // const user = {
   // 	nickname: "cafecafe",
   // 	picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png",
   // };
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
 
-  const [link, setLink] = useState("");
-  const [settings, setSettings] = useState([]);
-  const [textToOrder, setTextToOrder] = useState("");
-  const [logoImage, setLogoImage] = useState("");
-  const [showCreditCardButton, setShowCreditCardButton] = useState(false);
-  const [showApplePayButton, setShowApplePayButton] = useState(false);
-  const [showGooglePayButton, setShowGooglePayButton] = useState(false);
-  const [showOrderButton, setShowOrderButton] = useState(false);
+  const [link, setLink] = useState("")
+  const [settings, setSettings] = useState([])
+  const [textToOrder, setTextToOrder] = useState("")
+  const [logoImage, setLogoImage] = useState("")
+  const [showCreditCardButton, setShowCreditCardButton] = useState(false)
+  const [showApplePayButton, setShowApplePayButton] = useState(false)
+  const [showGooglePayButton, setShowGooglePayButton] = useState(false)
+  const [showOrderButton, setShowOrderButton] = useState(false)
 
   // const [successAlert, setSuccessAlert] = useState(false);
   // const [unsuccessAlert, setUnuccessAlert] = useState(false);
@@ -55,71 +55,71 @@ export function Settings() {
     isShow: false,
     severity: "error",
     message: "This is an info alert — check it out!",
-  });
+  })
 
   const getSettings = async () => {
-    const restaurant_id = 2;
+    const restaurant_id = 2
 
     try {
-      setLoading(true);
+      setLoading(true)
 
-      const response = await axios.get(`${baseURL}/settings/${restaurant_id}`);
+      const response = await axios.get(`${baseURL}/settings/${restaurant_id}`)
 
-      console.log("getSettings-response.data", response.data);
-      setSettings(response.data[0]);
+      console.log("getSettings-response.data", response.data)
+      setSettings(response.data[0])
 
-      console.log('Запрос "getSettings" успешно выполнен');
-      setLoading(false);
+      console.log('Запрос "getSettings" успешно выполнен')
+      setLoading(false)
     } catch (error) {
       setAlertDetail({
         isShow: true,
         severity: "error",
         message: "The operation was a failure",
-      });
+      })
 
       setTimeout(() => {
         setAlertDetail({
           ...alertDetail,
           isShow: false,
-        });
-      }, 2000);
+        })
+      }, 2000)
 
-      setLoading(false);
+      setLoading(false)
 
-      console.error('Ошибка при выполнении запроса "getSettings":', error);
-      return;
+      console.error('Ошибка при выполнении запроса "getSettings":', error)
+      return
     }
-  };
+  }
 
   useEffect(() => {
-    getSettings();
-  }, []);
+    getSettings()
+  }, [])
 
   const handleProductImageUpload = (e) => {
-    const file = e.target.files[0];
-    TransformFileData(file);
-  };
+    const file = e.target.files[0]
+    TransformFileData(file)
+  }
 
   const TransformFileData = (file) => {
-    const reader = new FileReader();
+    const reader = new FileReader()
 
     if (file) {
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file)
       reader.onloadend = () => {
-        setLogoImage(reader.result);
-      };
+        setLogoImage(reader.result)
+      }
     } else {
-      setLogoImage("");
+      setLogoImage("")
     }
-  };
+  }
 
   const handleLinkChange = (e) => {
-    setLink(e.target.value);
-  };
+    setLink(e.target.value)
+  }
 
   const handleTextToOrder = (e) => {
-    setTextToOrder(e.target.value);
-  };
+    setTextToOrder(e.target.value)
+  }
 
   const saveChanges = async () => {
     const dataToUpdate = {
@@ -130,61 +130,61 @@ export function Settings() {
       showGooglePayButton: showGooglePayButton,
       showOrderButton: showOrderButton,
       textToOrder: textToOrder,
-    };
+    }
 
-    const restaurant_id = 2;
-    console.log("dataToUpdate", dataToUpdate);
+    const restaurant_id = 2
+    console.log("dataToUpdate", dataToUpdate)
     try {
       const response = await axios.put(
         `${baseURL}/settings/${restaurant_id}`,
 
         dataToUpdate
-      );
-      console.log('Запрос "saveChanges" успешно выполнен');
-      setLoading(false);
+      )
+      console.log('Запрос "saveChanges" успешно выполнен')
+      setLoading(false)
 
       setAlertDetail({
         isShow: true,
         severity: "success",
         message: "The operation was a success!",
-      });
+      })
 
       setTimeout(() => {
         setAlertDetail({
           ...alertDetail,
           isShow: false,
-        });
-      }, 2000);
+        })
+      }, 2000)
     } catch (error) {
       setAlertDetail({
         isShow: true,
         severity: "error",
         message: "The operation was a failure",
-      });
+      })
 
       setTimeout(() => {
         setAlertDetail({
           ...alertDetail,
           isShow: false,
-        });
-      }, 2000);
+        })
+      }, 2000)
 
-      setLoading(false);
+      setLoading(false)
 
-      console.error('Ошибка при выполнении запроса "saveChanges":', error);
+      console.error('Ошибка при выполнении запроса "saveChanges":', error)
     }
-  };
+  }
 
   useEffect(() => {
-    setShowCreditCardButton(settings.showCreditCardButton || false);
-    setShowApplePayButton(settings.showApplePayButton || false);
-    setShowGooglePayButton(settings.showGooglePayButton || false);
-    setShowOrderButton(settings.showOrderButton || false);
+    setShowCreditCardButton(settings.showCreditCardButton || false)
+    setShowApplePayButton(settings.showApplePayButton || false)
+    setShowGooglePayButton(settings.showGooglePayButton || false)
+    setShowOrderButton(settings.showOrderButton || false)
 
-    setLink(settings.link || "");
-    setTextToOrder(settings.textToOrder || "");
-    setLogoImage(settings.logoImage || "");
-  }, [settings]);
+    setLink(settings.link || "")
+    setTextToOrder(settings.textToOrder || "")
+    setLogoImage(settings.logoImage || "")
+  }, [settings])
 
   return (
     <>
@@ -337,5 +337,5 @@ export function Settings() {
       )}
  */}
     </>
-  );
+  )
 }
