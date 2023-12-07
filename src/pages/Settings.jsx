@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { ImagePreview } from "styles/styledComponents";
 import {
   Paper,
   Table,
@@ -20,10 +19,13 @@ import axios from "axios";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { LoadingOverlay } from "components/LoadingOverlay";
 import { useAuth0 } from "@auth0/auth0-react";
+
 import {
   FlexRowContainer,
-  FlexColumnContainer,
+  FlexColumnContainer,ImagePreview
 } from "styles/styledComponents";
+// import { ImagePreview } from "styles/styledComponents";
+
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import { baseURL } from "constants/api";

@@ -1,5 +1,7 @@
 module.exports = {
   rules: {
+    "import/no-duplicates": "warn",
+
     "import/no-named-as-default": "off",
     "import/namespace": "off",
     "import/named": "off",
@@ -32,7 +34,7 @@ module.exports = {
     "plugin:import/recommended",
   ],
 
-  parser: "@babel/eslint-parser",// Парсер для обработки jsx кода
+  parser: "@babel/eslint-parser", // Парсер для обработки jsx кода
 
   parserOptions: {
     requireConfigFile: false,
@@ -54,4 +56,4 @@ module.exports = {
       version: "detect", // 'detect' автоматически определит версию React
     },
   },
-};
+}
