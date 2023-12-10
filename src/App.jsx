@@ -22,9 +22,10 @@ function App() {
 
           <Router>
             
-            <MenuBar />
             <Navbar />
             
+            <MenuBar />
+
             <Header />
 
             <Routes>

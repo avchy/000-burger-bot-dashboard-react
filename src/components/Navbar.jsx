@@ -40,49 +40,39 @@ export const Navbar = () => {
                   {page.name}
                 </NavBtnLink>
               ))}
+
+              {user?.picture && (
+                <img
+                  className="avatar_img"
+                  style={{ width: "50px", margin: "10px 10px 10px 40px" }}
+                  src={user?.picture}
+                  alt={user?.nickname}
+                />
+              )}
+
+              {isAuthenticated && (
+                <FlexRowContainer>
+                  <Typography sx={{ p: 1 }}>hello {user?.nickname} </Typography>
+
+                  <NavBtnLinkLogIn to="/" onClick={() => logout()}>
+                    logout
+                  </NavBtnLinkLogIn>
+
+                  <NavBtnLinkLogIn to="/settings">
+                    <IoSettingsSharp
+                      style={{
+                        color: "black",
+                        fontSize: "20px",
+                        marginTop: "5px",
+                      }}
+                    />
+                  </NavBtnLinkLogIn>
+                </FlexRowContainer>
+              )}
             </NavMenu>
           )}
 
           {/* Second Nav */}
-          <NavBtn>
-            {user?.picture && (
-              <img
-                className="avatar_img"
-                style={{ width: "50px", margin: "10px 10px 10px 40px" }}
-                src={user?.picture}
-                alt={user?.nickname}
-              />
-            )}
-
-            {/* {!isAuthenticated && (
-            <FlexRowContainer>
-              <Typography sx={{ p: 1 }}>hello guest, please log in </Typography>
-              <NavBtnLinkLogIn to="/" onClick={() => loginWithRedirect()}>
-                login
-              </NavBtnLinkLogIn>
-            </FlexRowContainer>
-          )} */}
-
-            {isAuthenticated && (
-              <FlexRowContainer>
-                <Typography sx={{ p: 1 }}>hello {user?.nickname} </Typography>
-
-                <NavBtnLinkLogIn to="/" onClick={() => logout()}>
-                  logout
-                </NavBtnLinkLogIn>
-
-                <NavBtnLinkLogIn to="/settings">
-                  <IoSettingsSharp
-                    style={{
-                      color: "black",
-                      fontSize: "20px",
-                      marginTop: "5px",
-                    }}
-                  />
-                </NavBtnLinkLogIn>
-              </FlexRowContainer>
-            )}
-          </NavBtn>
         </Nav>
       )}
     </>

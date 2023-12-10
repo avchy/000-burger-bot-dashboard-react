@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react"
+import axios from "axios"
 import {
   Box,
   Table,
@@ -10,131 +10,129 @@ import {
   CircularProgress,
   Paper,
   Typography,
-} from "@mui/material";
+} from "@mui/material"
 
 import {
   StyledTableRow,
   StyledTableCell,
   StyledTable,
   StyledTableContainer,
-} from "styles/styledComponents";
+} from "styles/styledComponents"
 
-import { initialState } from "data/orders.js";
-import AudioPlayer from "components/AudioPlayer.jsx";
+import { initialState } from "data/orders.js"
+import AudioPlayer from "components/AudioPlayer.jsx"
 
-import { useAuth0 } from "@auth0/auth0-react";
-import { baseURL } from "constants/api";
+import { useAuth0 } from "@auth0/auth0-react"
+import { baseURL } from "constants/api"
 
 export function Orders() {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth0()
   // const isAuthenticated = true;
 
-  const [orders, setOrders] = useState([]);
-  const [ordersReverse, setOrdersReverse] = useState([]);
+  const [orders, setOrders] = useState([])
+  const [ordersReverse, setOrdersReverse] = useState([])
   // const [orders, setOrders] = useState(initialState)
 
-  const [loading, setLoading] = useState(true);
-  const [volumeValueDataReceived, setVolumeValueDataReceived] = useState(0);
+  const [loading, setLoading] = useState(true)
+  const [volumeValueDataReceived, setVolumeValueDataReceived] = useState(0)
 
-  const audio = new Audio("icq_sms_sound.mp3");
-  const audioSrc = "icq_sms_sound.mp3";
+  const audio = new Audio("icq_sms_sound.mp3")
+  const audioSrc = "icq_sms_sound.mp3"
 
   //==================================================
 
   // Функция для получения данных из сервера
   const fetchData = async () => {
     try {
-      const response = await fetch(`${baseURL}/orders/`);
+      const response = await fetch(`${baseURL}/orders/`)
 
       if (response.ok) {
-        const newData = await response.json();
+        const newData = await response.json()
         // Проверка изменения данных
-        console.log("newData", newData);
-        console.log("orders", orders);
+        // console.log("newData", newData)
+        // console.log("orders", orders)
         if (newData.length != orders.length) {
-          // if (JSON.stringify(newData) !== JSON.stringify(orders)) {
+          console.log("Данные изменились:", newData)
+          setOrders(newData)
+          setOrdersReverse(newData.reverse())
 
-          console.log("Данные изменились:", newData);
-          setOrders(newData);
-          setOrdersReverse(newData.reverse());
-
-          setVolumeValueDataReceived(1);
+          setVolumeValueDataReceived(1)
           setTimeout(() => {
-            setVolumeValueDataReceived(0);
-          }, 3000);
+            setVolumeValueDataReceived(0)
+          }, 3000)
         }
       }
-      setLoading(false);
+      setLoading(false)
     } catch (error) {
-      console.error("Ошибка при запросе данных:", error);
-      setLoading(false);
+      console.error("Ошибка при запросе данных:", error)
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${baseURL}/orders/`);
+        const response = await fetch(`${baseURL}/orders/`)
 
         if (response.ok) {
-          const newData = await response.json();
-          setOrders(newData);
-          setOrdersReverse(newData.reverse());
+          const newData = await response.json()
+          setOrders(newData)
+          setOrdersReverse(newData.reverse())
         }
-        setLoading(false);
+        setLoading(false)
       } catch (error) {
-        console.error("Ошибка при запросе данных:", error);
-        setLoading(false);
+        console.error("Ошибка при запросе данных:", error)
+        setLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   useEffect(() => {
-    fetchData(); // Выполняем запрос сразу
-    const interval = setInterval(fetchData, 3000);
+    fetchData() // Выполняем запрос сразу
+    const interval = setInterval(fetchData, 3000)
 
-    return () => clearInterval(interval); // Очищаем интервал при размонтировании компонента
-  }, [orders]); // Зависимость от изменения данных
+    return () => clearInterval(interval) // Очищаем интервал при размонтировании компонента
+  }, [orders]) // Зависимость от изменения данных
 
   const parseCartItems = (cartItems) => {
     try {
-      return JSON.parse(cartItems);
+      return JSON.parse(cartItems)
     } catch (error) {
-      console.error("Error parsing cartItems:", error);
-      return [];
+      console.error("Error parsing cartItems:", error)
+      return []
     }
-  };
+  }
 
   const getRowColor = (orderDate) => {
-    const currentTime = new Date();
-    const orderTime = new Date(orderDate);
-    const timeDifference = (currentTime - orderTime) / (1000 * 60);
+    const currentTime = new Date()
+    const orderTime = new Date(orderDate)
+    const timeDifference = (currentTime - orderTime) / (1000 * 60)
 
     if (timeDifference <= 5) {
-      return "lightGreen";
+      return "lightGreen"
     } else if (timeDifference <= 10) {
-      return "Yellow";
+      return "Yellow"
     } else {
-      return "lightPink";
+      return "lightPink"
     }
-  };
+  }
 
   const dateToTime = (orderDateServer) => {
-    const orderDate = new Date(orderDateServer);
+    const orderDate = new Date(orderDateServer)
 
-    const hours = String(orderDate.getHours()).padStart(2, "0");
-    const minutes = String(orderDate.getMinutes()).padStart(2, "0");
-    const seconds = String(orderDate.getSeconds()).padStart(2, "0");
+    const hours = String(orderDate.getHours()).padStart(2, "0")
+    const minutes = String(orderDate.getMinutes()).padStart(2, "0")
+    const seconds = String(orderDate.getSeconds()).padStart(2, "0")
 
-    const day = String(orderDate.getDate()).padStart(2, "0");
-    const month = String(orderDate.getMonth() + 1).padStart(2, "0"); // Месяцы в JavaScript начинаются с 0, поэтому добавляем 1
-    const year = orderDate.getFullYear();
+    const day = String(orderDate.getDate()).padStart(2, "0")
+    const month = String(orderDate.getMonth() + 1).padStart(2, "0") // Месяцы в JavaScript начинаются с 0, поэтому добавляем 1
+    const year = orderDate.getFullYear()
 
-    const formattedDate = `${hours}:${minutes}:${seconds}--${day}/${month}/${year}`;
-    return formattedDate;
-  };
+    const formattedDate = `${hours}:${minutes}:${seconds}--${day}/${month}/${year}`
+    return formattedDate
+  }
   return (
     <>
       {isAuthenticated && (
@@ -253,6 +251,7 @@ export function Orders() {
                                     <TableCell>Quantity</TableCell>
                                     <TableCell>Description</TableCell>
                                     <TableCell>Toppings</TableCell>
+                                    <TableCell>Extras</TableCell>
                                   </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -265,16 +264,37 @@ export function Orders() {
                                           {item.description || "-"}
                                         </TableCell>
                                         <TableCell>
-                                          {item?.toppings?.length > 0 ? (
+                                          {item?.selectedToppings?.length >
+                                          0 ? (
                                             <ul>
-                                              {item?.toppings?.map(
-                                                (topping, toppingIndex) =>
-                                                  topping.count > 0 && (
-                                                    <li key={toppingIndex}>
-                                                      {topping.title}
-                                                    </li>
-                                                  )
+                                              {item?.selectedToppings?.map(
+                                                (topping, toppingIndex) => (
+                                                  <li key={toppingIndex}>
+                                                    {topping}
+                                                  </li>
+                                                )
                                               )}
+                                            </ul>
+                                          ) : (
+                                            "-"
+                                          )}
+                                        </TableCell>
+
+                                        <TableCell>
+                                          {item?.selectedExtrasNames ? (
+                                            <ul>
+                                              {Object.keys(
+                                                item?.selectedExtrasNames
+                                              ).map((key, index) => (
+                                                <li key={index}>
+                                                  {key} -{" "}
+                                                  {
+                                                    item?.selectedExtrasNames[
+                                                      key
+                                                    ]
+                                                  }
+                                                </li>
+                                              ))}
                                             </ul>
                                           ) : (
                                             "-"
@@ -309,5 +329,5 @@ export function Orders() {
         </>
       )}
     </>
-  );
+  )
 }
