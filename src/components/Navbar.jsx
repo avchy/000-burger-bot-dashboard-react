@@ -1,6 +1,6 @@
 // components/Navbar/index.js
 
-import React from "react";
+import React from "react"
 import {
   Nav,
   NavLink,
@@ -9,15 +9,17 @@ import {
   NavBtn,
   NavBtnLink,
   NavBtnLinkLogIn,
-} from "styles/navbarElements";
+} from "styles/navbarElements"
 
-import { Typography } from "@mui/material";
+import { Typography, Box } from "@mui/material"
 
-import { useAuth0 } from "@auth0/auth0-react";
-import { IoSettingsSharp } from "react-icons/io5";
-import { pagesDashboards } from "constants/constants";
+import { useAuth0 } from "@auth0/auth0-react"
+import { IoSettingsSharp } from "react-icons/io5"
+import { pagesDashboards } from "constants/constants"
+import { FlexRowContainer } from "styles/styledComponents"
+
 export const Navbar = () => {
-  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0()
 
   // const { loginWithRedirect, logout } = useAuth0();
   // const isAuthenticated = true;
@@ -29,54 +31,60 @@ export const Navbar = () => {
 
   return (
     <>
-      <Nav>
-        {isAuthenticated && (
-          <NavMenu>
-            {pagesDashboards.map((page, index) => (
-              <NavBtnLink key={index} to={page.href}>
-                {page.name}
-              </NavBtnLink>
-            ))}
-          </NavMenu>
-        )}
-
-        {/* Second Nav */}
-        <NavBtn>
-          {user?.picture && (
-            <img
-              className="avatar_img"
-              style={{ width: "50px", margin: "10px 10px 10px 40px" }}
-              src={user?.picture}
-              alt={user?.nickname}
-            />
-          )}
-
-          {isAuthenticated ? (
-            <Typography sx={{ p: 1 }}>hello {user?.nickname} </Typography>
-          ) : (
-            <Typography sx={{ p: 1 }}>hello guest, please log in </Typography>
-          )}
-
-          {!isAuthenticated && (
-            <NavBtnLinkLogIn to="/" onClick={() => loginWithRedirect()}>
-              login
-            </NavBtnLinkLogIn>
-          )}
-
+      {isAuthenticated && (
+        <Nav>
           {isAuthenticated && (
-            <NavBtnLinkLogIn to="/" onClick={() => logout()}>
-              logout
-            </NavBtnLinkLogIn>
+            <NavMenu>
+              {pagesDashboards.map((page, index) => (
+                <NavBtnLink key={index} to={page.href}>
+                  {page.name}
+                </NavBtnLink>
+              ))}
+            </NavMenu>
           )}
-          {isAuthenticated && (
-            <NavBtnLinkLogIn to="/settings">
-              <IoSettingsSharp
-                style={{ color: "black", fontSize: "20px", marginTop: "5px" }}
+
+          {/* Second Nav */}
+          <NavBtn>
+            {user?.picture && (
+              <img
+                className="avatar_img"
+                style={{ width: "50px", margin: "10px 10px 10px 40px" }}
+                src={user?.picture}
+                alt={user?.nickname}
               />
-            </NavBtnLinkLogIn>
-          )}
-        </NavBtn>
-      </Nav>
+            )}
+
+            {/* {!isAuthenticated && (
+            <FlexRowContainer>
+              <Typography sx={{ p: 1 }}>hello guest, please log in </Typography>
+              <NavBtnLinkLogIn to="/" onClick={() => loginWithRedirect()}>
+                login
+              </NavBtnLinkLogIn>
+            </FlexRowContainer>
+          )} */}
+
+            {isAuthenticated && (
+              <FlexRowContainer>
+                <Typography sx={{ p: 1 }}>hello {user?.nickname} </Typography>
+
+                <NavBtnLinkLogIn to="/" onClick={() => logout()}>
+                  logout
+                </NavBtnLinkLogIn>
+
+                <NavBtnLinkLogIn to="/settings">
+                  <IoSettingsSharp
+                    style={{
+                      color: "black",
+                      fontSize: "20px",
+                      marginTop: "5px",
+                    }}
+                  />
+                </NavBtnLinkLogIn>
+              </FlexRowContainer>
+            )}
+          </NavBtn>
+        </Nav>
+      )}
     </>
-  );
-};
+  )
+}

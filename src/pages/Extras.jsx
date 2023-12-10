@@ -160,7 +160,7 @@ export function Extras() {
   useEffect(() => {
     getExtras(restaurant_id)
     getTypes(restaurant_id)
-  }, [user.nickname])
+  }, [user?.nickname])
 
   const handleProductImageUpload = (e) => {
     const file = e.currentTarget.files[0]

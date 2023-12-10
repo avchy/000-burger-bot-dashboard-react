@@ -21,8 +21,10 @@ function App() {
 					<LogoutButton /> */}
 
           <Router>
+            
             <MenuBar />
             <Navbar />
+            
             <Header />
 
             <Routes>
