@@ -15,26 +15,26 @@ const clientId = "NHfpRMaT5rV9umhTrJU8DeCqkk7dByT8";
 
 // Получаем ширину устройства
 const deviceWidth = window.innerWidth;
-console.log("deviceWidth111", deviceWidth);
+// console.log("deviceWidth111", deviceWidth);
 // Получаем ширину страницы
 const pageWidth = document.documentElement.scrollWidth;
-console.log("pageWidth111", pageWidth);
+// console.log("pageWidth111", pageWidth);
 // Если ширина страницы больше ширины устройства, то можно установить ширину страницы равной ширине устройства
 if (pageWidth > deviceWidth) {
-	document.documentElement.style.width = `${deviceWidth}px`;
+  document.documentElement.style.width = `${deviceWidth}px`;
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-	<React.StrictMode>
-		<Auth0Provider
-			domain={domain}
-			clientId={clientId}
-			redirectUri={window.location.origin}
-		>
-			<ThemeProvider theme={theme}>
-				<App />
-			</ThemeProvider>
-		</Auth0Provider>
-	</React.StrictMode>
+  <React.StrictMode>
+    <Auth0Provider
+      domain={domain}
+      clientId={clientId}
+      redirectUri={window.location.origin}
+    >
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </Auth0Provider>
+  </React.StrictMode>
 );

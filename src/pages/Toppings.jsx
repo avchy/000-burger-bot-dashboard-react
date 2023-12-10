@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import {
   Paper,
   Table,
@@ -12,148 +12,175 @@ import {
   LinearProgress,
   Box,
   Input,
-} from "@mui/material";
-import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
-import { ImagePreview } from "styles/styledComponents";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
+} from "@mui/material"
+import axios from "axios"
+import { useAuth0 } from "@auth0/auth0-react"
+import CloudUploadIcon from "@mui/icons-material/CloudUpload"
+import Alert from "@mui/material/Alert"
+import AlertTitle from "@mui/material/AlertTitle"
 
-import { FlexRowContainer, StyledButton } from "components/AllHelpComponents";
+import {
+  FlexRowContainer,
+  StyledButton,
+  ImagePreview,
+} from "styles/styledComponents"
+import { baseURL } from "constants/api"
+import { LoadingOverlay } from "components/LoadingOverlay"
 
 export function Toppings() {
-  const { user } = useAuth0();
-  const [toppingsList, setToppingsList] = useState([]);
+  const { user } = useAuth0()
+  const [toppingsList, setToppingsList] = useState([])
   const [newTopping, setNewTopping] = useState({
     title: "",
     price: "",
     image: "",
-  });
-  const [logoImage, setLogoImage] = useState("");
-  const [successAlert, setSuccessAlert] = useState(false);
+  })
+  const [logoImage, setLogoImage] = useState("")
+  const [successAlert, setSuccessAlert] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const getToppings = async () => {
-    const restaurant_id = 2;
+    const restaurant_id = 2
+    setLoading(true)
+
     try {
-      const response = await axios.get(
-        "https://burgerim.ru/toppings/" + restaurant_id
-      );
-      setToppingsList(response.data);
+      const response = await axios.get(`${baseURL}/toppings/${restaurant_id}`)
+      console.log("getToppings_response.data", response.data)
+      setToppingsList(response.data)
+      setLoading(false)
     } catch (error) {
-      console.error('Ошибка при выполнении запроса "getToppings":', error);
+      setLoading(false)
+
+      console.error('Ошибка при выполнении запроса "getToppings":', error)
     }
-  };
+  }
 
   const addTopping = async () => {
-    const restaurant_id = 2;
+    const restaurant_id = 2
 
     const data = {
       title: newTopping.title,
       price: newTopping.price,
       image: logoImage,
       restaurant_id: restaurant_id,
-    };
+    }
 
-    console.log("newDish :>> ", data);
+    console.log("newDish :>> ", data)
+    setLoading(true)
 
     try {
       const response = await axios.post(
-        "https://burgerim.ru/toppings/" + restaurant_id,
+        `${baseURL}/toppings/`,
+
         data
-      );
-      console.log('Запрос "addMenuItem" успешно выполнен');
+      )
+      console.log('Запрос "addMenuItem" успешно выполнен')
+      setLoading(false)
 
       setNewTopping({
         title: "",
         price: "",
-        image: "",
-      });
+        image: null,
+      })
+      setLogoImage(null)
 
-      getToppings();
-      setSuccessAlert(true);
+      getToppings()
+      setSuccessAlert(true)
 
       setTimeout(() => {
-        setSuccessAlert(false);
-      }, 3000);
+        setSuccessAlert(false)
+      }, 3000)
     } catch (error) {
-      console.error('Ошибка при выполнении запроса "addMenuItem":', error);
-      return;
+      setLoading(false)
+
+      console.error('Ошибка при выполнении запроса "addMenuItem":', error)
+      return
     }
-  };
+  }
 
   const updateTopping = async (index) => {
-    const updatedTopping = toppingsList[index];
+    const updatedTopping = toppingsList[index]
+    setLoading(true)
+
     try {
       await axios.put(
-        `https://burgerim.ru/toppings/${updatedTopping.id}`,
+        `${baseURL}/toppings/${updatedTopping.id}`,
         updatedTopping
-      );
-      setSuccessAlert(true);
+      )
+      setLoading(false)
+
+      setSuccessAlert(true)
 
       setTimeout(() => {
-        setSuccessAlert(false);
-      }, 3000);
-      console.log("Топпинг успешно обновлен");
-      getToppings();
+        setSuccessAlert(false)
+      }, 3000)
+      console.log("Топпинг успешно обновлен")
+      getToppings()
     } catch (error) {
-      console.error("Ошибка при обновлении топпинга:", error);
+      setLoading(false)
+
+      console.error("Ошибка при обновлении топпинга:", error)
     }
-  };
+  }
 
   const deleteTopping = async (index) => {
-    try {
-      const toppingIdToDelete = toppingsList[index].id;
-      await axios.delete(`https://burgerim.ru/toppings/${toppingIdToDelete}`);
+    setLoading(true)
 
-      setSuccessAlert(true);
+    try {
+      const toppingIdToDelete = toppingsList[index].id
+      await axios.delete(`${baseURL}/toppings/${toppingIdToDelete}`)
+      setLoading(false)
+
+      setSuccessAlert(true)
       setTimeout(() => {
-        setSuccessAlert(false);
-      }, 3000);
-      console.log("Топпинг успешно удален");
-      getToppings();
+        setSuccessAlert(false)
+      }, 3000)
+      console.log("Топпинг успешно удален")
+      getToppings()
     } catch (error) {
-      console.error("Ошибка при удалении топпинга:", error);
+      setLoading(false)
+
+      console.error("Ошибка при удалении топпинга:", error)
     }
-  };
+  }
 
   useEffect(() => {
-    getToppings();
-  }, [user.nickname]);
+    getToppings()
+  }, [user.nickname])
 
   const handleProductImageUpload = (e) => {
     // const file = e.target.files[0];
-    const file = e.currentTarget.files[0];
+    const file = e.currentTarget.files[0]
 
-    TransformFileData(file);
-  };
+    TransformFileData(file)
+  }
 
   const TransformFileData = (file) => {
-    const reader = new FileReader();
+    const reader = new FileReader()
 
     if (file) {
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file)
       reader.onloadend = () => {
-        setLogoImage(reader.result);
-      };
+        setLogoImage(reader.result)
+      }
     } else {
-      setLogoImage("");
+      setLogoImage("")
     }
-  };
+  }
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target
 
     // Проверяем, что вводимое значение содержит только цифры
     if (name === "price" && !/^\d+$/.test(value)) {
-      return; // Прерываем выполнение функции, если ввод не является числом
+      return // Прерываем выполнение функции, если ввод не является числом
     }
 
     setNewTopping({
       ...newTopping,
       [name]: value,
-    });
-  };
+    })
+  }
 
   return (
     <>
@@ -169,6 +196,12 @@ export function Toppings() {
       {toppingsList.length === 0 && (
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
+        </Box>
+      )}
+      {/* {console.log("loading", loading)} */}
+      {loading && (
+        <Box sx={{ width: "100%" }}>
+          <LoadingOverlay />
         </Box>
       )}
 
@@ -190,24 +223,24 @@ export function Toppings() {
                     <TextField
                       value={topping.title}
                       onChange={(e) => {
-                        const updatedList = [...toppingsList];
-                        updatedList[index].title = e.target.value;
-                        setToppingsList(updatedList);
+                        const updatedList = [...toppingsList]
+                        updatedList[index].title = e.target.value
+                        setToppingsList(updatedList)
                       }}
                     />
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ width: 100 }}>
                     <TextField
                       value={topping.price}
                       onChange={(e) => {
-                        const { value } = e.target;
+                        const { value } = e.target
                         // Проверяем, что вводимое значение содержит только цифры
                         if (!/^\d*$/.test(value)) {
-                          return; // Прерываем выполнение функции, если ввод не является числом
+                          return // Прерываем выполнение функции, если ввод не является числом
                         }
-                        const updatedList = [...toppingsList];
-                        updatedList[index].price = value;
-                        setToppingsList(updatedList);
+                        const updatedList = [...toppingsList]
+                        updatedList[index].price = value
+                        setToppingsList(updatedList)
                       }}
                     />
                   </TableCell>
@@ -246,22 +279,22 @@ export function Toppings() {
                           style: { display: "none" },
                         }}
                         onChange={(e) => {
-                          const updatedList = [...toppingsList];
-                          const file = e.target.files[0];
-                          const reader = new FileReader();
+                          const updatedList = [...toppingsList]
+                          const file = e.target.files[0]
+                          const reader = new FileReader()
 
                           if (file) {
-                            reader.readAsDataURL(file);
+                            reader.readAsDataURL(file)
                             reader.onloadend = () => {
                               // setLogoImage(reader.result);
-                              console.log("index", index);
-                              updatedList[index].image = reader.result;
-                              console.log("updatedList", updatedList);
+                              console.log("index", index)
+                              updatedList[index].image = reader.result
+                              console.log("updatedList", updatedList)
 
-                              setToppingsList(updatedList);
-                            };
+                              setToppingsList(updatedList)
+                            }
                           } else {
-                            setToppingsList([...toppingsList]);
+                            setToppingsList([...toppingsList])
                           }
                         }}
                         required
@@ -307,7 +340,7 @@ export function Toppings() {
                 />
               </TableCell>
 
-              <TableCell>
+              <TableCell sx={{ width: 100 }}>
                 <TextField
                   label="Price"
                   name="price"
@@ -369,5 +402,5 @@ export function Toppings() {
         </Table>
       </Paper>
     </>
-  );
+  )
 }

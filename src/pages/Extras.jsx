@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 import {
   Paper,
   Table,
@@ -12,143 +12,183 @@ import {
   LinearProgress,
   Box,
   Input,
-} from "@mui/material";
-import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
-import { ImagePreview } from "styles/styledComponents";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
+} from "@mui/material"
+import axios from "axios"
+import { useAuth0 } from "@auth0/auth0-react"
+import CloudUploadIcon from "@mui/icons-material/CloudUpload"
+import Alert from "@mui/material/Alert"
+import AlertTitle from "@mui/material/AlertTitle"
 
-import { FlexRowContainer, StyledButton } from "components/AllHelpComponents";
+import {
+  FlexRowContainer,
+  StyledButton,
+  ImagePreview,
+} from "styles/styledComponents"
+import { baseURL, getExtras } from "constants/api"
 
 export function Extras() {
-  const { user } = useAuth0();
-  const [extrasList, setExtrasList] = useState([]);
+  const { user } = useAuth0()
+  const [extrasList, setExtrasList] = useState([])
   const [newExtra, setNewExtra] = useState({
     title: "",
-    image: "",
-  });
-  const [logoImage, setLogoImage] = useState("");
-  const [successAlert, setSuccessAlert] = useState(false);
+    image: null,
+    type: "", // Добавлено новое поле types
+  })
+  const [logoImage, setLogoImage] = useState("")
+  const [successAlert, setSuccessAlert] = useState(false)
+
+  const [typesList, setTypesList] = useState([
+    { id: 1, type: "salad" },
+    { id: 2, type: "bread" },
+  ])
+  const restaurant_id = 2
+
+  //TODO  enable getRestaurantIdByNickname( user )
+  // const getRestaurantIdByNickname = async (user) => {
+  // 	// const restaurant_id = 2
+  // 	try {
+  // 		const response = await axios.get(`${baseURL}/restaurant/${user.nickname}`)
+  // 		setExtrasList(response.data)
+  // 		console.log("extrasList", response.data)
+  // 	} catch (error) {
+  // 		console.error('Ошибка при выполнении запроса "getExtras":', error)
+  // 	}
+  // }
 
   const getExtras = async () => {
-    const restaurant_id = 2;
+    const restaurant_id = 2
     try {
-      const response = await axios.get(
-        "https://burgerim.ru/extras/" + restaurant_id
-      );
-      setExtrasList(response.data);
-      console.log("getExtras", response.data);
+      const response = await axios.get(`${baseURL}/extras/${restaurant_id}`)
+      setExtrasList(response.data)
+      console.log("extrasList", response.data)
     } catch (error) {
-      console.error('Ошибка при выполнении запроса "getExtras":', error);
+      console.error('Ошибка при выполнении запроса "getExtras":', error)
     }
-  };
+  }
+
+  const getTypes = async (restaurant_id) => {
+    try {
+      const response = await axios.get(`${baseURL}/types/` + restaurant_id)
+      console.log("getTypes_response.data", response.data)
+      setTypesList(response.data)
+    } catch (error) {
+      console.error('Ошибка при выполнении запроса "getTypes":', error)
+    }
+  }
 
   const addExtra = async () => {
-    const restaurant_id = 2;
-
     const data = {
       title: newExtra.title,
       image: logoImage,
       restaurant_id: restaurant_id,
-    };
+      type_id: typesList.find((item) => item.type === newExtra.type).id, // Добавлено новое поле types
+    }
 
-    console.log("newExtra :>> ", data);
+    console.log("data_newExtra :>> ", data)
 
     try {
       const response = await axios.post(
-        "https://burgerim.ru/extras/",
-        // "https://burgerim.ru/extras/" + restaurant_id,
+        `${baseURL}/extras/`,
+
         data
-      );
-      console.log('Запрос "addExtra" успешно выполнен');
+      )
+      console.log('Запрос "addExtra" успешно выполнен')
 
       setNewExtra({
         title: "",
-        image: "",
-      });
+        image: null,
+        type: "", // Добавлено новое поле types
+      })
 
-      setLogoImage(null);
-      getExtras();
-      setSuccessAlert(true);
+      setLogoImage(null)
+      //TODO  enable getExtras(restaurant_id)
+      getExtras(restaurant_id)
+      // setExtrasList(() => getExtras(restaurant_id))
+
+      setSuccessAlert(true)
 
       setTimeout(() => {
-        setSuccessAlert(false);
-      }, 3000);
+        setSuccessAlert(false)
+      }, 3000)
     } catch (error) {
-      console.error('Ошибка при выполнении запроса "addExtra":', error);
-      return;
+      console.error('Ошибка при выполнении запроса "addExtra":', error)
+      return
     }
-  };
+  }
 
   const updateExtra = async (index) => {
-    const updatedExtra = extrasList[index];
+    const updatedExtra = extrasList[index]
+
+    console.log("index :>> ", index)
+    console.log("extrasList :>> ", extrasList)
     try {
       await axios.put(
-        `https://burgerim.ru/extras`,
-        // `https://burgerim.ru/extras/${updatedExtra.id}`,
+        `${baseURL}/extras/`,
+
         updatedExtra
-      );
-      setSuccessAlert(true);
+      )
+      setSuccessAlert(true)
 
       setTimeout(() => {
-        setSuccessAlert(false);
-      }, 3000);
-      console.log("Экстра успешно обновлена");
-      getExtras();
+        setSuccessAlert(false)
+      }, 3000)
+      console.log("Экстра успешно обновлена")
+      getExtras(restaurant_id)
+      // setExtrasList(() => getExtras(restaurant_id))
     } catch (error) {
-      console.error("Ошибка при обновлении экстры:", error);
+      console.error("Ошибка при обновлении экстры:", error)
     }
-  };
+  }
 
   const deleteExtra = async (index) => {
     try {
-      const extraIdToDelete = extrasList[index].id;
-      await axios.delete(`https://burgerim.ru/extras/${extraIdToDelete}`);
+      const extraIdToDelete = extrasList[index].id
+      await axios.delete(`${baseURL}/extras/${extraIdToDelete}`)
 
-      setSuccessAlert(true);
+      setSuccessAlert(true)
       setTimeout(() => {
-        setSuccessAlert(false);
-      }, 3000);
-      console.log("Экстра успешно удалена");
-      getExtras();
+        setSuccessAlert(false)
+      }, 3000)
+      console.log("Экстра успешно удалена")
+      getExtras(restaurant_id)
+      // setExtrasList(() => getExtras(restaurant_id))
     } catch (error) {
-      console.error("Ошибка при удалении экстры:", error);
+      console.error("Ошибка при удалении экстры:", error)
     }
-  };
+  }
 
   useEffect(() => {
-    getExtras();
-  }, [user.nickname]);
+    getExtras(restaurant_id)
+    getTypes(restaurant_id)
+  }, [user?.nickname])
 
   const handleProductImageUpload = (e) => {
-    const file = e.currentTarget.files[0];
+    const file = e.currentTarget.files[0]
 
-    TransformFileData(file);
-  };
+    TransformFileData(file)
+  }
 
   const TransformFileData = (file) => {
-    const reader = new FileReader();
+    const reader = new FileReader()
 
     if (file) {
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file)
       reader.onloadend = () => {
-        setLogoImage(reader.result);
-      };
+        setLogoImage(reader.result)
+      }
     } else {
-      setLogoImage("");
+      setLogoImage("")
     }
-  };
+  }
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target
 
     setNewExtra({
       ...newExtra,
       [name]: value,
-    });
-  };
+    })
+  }
 
   return (
     <>
@@ -172,23 +212,51 @@ export function Extras() {
           <TableHead>
             <TableRow sx={{ backgroundColor: "lightBlue" }}>
               <TableCell>Title</TableCell>
+              <TableCell>Type</TableCell> {/* Заголовок для столбца types */}
               <TableCell>Image</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {extrasList.length > 0 &&
+            {extrasList?.length > 0 &&
               extrasList.map((extra, index) => (
                 <TableRow key={index}>
                   <TableCell>
                     <TextField
                       value={extra.title}
                       onChange={(e) => {
-                        const updatedList = [...extrasList];
-                        updatedList[index].title = e.target.value;
-                        setExtrasList(updatedList);
+                        const updatedList = [...extrasList]
+                        updatedList[index].title = e.target.value
+                        setExtrasList(updatedList)
                       }}
                     />
+                  </TableCell>
+
+                  <TableCell>
+                    <TextField
+                      select
+                      value={
+                        typesList.find((item) => item.id === extra.type_id)
+                          ?.type
+                      }
+                      onChange={(e) => {
+                        const updatedList = [...extrasList]
+                        updatedList[index].type_id = typesList.find(
+                          (item) => item.type === e.target.value
+                        )?.id
+
+                        setExtrasList(updatedList)
+                      }}
+                      SelectProps={{
+                        native: true,
+                      }}
+                    >
+                      {typesList.map((type) => (
+                        <option key={type.id} value={type.type}>
+                          {type.type}
+                        </option>
+                      ))}
+                    </TextField>
                   </TableCell>
 
                   <TableCell>
@@ -226,18 +294,18 @@ export function Extras() {
                           style: { display: "none" },
                         }}
                         onChange={(e) => {
-                          const updatedList = [...extrasList];
-                          const file = e.target.files[0];
-                          const reader = new FileReader();
+                          const updatedList = [...extrasList]
+                          const file = e.target.files[0]
+                          const reader = new FileReader()
 
                           if (file) {
-                            reader.readAsDataURL(file);
+                            reader.readAsDataURL(file)
                             reader.onloadend = () => {
-                              updatedList[index].image = reader.result;
-                              setExtrasList(updatedList);
-                            };
+                              updatedList[index].image = reader.result
+                              setExtrasList(updatedList)
+                            }
                           } else {
-                            setExtrasList([...extrasList]);
+                            setExtrasList([...extrasList])
                           }
                         }}
                         required
@@ -265,6 +333,7 @@ export function Extras() {
 
             <TableRow sx={{ backgroundColor: "lightBlue" }}>
               <TableCell>Title</TableCell>
+              <TableCell>Type</TableCell>
               <TableCell>Image</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
@@ -278,6 +347,25 @@ export function Extras() {
                   onChange={handleInputChange}
                   sx={{ m: "10px" }}
                 />
+              </TableCell>
+
+              <TableCell>
+                <TextField
+                  select
+                  name="type"
+                  value={newExtra?.type}
+                  onChange={handleInputChange}
+                  SelectProps={{
+                    native: true,
+                  }}
+                >
+                  <option value="">None</option>
+                  {typesList?.map((type) => (
+                    <option key={type.id} value={type.type}>
+                      {type.type}
+                    </option>
+                  ))}
+                </TextField>
               </TableCell>
 
               <TableCell>
@@ -332,5 +420,5 @@ export function Extras() {
         </Table>
       </Paper>
     </>
-  );
+  )
 }

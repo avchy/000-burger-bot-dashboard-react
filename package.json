@@ -1,45 +1,51 @@
 {
-	"name": "burger-bot-dashboard",
-	"version": "0.1.0",
-	"private": true,
-	"dependencies": {
-		"@auth0/auth0-react": "^1.9.0",
-		"@emotion/react": "^11.10.5",
-		"@emotion/styled": "^11.10.5",
-		"@mui/material": "^5.14.17",
-		"@mui/styled-engine-sc": "^6.0.0-alpha.5",
-		"axios": "^1.4.0",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"react-icons": "^4.11.0",
-		"@mui/icons-material": "^5.10.9",
-		"react-router-dom": "^6.11.2",
-		"react-scripts": "5.0.1",
-		"styled-components": "^6.1.0"
-	},
-	"scripts": {
-		"start": "react-scripts start"
-	},
-	"eslintConfig": {
-		"extends": [
-			"react-app",
-			"react-app/jest"
-		]
-	},
-	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
-		],
-		"development": [
-			"last 1 chrome version",
-			"last 1 firefox version",
-			"last 1 safari version"
-		]
-	},
-	"devDependencies": {
-		"@babel/eslint-parser": "^7.22.15",
-		"sass": "^1.69.5"
-	}
+  "name": "burger-bot-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@auth0/auth0-react": "^1.9.0",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.10.9",
+    "@mui/material": "^5.14.17",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.5",
+    "axios": "^1.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.11.0",
+    "react-router-dom": "^6.11.2",
+    "react-scripts": "5.0.1",
+    "styled-components": "^6.1.0"
+  },
+  "scripts": {
+    "start": "REACT_APP_STAGE=prod react-scripts start",
+    "dev": "REACT_APP_STAGE=local react-scripts start",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.22.15",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react": "^7.33.2",
+    "sass": "^1.69.5"
+  }
 }
