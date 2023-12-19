@@ -18,7 +18,11 @@ import Autocomplete from "@mui/material/Autocomplete"
 import Stack from "@mui/material/Stack"
 import axios from "axios"
 import { useAuth0 } from "@auth0/auth0-react"
-import { ImagePreview, StyledTableCell } from "styles/styledComponents"
+import {
+  ImagePreview,
+  StyledTableCell,
+  FlexColumnContainer,
+} from "styles/styledComponents"
 import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
 import CloudUploadIcon from "@mui/icons-material/CloudUpload"
@@ -106,20 +110,15 @@ export function Dishes() {
       const response = await axios.get(`${baseURL}/dishes/` + restaurant_id)
       setLoading(false)
       console.log("getMenu_response.data", response.data)
-	  
-	  
+
       setDishes(response.data)
       setOriginalDishes(response.data) // Обновление originalDishes
       console.log('Запрос "getMenu" успешно выполнен')
-	  
-	  
-	  
-	//   const receivedDishes = response.data;
-	//   setDishes(receivedDishes);
-	//   setOriginalDishes([...receivedDishes]); // Создаем копию полученных блюд и сохраняем в originalDishes
-	//   console.log('Запрос "getMenu" успешно выполнен');
-	  
-	  
+
+      //   const receivedDishes = response.data;
+      //   setDishes(receivedDishes);
+      //   setOriginalDishes([...receivedDishes]); // Создаем копию полученных блюд и сохраняем в originalDishes
+      //   console.log('Запрос "getMenu" успешно выполнен');
     } catch (error) {
       setLoading(false)
       console.error('Ошибка при выполнении запроса "getMenu":', error)
@@ -267,16 +266,16 @@ export function Dishes() {
   const updateAllDishes = async () => {
     console.log("dishes", dishes)
     console.log("originalDishes", originalDishes)
- // Функция для сравнения объектов
- const isEqual = (obj1, obj2) => {
-    return JSON.stringify(obj1) === JSON.stringify(obj2)
-  }
+    // Функция для сравнения объектов
+    const isEqual = (obj1, obj2) => {
+      return JSON.stringify(obj1) === JSON.stringify(obj2)
+    }
     setLoading(true)
     try {
       const promises = dishes.map(async (dish) => {
         const originalDish = originalDishes.find((d) => d.id === dish.id)
 
-        // console.log("originalDish111", originalDish) 
+        // console.log("originalDish111", originalDish)
 
         if (!isEqual(originalDish, dish)) {
           console.log("isEqual5555", originalDish)
@@ -299,8 +298,6 @@ export function Dishes() {
       console.error('Ошибка при выполнении запроса "updateAllDishes":', error)
     }
   }
-
- 
 
   // function isEqual(obj1, obj2) {
   // 	function isObject(obj) {
@@ -334,7 +331,7 @@ export function Dishes() {
     getToppings()
     getExtras()
   }, [])
-//   }, [user.nickname])
+  //   }, [user.nickname])
 
   return (
     <>
@@ -361,7 +358,7 @@ export function Dishes() {
               variant="contained"
               color="primary"
               onClick={() => updateAllDishes()}
-			  disabled={true}
+              disabled={true}
             >
               Save All
             </Button>
@@ -396,9 +393,12 @@ export function Dishes() {
                     />
                   </StyledTableCell>
                   <StyledTableCell>
-                    <TextField
-                      // sx={{ minWidth: "150px" }}
+                    <textarea
                       value={item.description}
+                      style={{
+                        width: "100%",
+                        minHeight: "8em",
+                      }}
                       onChange={(e) =>
                         handleEditChange(e, index, "description")
                       }
@@ -415,9 +415,7 @@ export function Dishes() {
                     <Box>
                       <ImagePreview>
                         {item.image ? (
-                          <>
-                            <img src={item.image} alt="no_image!" />
-                          </>
+                          <img src={item.image} alt="no_image!" />
                         ) : (
                           <Typography> Image Preview </Typography>
                         )}
@@ -462,9 +460,9 @@ export function Dishes() {
                               setDishes(updatedList)
                             }
                           }
-						//    else {
-                        //     setDishes([...dishes])
-                        //   }
+                          //    else {
+                          //     setDishes([...dishes])
+                          //   }
                         }}
                         required
                       />
@@ -586,11 +584,21 @@ export function Dishes() {
                   />
                 </StyledTableCell>
                 <StyledTableCell>
-                  <TextField
+                  {/* <TextField
                     name="description"
                     value={newDish.description}
                     onChange={handleNewDishChange}
                     variant="outlined"
+                  /> */}
+
+                  <textarea
+                    name="description"
+                    value={newDish.description}
+                    style={{
+                      width: "100%",
+                      minHeight: "8em",
+                    }}
+                    onChange={handleNewDishChange}
                   />
                 </StyledTableCell>
                 <StyledTableCell sx={{ width: 100 }}>

@@ -92,12 +92,10 @@ export const StyledTableRow = styled(TableRow)`
 `
 
 export const ImagePreview = styled(Box)`
-  margin: 10px 0;
-  /* padding: 5px; */
-
-  border: 1px solid rgb(183, 183, 183);
-  max-width: 200px;
+  /* max-width: 300px; */
   /* width: 100%; */
+  margin: 10px 0;
+  border: 1px solid rgb(183, 183, 183);
   display: flex;
   align-items: center;
   justify-content: center;
