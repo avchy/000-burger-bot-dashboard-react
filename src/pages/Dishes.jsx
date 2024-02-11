@@ -370,10 +370,9 @@ export function Dishes() {
                 <StyledTableCell width="20%">Title</StyledTableCell>
                 <StyledTableCell width="20%">Description</StyledTableCell>
                 <StyledTableCell width="10%">Price</StyledTableCell>
+                
                 <StyledTableCell width="20%">image</StyledTableCell>
-                <StyledTableCell sx={{ minWidth: 230 }} width="15%">
-                  Toppings
-                </StyledTableCell>
+                <StyledTableCell width="10%">Toppings</StyledTableCell>
                 <StyledTableCell width="10%">Extras</StyledTableCell>
                 <StyledTableCell width="5%">Actions</StyledTableCell>
               </TableRow>
@@ -474,7 +473,8 @@ export function Dishes() {
 
                   <StyledTableCell>
                     {item.toppings && (
-                      <Stack spacing={3}>
+                      <Stack >
+                      {/* <Stack spacing={3}> */}
                         <Autocomplete
                           multiple
                           options={toppings}
