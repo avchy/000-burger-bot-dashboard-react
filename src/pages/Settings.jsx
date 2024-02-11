@@ -270,7 +270,7 @@ export function Settings() {
         </FlexRowContainer>
 
         <Box sx={{ border: "2px solid grey", borderRadius: "5px" }}>
-          <FlexRowContainer>
+          <FlexRowContainer sx={{  justifyContent: "space-between"}}>
             <Typography sx={{ m: "5px " }} variant="h6">
               Credit Card Button
             </Typography>
@@ -279,7 +279,7 @@ export function Settings() {
               onChange={(e) => setShowCreditCardButton(e.target.checked)}
             />
           </FlexRowContainer>
-          <FlexRowContainer>
+          <FlexRowContainer sx={{  justifyContent: "space-between"}}>
             <Typography sx={{ m: "5px " }} variant="h6">
               Apple Pay Button
             </Typography>
@@ -288,7 +288,7 @@ export function Settings() {
               onChange={(e) => setShowApplePayButton(e.target.checked)}
             />
           </FlexRowContainer>
-          <FlexRowContainer>
+          <FlexRowContainer sx={{  justifyContent: "space-between"}}>
             <Typography sx={{ m: "5px " }} variant="h6">
               Google Pay Button
             </Typography>
@@ -297,7 +297,7 @@ export function Settings() {
               onChange={(e) => setShowGooglePayButton(e.target.checked)}
             />
           </FlexRowContainer>
-          <FlexRowContainer>
+          <FlexRowContainer sx={{  justifyContent: "space-between"}}>
             <Typography sx={{ m: "5px " }} variant="h6">
               Order Button
             </Typography>
