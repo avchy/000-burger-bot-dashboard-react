@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is a React application for a Burger Bot dashboard. Based on the filenames, it can be inferred that the application is intended for managing orders, dishes, extras, toppings, and user profiles.
+This project is a React application for a Burger Bot dashboard. Application is intended for managing orders, dishes, extras, toppings, and user profiles.
 
 ## Features
 
@@ -29,7 +29,7 @@ This project is a React application for a Burger Bot dashboard. Based on the fil
 ## Technical Features
 
 - Frontend: React
-- Backend: API or database (indicated in burger_db.sql files)
+- Backend: API or database 
 - Additional files: styles, configuration
 - Repository: [GitHub Repository](https://github.com/yair-roshal/000-burger-bot-dashboard-react)
 
