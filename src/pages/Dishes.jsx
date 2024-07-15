@@ -43,6 +43,7 @@ export function Dishes() {
 
   const [dishes, setDishes] = useState([])
   const [originalDishes, setOriginalDishes] = useState([])
+  const [groups, setGroups] = useState([])
   const [toppings, setToppings] = useState([])
   const [extras, setExtras] = useState([])
   const [newDish, setNewDish] = useState({
@@ -158,6 +159,23 @@ export function Dishes() {
       console.error('Ошибка при выполнении запроса "getExtras":', error)
       return
     }
+  }
+
+  const getGroups = async () => {
+     // const restaurant = user.nickname
+     const restaurant_id = 2
+
+     try {
+       const response = await axios.get(`${baseURL}/groups/` + restaurant_id);
+ 
+       console.log("getGroups.data", response.data)
+       setGroups(response.data)
+ 
+       console.log('Запрос "getGroups" успешно выполнен')
+     } catch (error) {
+       console.error('Ошибка при выполнении запроса "getGroups":', error)
+       return
+     }
   }
 
   const addNewDish = async (index) => {
@@ -333,6 +351,7 @@ export function Dishes() {
     getMenu()
     getToppings()
     getExtras()
+    getGroups();
   }, [])
 //   }, [user.nickname])
 
@@ -370,8 +389,9 @@ export function Dishes() {
             <TableHead>
               <TableRow sx={{ backgroundColor: "lightBlue" }}>
                 <StyledTableCell width="5%">ID</StyledTableCell>
-                <StyledTableCell width="20%">Title</StyledTableCell>
-                <StyledTableCell width="20%">Description</StyledTableCell>
+                <StyledTableCell width="15%">Title</StyledTableCell>
+                <StyledTableCell width="10%">Group</StyledTableCell>
+                <StyledTableCell width="15%">Description</StyledTableCell>
                 <StyledTableCell width="10%">Price</StyledTableCell>
                 <StyledTableCell width="20%">image</StyledTableCell>
                 <StyledTableCell sx={{ minWidth: 230 }} width="15%">
@@ -395,6 +415,36 @@ export function Dishes() {
                       onChange={(e) => handleEditChange(e, index, "title")}
                     />
                   </StyledTableCell>
+
+                  <StyledTableCell>
+                    <Stack spacing={3}>
+                      <Autocomplete
+                        options={groups}
+                        getOptionLabel={(option) => option.name}
+                        value={groups.find(group => group.id === item.group) }
+                        defaultValue={item.group}
+                        filterSelectedOptions
+                        onChange={(event, newValue) => {
+                          handleEditChange(
+                            { target: { value: newValue } }, // Создаем фейковое событие для передачи в handleEditChange
+                            index,
+                            "group"
+                          )
+                        }}
+                        isOptionEqualToValue={(option, value) =>
+                          option.id === value?.id
+                        } // Добавьте это свойство
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="select group"
+                            placeholder="..."
+                          />
+                        )}
+                      />
+                    </Stack>
+                  </StyledTableCell>
+
                   <StyledTableCell>
                     <TextField
                       // sx={{ minWidth: "150px" }}

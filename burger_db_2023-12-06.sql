@@ -480,6 +480,32 @@ VALUES
 	(9,'Side Dish',2),
 	(10,'Base',2);
 
+
+# Dump of table groups
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `groups`;
+
+CREATE TABLE `groups` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(55) DEFAULT NULL,
+  `restaurant_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK TABLES `groups` WRITE;
+/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+
+INSERT INTO `groups` (`id`, `name`, `restaurant_id`)
+VALUES
+	(1,'Salad',2),
+	(2,'Bread',2),
+	(8,'Pasta',2),
+	(9,'Side Dish',2),
+	(10,'Base',2);
+
+ALTER TABLE `dishes` ADD `group_id` INT, ADD FOREIGN KEY (`group_id`) REFERENCES `groups`(`id`);
+
 /*!40000 ALTER TABLE `types` ENABLE KEYS */;
 UNLOCK TABLES;
 

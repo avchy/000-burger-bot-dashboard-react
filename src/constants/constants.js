@@ -6,6 +6,7 @@ import { Dishes } from "pages/Dishes";
 import { Toppings } from "pages/Toppings";
 import { Extras } from "pages/Extras";
 import { Types } from "pages/Types";
+import { Groups } from "pages/Groups";
 import { Statistics } from "pages/Statistics";
 
 export const pagesDashboards = [
@@ -19,6 +20,7 @@ export const pagesDashboards = [
   },
   { name: "Extras", href: "/extras", pageType: "up", element: <Extras /> },
   { name: "Types", href: "/types", pageType: "up", element: <Types /> },
+  { name: "Groups", href: "/groups", pageType: "up", element: <Groups /> },
 
   { name: "Dishes", href: "/dishes", pageType: "up", element: <Dishes /> },
   // { name: "Statistics", href: "/statistics", pageType: "up" , element: <Statistics />},
